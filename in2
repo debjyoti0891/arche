@@ -1,0 +1,6 @@
+set debug true
+set col 24
+set row 100
+read usb_phy.v
+showgraph test.gml
+map

@@ -1,0 +1,7 @@
+set debug true
+set col 8
+set row 100
+read test_map.v
+showgraph test.gml
+map
+ps -f stats.txt
