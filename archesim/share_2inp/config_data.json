@@ -1,0 +1,24 @@
+{
+    "dim": {
+        "m": 3,
+        "n": 2
+    },
+    "filename": {
+        "input": "2_bit_xor.inp",
+        "ins_mem": "2_bit_xor_ins.txt",
+        "output": "2_bit_xor",
+        "varin" : "2_bit.varin",
+        "varout" : "2_bit.varout"
+    },
+    "simulation": {
+        "cycles": 0,
+        "print_ins": 1,
+        "verbose": 0
+    },
+    "voltage": {
+        "0": -2.4,
+        "1": 2.4,
+        "delta": 5,
+        "period": 50
+    }
+}

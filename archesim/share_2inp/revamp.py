@@ -4,7 +4,7 @@ import sys
 import json
 import copy
 
-class MAMI:
+class ReVAMP:
 
     def __init__(self):
         ''' Initializes -
@@ -17,7 +17,6 @@ class MAMI:
         self.voltage = list()
 
     def __setupSim(self):
-        self.sim_type = 'mami'
         self.crossbar = []
         m = self.m
         n = self.n
@@ -141,23 +140,22 @@ class MAMI:
             else:
                 return l
 
-    def __writeLogicMaj(self, crossbar, source, ins, clk, out_f):
-        ''' TODO : update '''
+    def __writeLogic(self, crossbar, source, ins, clk, out_f):
         ws = None 
-        ''' t Apply dir addr s wb ws val v val v val '''
-        if ins[5] == '00':
+        ''' Apply wl s wb val v val v val '''
+        if ins[3] == '00':
             ws = '0'
-        elif ins[5] == '01':
+        elif ins[3] == '01':
             ws = '1'
-        elif ins[5] == '11':
-            ws = source[len(crossbar)-int(ins[6]) - 1]
+        elif ins[3] == '11':
+            ws = source[len(crossbar)-int(ins[4]) - 1]
     
         new_cross = [i for i in crossbar]
         for i in range(len(crossbar)):
             index = len(crossbar)-1 - i
-            prefix = 't'+str(clk)+'_'+ins[1]+'_'+str(self.__ins_count)+'_'
-            v = ins[7+2*i]
-            val = ins[7+2*i+1]
+            prefix = 't'+str(clk)+'_'+ins[1]+'_'
+            v = ins[5+2*i]
+            val = ins[5+2*i+1]
             if v == '0' : # NOP
                 continue
             bl =  str(source[index])
@@ -166,11 +164,6 @@ class MAMI:
                 bl = '1'
             elif bl == '1':
                 bl = '0'
-            elif bl == '':
-                print("Invalid read")
-                print("Source: " , source)
-                print("Instruction : ", ins)
-                sys.exit(0)
             else:
                 neg = True 
                 bl = '~'+bl 
@@ -229,32 +222,7 @@ class MAMI:
 
 
         return new_cross 
-
-    def __writeLogicMagic(self, crossbar, ins, clk, out_f):
-        ''' t Magic dir addr k i_1 i_2 ... i_k o '''
-        prefix = 't'+str(clk)+'_'+ins[1]+'_'+str(self.__ins_count)+'_'
-        new_cross = [i for i in crossbar]
-        k = int(ins[4])
-        inputs = []
-        for i in ins[5:-1]:
-            inputs.append(len(crossbar)-int(i)-1)
-        output = len(crossbar) - int(ins[-1]) -1  
-        
-        if crossbar[output] != '0' and crossbar[output] != '1':
-            print('Attempted MAGIC write on a dirty cell')
-            print('Crossbar state:' ,  crossbar)
-            print('Instruction :' , ins)
-            sys.exit(0)
-        new_cross[output] = prefix
-        out_f.write('.names ')
-        for i in inputs:
-            out_f.write(crossbar[i]+' ')
-        out_f.write(prefix+'\n')
-        for i in range(len(inputs)):
-            out_f.write('0')
-        out_f.write(' 1\n')
-        return new_cross
-
+    
     def __writeHeader(self, out_file):
         out_file.write('.model top\n')
         # get inputs
@@ -293,7 +261,6 @@ class MAMI:
 
 
     def genBlif(self, config_file):
-        ''' TODO : update '''
         self.loadConfig(config_file)
         ''' read each instruction 
             ---> check corresponding varin -> update if t_var_in < curr_clk
@@ -314,28 +281,25 @@ class MAMI:
         crossbar = [[0 for j in range(self.n)] for i in range(self.m)]
         dmr = None
         ins_f = open(self.ins_file)
-        self.__ins_count = 0
-        while True:
-            ins = self.__getLine(ins_f)
-            if ins == None:
-                break
-            #curr_clk = curr_clk+1
-            self.__ins_count = self.__ins_count + 1
+        for ins in ins_f:
+            ins = ins.strip()
+            comment = ins.find('//')
+            if comment >= 0:
+                ins = ins[:comment]
+            if ins == '':
+                continue
+
+            curr_clk = curr_clk+1
             if not self.__checkValid(ins):
                 print('Invalid Instruction')
                 print(curr_clk,' : ', ins)
                 sys.exit(1)
-            ins = ins.split()
-            curr_clk = int(ins[0])
-            opcode = ins[1]
-            compute_dir = ins[2]
-            addr = int(ins[3])
-
-
+            
             ''' check varin '''
             if in_clk < curr_clk:
                 input_line = self.__getLine(var_in)
                 if input_line != None: # the line is valid
+                    input_line = input_line.strip()
                     input_line = input_line.split()
                     in_clk = int(input_line[0])
                     curr_in[0] = curr_in[1]
@@ -345,12 +309,14 @@ class MAMI:
             if out_clk < curr_clk:
                 input_line = self.__getLine(var_out)
                 if input_line != None: # the line is valid
+                    input_line = input_line.strip()
                     input_line = input_line.split()
                     out_clk = int(input_line[0])
                     curr_out[0] = curr_out[1]
                     curr_out[1] = (out_clk, input_line[1:])
                     
             ''' decode the instruction and write to the blif file ''' 
+            ins = ins.strip()
             ins = ins.split()
             if curr_in[1][0] != None and curr_in[1][0] <= curr_clk:
                 pir = curr_in[1][1]
@@ -358,42 +324,16 @@ class MAMI:
                 pir = curr_in[0][1]
             else:
                 pir = None
-          
-            if opcode == 'Read':
-                if compute_dir == '0':
-                    dmr = self.copy.deepcopy(crossbar[addr])
-                else:
-                    dmr = []
-                    for i in range(self.m):
-                        dmr.append(crossbar[i][addr])
-                for i in range(max(self.m,self.n)-len(dmr)):
-                    dmr.append('')
+            wl = int(ins[1])
+            if ins[0] == 'Read':
+                dmr = crossbar[wl]
 
-            elif opcode == 'Apply': 
-                if ins[4] == '0': #s 
+            elif ins[0] == 'Apply': 
+                if ins[2] == '0':
                     source = pir
                 else:
                     source = dmr
-                if compute_dir == '0':
-                    crossbar[wl] = self.__writeLogicMaj(crossbar[wl], source, ins, curr_clk, out_blif)
-                else:
-                    crossbar_bl = []
-                    for i in range(self.m):
-                        crossbar_bl.append(crossbar[i][addr])
-                    crossbar_bl = self.__writeLogicMaj(crossbar_bl, source, ins, curr_clk, out_blif)
-                    for i in range(self.m):
-                        crossbar[i][addr] = crossbar_bl[i]
-            elif opcode == 'Magic':
-                if compute_dir == '0':
-                    crossbar[wl] = self.__writeLogicMagic(crossbar[wl], source, ins, curr_clk, out_blif)
-                else:
-                    crossbar_bl = []
-                    for i in range(self.m):
-                        crossbar_bl.append(crossbar[i][addr])
-                    crossbar_bl = self.__writeLogicMagic(crossbar_bl, source, ins, curr_clk, out_blif)
-                    for i in range(self.m):
-                        crossbar[i][addr] = crossbar_bl[i]
-            # Edit from here
+                crossbar[wl] = self.__writeLogic(crossbar[wl], source, ins, curr_clk, out_blif)
             if curr_clk == curr_out[0][0]:
                 print('out found :', curr_clk, curr_out[0][0])
                 for i in range(int(len(curr_out[0][1])/3)):
@@ -425,135 +365,79 @@ class MAMI:
 
 
         ''' Instruction types :
-            t Read dir addr 
-            t Apply dir addr s ws wb (v val_1) .. (v val_n)
-            t Magic dir addr k i_1 i_2 ... i_k o 
-            t Init dir addr b_1b_2...b_k
+            Read w
+            Apply w s ws wb (v val_1) .. (v val_n)
 
-            t       = clock cycle
-            dir     = direction of compute
-                0 : wordline
-                1 : bitline 
-            addr    = wordline/bitline addr 
-            s       = source select
-                0 : PIR
-                1 : DMR
-            ws      = wordline source select
-                00 : 0
-                01 : 1
-                10 : Invalid
-                11 : either DMR or PIR based on s
-            wb, val_1,..,val_n,i_1,..,i_k = wordline/bitline address (>=0 , < n)
-            v       = valid flag
-            b_i     = single bit
+            w = wordline
+            s = source select
+              0 : PIR
+              1 : DMR
+            ws  = wordline source select
+            00  : 0
+            01  : 1
+            10  : Invalid
+            11  : either DMR or PIR based on s
+
+            wb, val_1, val_n = bitline address (>=0 , < n)
+            v   = valid flag
         '''
         valid = self.__checkValid(instruction)
         if not valid:
             print('Error : Invalid instruction')
             print(instruction)
             sys.exit(1)
-        if self.__clk in self.simulation_mem.keys():
-            self.simulation_mem[self.__clk].append(instruction)
-        else:
-            self.simulation_mem[self.__clk] = [instruction]
 
-    def __checkValidAddr(self, compute_dir, address):
-        valid = True 
-        if compute_dir  == '0' and (address >= self.m or address < 0):
-            print('Invalid read address')
-            valid = False
-        elif compute_dir == '1' and (address >= self.n or address < 0):
-            print('Invalid read address')
-            valid = False
-        else:
-            print('Invalid compute direction')
-            valid = False
-        return valid
+        self.__clk = self.__clk + 1
+        self.simulation_mem[self.__clk] = instruction
 
     def __checkValid(self,ins):
         ''' check if an instruction is valid'''
         ins = ins.split()
-        clock = int(ins[0])
-        opcode = ins[1]
-        compute_dir = ins[2]
-        addr = int(ins[3])
+        opcode = ins[0]
         valid = True
         m = self.m
         n = self.n
-        if not self.__checkValidAddr(compute_dir, addr):
-            print('Invalid address')
-            return False
-        elif clock != 1 and (self.__clk != clock or self.__clk != clock+1)
-            print('Invalid clock cycle')
-            return False
+        if opcode == 'Read':
+            address = int(ins[1])
+            if address >= m or address < 0:
+                print('Invalid read address')
+                valid = False
 
-        if opcode == 'Apply':
-            if compute_dir == '0':
-                exp_len = 7 + 2*n
-            else:
-                exp_len = 7 + 2*m
-
+        elif opcode == 'Apply':
+            exp_len = 5+ 2*n
             if len(ins) != exp_len:
                 valid = False
                 print('Invalid number of elements in instruction')
                 print('Expected:',exp_len)
                 return valid
-            s = ins[4]
-            ws = ins[5]
-            wb = int(ins[6])
-            if s != '1' and s != '0':
+            address = int(ins[1])
+            s = ins[2]
+            ws = ins[3]
+            wb = int(ins[4])
+            if address >= m or address < 0:
+                print('Invalid wordline address')
+                valid = False
+            elif s != '1' and s != '0':
                 print(' Invalid source select flag')
                 valid = False
             elif ws not in ['00', '01', '11']:
                 print(' Invalid wordline select')
                 valid = False
-            elif ws == '11' and (compute_dir == '0' and wb >= n) \
-                    or (compute_dir == '1' and wb >= m) \
-                    or wb < 0:
+            elif ws == '11' and wb >= n or wb < 0:
                 print(' Invalid wordline input address')
             else:
-                for i in range(7,exp_len,2):
+                for i in range(5,5+2*n,2):
                     v = int(ins[i])
                     val = int(ins[i+1])
-                    if (v != 0 and v!= 1) or val < 0 \
-                            (compute_dir == '0' and val >= n) \
-                            (compute_dir == '1' and val >= m):
+                    if (v != 0 and v!= 1) or (val < 0 or val >= n):
                         valid = False
                         print('Invalid valid,addr pair (',v,',',val,')')
                     if not valid:
                         break
-        elif opcode == 'Magic':
-            k = int(ins[4])
-            if clock in self.simulation_mem.keys():
-                old_ins = self.simulation_mem[clock][0]
-                old_ins = old_ins.split()
-                old_k = int(old_ins[4]) 
-                if k != old_k:
-                    print('Different number of inputs for parallel instructions')
-                    valid = False
-                else:
-                    for i in range(5, 5+k+1):
-                        if old_ins[i] != ins[i]:
-                            print('Inputs are not aligned for parallel instructions')
-                            valid = False
-                            break
-            else:
-                if k < 0 or (compute_dir == '0' and k + 1 >= n) \
-                        or (compute_dir == '1' and k+1 >= m):
-                    print('Invalid number of inputs in Magic instruction')
-                    valid = False
-                else:
-                    for i range(5, 5+k+1):
-                        valid = self.__checkValidAddr(compute_dir, ins[i])
-                        if not valid:
-                            break
 
-                
-        elif opcode != 'Read':
+        else:
             print('Invalid opcode')
             valid = False
-        if valid:
-            self.__clk = clock
         return valid
 
     def loadProgram(self,program_file):
@@ -561,7 +445,7 @@ class MAMI:
         and adds the instructions to simulation memory
 
         Program file format:
-        t opcode operands
+        opcode operands
         Any content after "//" is ignored
         '''
 
@@ -597,7 +481,7 @@ class MAMI:
             w = l.split()
             if l == '' or l == '\n':
                 continue
-            if len(w[1]) != max(self.n,self.m):
+            if len(w[1]) != self.n:
                 print('Invalid Primary Input in clock :', w[0])
                 sys.exit(1)
             else:
@@ -614,15 +498,12 @@ class MAMI:
     def printInstructionMemory(self,clk=None):
         if clk == None:
             for i in range(1,self.__clk+1):
-                for ins in self.simulation_mem[i]:
-                    print('Cycle', i, ':', ins)
+               print('Cycle', i, ':', self.simulation_mem[i])
 
         else:
-            for ins in self.simulation_mem[clk]:
-               print('Cycle', clk, ':', ins) 
+               print('Cycle', clk, ':', self.simulation_mem[clk])
 
     def update_crossbar(self,clk,voltage_spec = None):
-        ''' TODO '''
         ins = self.simulation_mem[clk]
         ins = ins.split()
 
@@ -728,7 +609,8 @@ class MAMI:
 
 
     def writeVoltage(self,out_fname):
-        ''' TODO : change       '''
+        ''' to do
+        '''
         #print('write:',self.voltage)
         steps = len(self.voltage)
 
@@ -766,15 +648,15 @@ if __name__ == '__main__':
     if len(sys.argv) == 5:
         #TODO : update
         sys.exit(1)
-        crossbar = MAMI(int(sys.argv[1]),int(sys.argv[2]))
+        crossbar = ReVAMP(int(sys.argv[1]),int(sys.argv[2]))
         crossbar.loadProgram(sys.argv[3])
         crossbar.loadPI(sys.argv[4])
         crossbar.printInstructionMemory()
         crossbar.simulate(0,0)
     elif len(sys.argv) == 2:
-        crossbar = MAMI()
-        crossbar.simulateConfig(sys.argv[1])
-        #crossbar.genBlif(sys.argv[1])
+        crossbar = ReVAMP()
+        #crossbar.simulateConfig(sys.argv[1])
+        crossbar.genBlif(sys.argv[1])
     else:
         print('Invalid command line arguments ')
-        print('python3 mami.py config.json')
+        print('python3 revamp.py wordlines bitlines program_file primary_in_file')

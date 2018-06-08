@@ -1,0 +1,23 @@
+{
+    "dim": {
+        "m": 4,
+        "n": 3
+    },
+    "filename": {
+        "ins_mem": "random_ins.txt",
+        "output": "2_bit_xor",
+        "varin" : "random.varin",
+        "varout" : "random.varout"
+    },
+    "simulation": {
+        "cycles": 0,
+        "print_ins": 1,
+        "verbose": 0
+    },
+    "voltage": {
+        "0": -2.4,
+        "1": 2.4,
+        "delta": 5,
+        "period": 50
+    }
+}

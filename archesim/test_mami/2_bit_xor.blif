@@ -1,0 +1,11 @@
+.model top
+.inputs a_1 b_1 a_2 b_2 
+.outputs r 
+.names 1 t1_Apply_1_2
+1 1
+.names a_2 t1_Apply_1_1
+0 1
+.names 1 t2_Apply_2_2
+1 1
+.names b_2 t2_Apply_2_1
+0 1
