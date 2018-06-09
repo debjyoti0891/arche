@@ -150,17 +150,18 @@ class MAMI:
         elif ins[5] == '01':
             ws = '1'
         elif ins[5] == '11':
-            ws = source[len(crossbar)-int(ins[6]) - 1]
-    
+            ws = source[len(crossbar)-int(ins[6])-1]
+        print(source) 
         new_cross = [i for i in crossbar]
         for i in range(len(crossbar)):
-            index = len(crossbar)-1 - i
+            index =i 
+
             prefix = 't'+str(clk)+'_'+ins[1]+'_'+str(self.__ins_count)+'_'
             v = ins[7+2*i]
-            val = ins[7+2*i+1]
+            val =  len(crossbar)-int(ins[7+2*i+1])-1
             if v == '0' : # NOP
                 continue
-            bl =  str(source[index])
+            bl =  str(source[val])
             neg = False 
             if bl == '0':
                 bl = '1'
@@ -177,7 +178,7 @@ class MAMI:
             c = [str(crossbar[index]), str(ws) , bl]
             c.sort()
             
-
+            print('Maj :c:',c)
             prefix = prefix + str(index)
             if c[0] == '0':
                 if c[1] == '0':
@@ -234,25 +235,30 @@ class MAMI:
         ''' t Magic dir addr k i_1 i_2 ... i_k o '''
         prefix = 't'+str(clk)+'_'+ins[1]+'_'+str(self.__ins_count)+'_'
         new_cross = [i for i in crossbar]
+        print(new_cross, 'dir=',ins[2],'addr=',ins[3])
         k = int(ins[4])
         inputs = []
         for i in ins[5:-1]:
-            inputs.append(len(crossbar)-int(i)-1)
-        output = len(crossbar) - int(ins[-1]) -1  
+            inputs.append(len(crossbar) -int(i) -1)
+        output = len(crossbar) - int(ins[-1]) - 1
         
-        if crossbar[output] != '0' and crossbar[output] != '1':
+        if str(crossbar[output]) != '0' and str(crossbar[output]) != '1':
             print('Attempted MAGIC write on a dirty cell')
             print('Crossbar state:' ,  crossbar)
             print('Instruction :' , ins)
             sys.exit(0)
+        prefix = prefix + str(output)
         new_cross[output] = prefix
         out_f.write('.names ')
         for i in inputs:
-            out_f.write(crossbar[i]+' ')
+            if crossbar[i] != 0:
+                out_f.write(crossbar[i]+' ')
         out_f.write(prefix+'\n')
-        for i in range(len(inputs)):
-            out_f.write('0')
+        for i in inputs:
+            if crossbar[i] != 0:
+               out_f.write('0')
         out_f.write(' 1\n')
+        print('updated:',new_cross)
         return new_cross
 
     def __writeHeader(self, out_file):
@@ -316,6 +322,7 @@ class MAMI:
         ins_f = open(self.ins_file)
         self.__ins_count = 0
         while True:
+
             ins = self.__getLine(ins_f)
             if ins == None:
                 break
@@ -323,7 +330,7 @@ class MAMI:
             self.__ins_count = self.__ins_count + 1
             if not self.__checkValid(ins):
                 print('Invalid Instruction')
-                print(curr_clk,' : ', ins)
+                print(ins)
                 sys.exit(1)
             ins = ins.split()
             curr_clk = int(ins[0])
@@ -350,22 +357,23 @@ class MAMI:
                     curr_out[0] = curr_out[1]
                     curr_out[1] = (out_clk, input_line[1:])
                     
+            self.__writeOutput(curr_clk, curr_out, crossbar, out_blif)
             ''' decode the instruction and write to the blif file ''' 
-            ins = ins.split()
+            print(ins)
             if curr_in[1][0] != None and curr_in[1][0] <= curr_clk:
                 pir = curr_in[1][1]
             elif curr_in[0][0] != None:
                 pir = curr_in[0][1]
             else:
                 pir = None
-          
+            print(ins) 
             if opcode == 'Read':
                 if compute_dir == '0':
-                    dmr = self.copy.deepcopy(crossbar[addr])
+                    dmr = copy.deepcopy(crossbar[self.m-addr-1])
                 else:
                     dmr = []
                     for i in range(self.m):
-                        dmr.append(crossbar[i][addr])
+                        dmr.append(crossbar[i][self.n-addr-1])
                 for i in range(max(self.m,self.n)-len(dmr)):
                     dmr.append('')
 
@@ -375,49 +383,66 @@ class MAMI:
                 else:
                     source = dmr
                 if compute_dir == '0':
+                    wl = self.m - addr - 1
                     crossbar[wl] = self.__writeLogicMaj(crossbar[wl], source, ins, curr_clk, out_blif)
                 else:
                     crossbar_bl = []
                     for i in range(self.m):
-                        crossbar_bl.append(crossbar[i][addr])
+                        crossbar_bl.append(crossbar[i][self.n - addr -1])
                     crossbar_bl = self.__writeLogicMaj(crossbar_bl, source, ins, curr_clk, out_blif)
                     for i in range(self.m):
                         crossbar[i][addr] = crossbar_bl[i]
             elif opcode == 'Magic':
                 if compute_dir == '0':
-                    crossbar[wl] = self.__writeLogicMagic(crossbar[wl], source, ins, curr_clk, out_blif)
+                    addr = self.m - addr -1 
+                    crossbar[addr] = self.__writeLogicMagic(crossbar[addr],  ins, curr_clk, out_blif)
                 else:
                     crossbar_bl = []
                     for i in range(self.m):
-                        crossbar_bl.append(crossbar[i][addr])
-                    crossbar_bl = self.__writeLogicMagic(crossbar_bl, source, ins, curr_clk, out_blif)
+                        crossbar_bl.append(crossbar[i][self.n - addr -1])
+                    crossbar_bl = self.__writeLogicMagic(crossbar_bl,  ins, curr_clk, out_blif)
                     for i in range(self.m):
-                        crossbar[i][addr] = crossbar_bl[i]
-            # Edit from here
-            if curr_clk == curr_out[0][0]:
-                print('out found :', curr_clk, curr_out[0][0])
-                for i in range(int(len(curr_out[0][1])/3)):
-                    out = curr_out[0][1][3*i]
-                    r = int(curr_out[0][1][3*i+1])
-                    c = int(curr_out[0][1][3*i+2])
-                    out_blif.write('.names '+crossbar[r][c]+' '+out+'\n')
-                    out_blif.write('1 1\n')
-            elif curr_clk == curr_out[1][0]:
-                print('out found :', curr_clk, curr_out[1][0])
-                for i in range(int(len(curr_out[1][1])/3)):
-                    out = curr_out[1][1][3*i]
-                    r = int(curr_out[1][1][3*i+1])
-                    c = int(curr_out[1][1][3*i+2])
-                    out_blif.write('.names '+crossbar[r][c]+' '+out+'\n')
-                    out_blif.write('1 1\n')
+                        crossbar[i][self.n - addr -1] = crossbar_bl[i]
             print(curr_clk, ins)
             print(in_clk, curr_in)
             print(out_clk, curr_out)
+            self.__printCrossbar(crossbar)
+        self.__writeOutput(curr_clk+1, curr_out, crossbar, out_blif)
         out_blif.write('.end\n')
         out_blif.close()
         var_in.close()
         var_out.close() 
 
+    def __writeOutput(self, curr_clk, curr_out, crossbar, out_blif):
+        print(curr_out)
+        if curr_clk-1 == curr_out[0][0]:
+            print('out found :', curr_clk, curr_out[0][0])
+            for i in range(int(len(curr_out[0][1])/3)):
+                out = curr_out[0][1][3*i]
+                r = int(curr_out[0][1][3*i+1])
+                c = int(curr_out[0][1][3*i+2])
+                
+                out_blif.write('.names '+str(crossbar[self.m-r-1][self.n-c-1])+' '+out+'\n')
+                out_blif.write('1 1\n')
+        elif curr_clk-1 == curr_out[1][0]:
+            print('out found :', curr_clk, curr_out[1][0])
+            for i in range(int(len(curr_out[1][1])/3)):
+                print(curr_out[1][1], i)
+                out = curr_out[1][1][3*i]
+                r = int(curr_out[1][1][3*i+1])
+                c = int(curr_out[1][1][3*i+2])
+                out_blif.write('.names '+str(crossbar[self.m-r-1][self.n-c-1])+' '+out+'\n')
+                out_blif.write('1 1\n')
+     
+
+    def __printCrossbar(self,crossbar):
+        print("\n")
+        for i in range(len(crossbar)):
+            bl = crossbar[i]
+            for j  in range(len(bl)):
+                print("%15s"%bl[j], end=' ')
+            print('',end='\n')
+        print("\n")
     def __addInstruction(self,instruction):
         ''' Decodes an instruction to wordline
         and bit line inputs and adds it to
@@ -449,7 +474,6 @@ class MAMI:
         '''
         valid = self.__checkValid(instruction)
         if not valid:
-            print('Error : Invalid instruction')
             print(instruction)
             sys.exit(1)
         if self.__clk in self.simulation_mem.keys():
@@ -459,20 +483,25 @@ class MAMI:
 
     def __checkValidAddr(self, compute_dir, address):
         valid = True 
+        address = int(address)
         if compute_dir  == '0' and (address >= self.m or address < 0):
-            print('Invalid read address')
+            print('Invalid read address:', address, 'dir:',compute_dir)
             valid = False
         elif compute_dir == '1' and (address >= self.n or address < 0):
-            print('Invalid read address')
+            print('Invalid read address:', address, 'dir:',compute_dir)
             valid = False
-        else:
-            print('Invalid compute direction')
+        elif compute_dir != '0' and compute_dir != '1':
+            print('Invalid compute direction dir:',compute_dir)
             valid = False
         return valid
 
     def __checkValid(self,ins):
         ''' check if an instruction is valid'''
         ins = ins.split()
+        if len(ins) < 4 :
+            print('Invalid instruction. Fields missing')
+            print(ins)
+            return False
         clock = int(ins[0])
         opcode = ins[1]
         compute_dir = ins[2]
@@ -481,17 +510,16 @@ class MAMI:
         m = self.m
         n = self.n
         if not self.__checkValidAddr(compute_dir, addr):
-            print('Invalid address')
             return False
-        elif clock != 1 and (self.__clk != clock or self.__clk != clock+1)
-            print('Invalid clock cycle')
-            return False
-
+        #elif clock != 1 and (self.__clk != clock or self.__clk != clock+1):
+        #    print('Invalid clock cycle')
+        #    return False
+        # TODO : add checking for clock cycle sanity
         if opcode == 'Apply':
             if compute_dir == '0':
-                exp_len = 7 + 2*n
+                exp_len = 7 + 2*self.n
             else:
-                exp_len = 7 + 2*m
+                exp_len = 7 + 2*self.m
 
             if len(ins) != exp_len:
                 valid = False
@@ -516,8 +544,8 @@ class MAMI:
                     v = int(ins[i])
                     val = int(ins[i+1])
                     if (v != 0 and v!= 1) or val < 0 \
-                            (compute_dir == '0' and val >= n) \
-                            (compute_dir == '1' and val >= m):
+                            or (compute_dir == '0' and val >= n) \
+                            or (compute_dir == '1' and val >= m):
                         valid = False
                         print('Invalid valid,addr pair (',v,',',val,')')
                     if not valid:
@@ -538,13 +566,17 @@ class MAMI:
                             valid = False
                             break
             else:
-                if k < 0 or (compute_dir == '0' and k + 1 >= n) \
-                        or (compute_dir == '1' and k+1 >= m):
+                if k < 0 or (compute_dir == '0' and k + 1 > n) \
+                        or (compute_dir == '1' and k+1 > m):
                     print('Invalid number of inputs in Magic instruction')
                     valid = False
                 else:
-                    for i range(5, 5+k+1):
-                        valid = self.__checkValidAddr(compute_dir, ins[i])
+                    for i in range(5, 5+k+1):
+                        if compute_dir == '0':
+                            op_dir = '1'
+                        else:
+                            op_dir = '0'
+                        valid = self.__checkValidAddr(op_dir, ins[i])
                         if not valid:
                             break
 
@@ -599,12 +631,17 @@ class MAMI:
                 continue
             if len(w[1]) != max(self.n,self.m):
                 print('Invalid Primary Input in clock :', w[0])
+                print(w)
                 sys.exit(1)
             else:
+                binOnly = True
                 for b in w[1]:
                     if b!= '0' and b!= '1':
-                        print(' Primary input can be in binary only')
-                        sys.exit(1)
+                        print(' Primary input should be in binrary')
+                        binOnly = False
+                        break
+                if not binOnly:
+                    print(w)
             self.primary_input[int(w[0])] = w[1]
 
         #print('Primary input data:',self.primary_input)
@@ -624,8 +661,7 @@ class MAMI:
     def update_crossbar(self,clk,voltage_spec = None):
         ''' TODO '''
         ins = self.simulation_mem[clk]
-        ins = ins.split()
-
+        print(ins)
         opcode = ins[0]
         w = int(ins[1])
         if voltage_spec != None:
@@ -773,8 +809,8 @@ if __name__ == '__main__':
         crossbar.simulate(0,0)
     elif len(sys.argv) == 2:
         crossbar = MAMI()
-        crossbar.simulateConfig(sys.argv[1])
-        #crossbar.genBlif(sys.argv[1])
+        #crossbar.simulateConfig(sys.argv[1])
+        crossbar.genBlif(sys.argv[1])
     else:
         print('Invalid command line arguments ')
         print('python3 mami.py config.json')
