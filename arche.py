@@ -9,7 +9,10 @@ from cmd2 import Cmd, make_option, options, set_use_arg_list
 
 # custom packages 
 import archeio.hdlread
+import archeio.graphio 
+import archetech.smr
 import archetech.techmagic  
+
 
 history_file = os.path.expanduser('~/.arche_history')
 if not os.path.exists(history_file):
@@ -37,16 +40,29 @@ class ArcheTech(Cmd):
         self.settable.update({'dev': '1S1R or VTEAM'})
         Cmd.__init__(self)
     
-    @options([make_option('-t', '--tech', type="int",  action="store",  help='map using technology [TECH] ReVAMP [0], MAGIC [1]'),
-    make_option('-d', '--display', action='store_true', help='print intermediate results')])
+    @options([make_option('-t', '--tech', type="int",  action="store",  help='map using technology [TECH] ReVAMP [0], MAGIC [1], SAT MAGIC[2]'),
+    make_option('-d', '--display', action='store_true', help='print intermediate results'),
+    make_option('-c', '--cycles', type="int", action='store', help='constraint on number of cycles available for mapping')])
     def do_map(self, arg, opts=None):
         ''' maps the loaded netlist '''
         if self.debug : print(opts.tech, opts.display) 
         if (len(self.graphDb) == 0):
             print('load a mapped netlist before mapping ')
         else:
-            self.techMapper = archetech.techmagic.TechMagic(self.debug)
-            self.techMapper.map(self.row, self.col, self.graphDb[-1])
+            print('tech:',opts.tech) 
+            if opts.tech == 1:
+                self.techMapper = archetech.techmagic.TechMagic(self.debug)
+                self.techMapper.map(self.row, self.col, self.graphDb[-1])
+            elif opts.tech == 2:
+                if opts.cycles == None:
+                    print(' the option --cycles must be specified for SAT based mapping')
+                    return
+                self.techMapper = archetech.smr.optiRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
+                  opts.cycles,\
+                  self.col,\
+                  len(self.graphDb[-1].vs),\
+                  archeio.graphio.getOutputs(self.graphDb[-1]),\
+                  opts.display)
 
     @options([make_option('-f', '--file', type="string", help='write mapping stats to file')])
     def do_ps(self, arg, opts=None):
