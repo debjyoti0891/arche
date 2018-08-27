@@ -42,7 +42,9 @@ class ArcheTech(Cmd):
     
     @options([make_option('-t', '--tech', type="int",  action="store",  help='map using technology [TECH] ReVAMP [0], MAGIC [1], SAT MAGIC[2]'),
     make_option('-d', '--display', action='store_true', help='print intermediate results'),
-    make_option('-c', '--cycles', type="int", action='store', help='constraint on number of cycles available for mapping')])
+    make_option('-c', '--cycles', type="int", action='store', help='constraint on number of cycles available for mapping'),
+    make_option('-i', '--iterations', type="int", action='store', help='constraint on number of iterations to find minimum number of devices [0 = unconstrained]'),
+    make_option('-m', '--minimum', action='store_true', help='find minimum number of devices required for mapping')])
     def do_map(self, arg, opts=None):
         ''' maps the loaded netlist '''
         if self.debug : print(opts.tech, opts.display) 
@@ -54,15 +56,29 @@ class ArcheTech(Cmd):
                 self.techMapper = archetech.techmagic.TechMagic(self.debug)
                 self.techMapper.map(self.row, self.col, self.graphDb[-1])
             elif opts.tech == 2:
-                if opts.cycles == None:
+                if opts.cycles == None and not opts.minimum:
                     print(' the option --cycles must be specified for SAT based mapping')
                     return
-                self.techMapper = archetech.smr.optiRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
-                  opts.cycles,\
-                  self.col,\
-                  len(self.graphDb[-1].vs),\
-                  archeio.graphio.getOutputs(self.graphDb[-1]),\
-                  opts.display)
+                
+                if len(archeio.graphio.getOutputs(self.graphDb[-1])) == 0:
+                    print('Error: Input netlist does not have an output')
+                    return
+                if not opts.minimum:
+                    feasible,solution = archetech.smr.optiRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
+                    len(self.graphDb[-1].vs),\
+                    archeio.graphio.getOutputs(self.graphDb[-1]),\
+                    self.col,\
+                    opts.cycles,\
+                    opts.display)
+                else: 
+                    minReg,solution= archetech.smr.minRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
+                    len(self.graphDb[-1].vs),\
+                    archeio.graphio.getOutputs(self.graphDb[-1]),\
+                    opts.cycles,\
+                    opts.iterations,\
+                    opts.display)
+                    print('Min reg needed :', minReg)
+
 
     @options([make_option('-f', '--file', type="string", help='write mapping stats to file')])
     def do_ps(self, arg, opts=None):
