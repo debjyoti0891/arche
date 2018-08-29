@@ -111,14 +111,14 @@ def optiRegAlloc(g,V,out,N,T,verbose=False):
             for v in vertices:
                 if verbose: print(' %3d'% ( boolP(m[assigned[v][t]])), end="")
             if verbose: print("",end="\n")
-        if oneShot :
-            print('First Alloc:')
-            for t in range(T+1):
-                if verbose: print("t%3d|"%(t),end="")
-                for v in vertices:
-                    if verbose: print(' %3d'% ( boolP(m[firstAlloc[v][t]])), end="")
-                if verbose: print("",end="\n")
- 
+        #if oneShot :
+        #    print('First Alloc:')
+        #    for t in range(T+1):
+        #        if verbose: print("t%3d|"%(t),end="")
+        #        for v in vertices:
+        #            if verbose: print(' %3d'% ( boolP(m[firstAlloc[v][t]])), end="")
+        #        if verbose: print("",end="\n")
+        if verbose: writeSolution() 
     return feasible, model
 
 def writeSolution(verbose=False):
@@ -178,9 +178,19 @@ def writeSolution(verbose=False):
     print(eliminateComp)
     for i in reversed(eliminateComp):
         insSeq.pop(i)
+    i = 0
+    magicCount = 0
+    resetCount = 0 
     for ins in insSeq:
-        print('%s %4d [Dev %3d]' % (ins[0],ins[1],ins[2]))
-   
+        i = i+1
+        print('[%3d] %s %4d [Dev %3d]' % (i,ins[0],ins[1],ins[2]))
+        if ins[0] == 'MAGIC':
+            magicCount = magicCount+1
+
+        elif ins[0] == 'Reset':
+            resetCount = resetCount+1
+
+    print("Cycles: %s MAGIC count: %s Reset count: %s" % (len(insSeq),magicCount, resetCount))
 
 
 

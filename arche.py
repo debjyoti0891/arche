@@ -4,9 +4,11 @@ Arche
 """
 import os
 import atexit
+import argparse
 import readline
-from cmd2 import Cmd, make_option, options, set_use_arg_list
-
+from cmd2 import Cmd 
+import cmd2
+from z3 import sat
 # custom packages 
 import archeio.hdlread
 import archeio.graphio 
@@ -39,62 +41,83 @@ class ArcheTech(Cmd):
         self.settable.update({'col': 'Number of crossbar columns'})
         self.settable.update({'dev': '1S1R or VTEAM'})
         Cmd.__init__(self)
-    
-    @options([make_option('-t', '--tech', type="int",  action="store",  help='map using technology [TECH] ReVAMP [0], MAGIC [1], SAT MAGIC[2]'),
-    make_option('-d', '--display', action='store_true', help='print intermediate results'),
-    make_option('-c', '--cycles', type="int", action='store', help='constraint on number of cycles available for mapping'),
-    make_option('-i', '--iterations', type="int", action='store', help='constraint on number of iterations to find minimum number of devices [0 = unconstrained]'),
-    make_option('-m', '--minimum', action='store_true', help='find minimum number of devices required for mapping')])
-    def do_map(self, arg, opts=None):
-        ''' maps the loaded netlist '''
-        if self.debug : print(opts.tech, opts.display) 
+
+    mapParser = argparse.ArgumentParser()
+    mapParser.add_argument('-t', '--tech', type=int,  action="store",  help='map using technology [TECH] ReVAMP [0], MAGIC [1], SAT MAGIC[2]')
+    mapParser.add_argument('-d', '--dir', action='store_true', help='specifies output directory [optional]')
+    mapParser.add_argument('-v', '--verbose', action='store_true', help='print intermediate results')
+    @cmd2.with_argparser(mapParser)
+    def do_map(self, args):
+        if self.debug : print(args.tech, args.verbose) 
         if (len(self.graphDb) == 0):
             print('load a mapped netlist before mapping ')
         else:
-            print('tech:',opts.tech) 
-            if opts.tech == 1:
+            print('tech:',args.tech) 
+            if args.tech == 1:
                 self.techMapper = archetech.techmagic.TechMagic(self.debug)
                 self.techMapper.map(self.row, self.col, self.graphDb[-1])
-            elif opts.tech == 2:
-                if opts.cycles == None and not opts.minimum:
-                    print(' the option --cycles must be specified for SAT based mapping')
-                    return
-                
-                if len(archeio.graphio.getOutputs(self.graphDb[-1])) == 0:
-                    print('Error: Input netlist does not have an output')
-                    return
-                if not opts.minimum:
-                    feasible,solution = archetech.smr.optiRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
-                    len(self.graphDb[-1].vs),\
-                    archeio.graphio.getOutputs(self.graphDb[-1]),\
-                    self.col,\
-                    opts.cycles,\
-                    opts.display)
-                else: 
-                    minReg,solution= archetech.smr.minRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
-                    len(self.graphDb[-1].vs),\
-                    archeio.graphio.getOutputs(self.graphDb[-1]),\
-                    opts.cycles,\
-                    opts.iterations,\
-                    opts.display)
-                    print('Min reg needed :', minReg)
+         
 
 
-    @options([make_option('-f', '--file', type="string", help='write mapping stats to file')])
+    rowsatParser = argparse.ArgumentParser()
+    rowsatParser.add_argument('-c', '--col', type=int, action='store', help='specify number of devices in a column [ignored by -m flag]')
+    rowsatParser.add_argument('-d', '--dir', action='store_true', help='specifies output directory [optional]')
+    rowsatParser.add_argument('-i', '--iterations', type=int, action='store', help='constraint on number of iterations to find minimum number of devices [0 = unconstrained]')
+    rowsatParser.add_argument('-m', '--minimum', action='store_true', help='find minimum number of devices required for mapping')
+    rowsatParser.add_argument('-s', '--steps', type=int, action='store', help='constraint on number of cycles available for mapping')
+    rowsatParser.add_argument('-v', '--verbose', action='store_true', help='print intermediate results')
+    @cmd2.with_argparser(rowsatParser)      
+    def do_rowsat(self, args):
+        '''maps the loaded netlist '''
+        if args.steps == None and not args.minimum:
+            print(' the option --cycles must be specified for SAT based mapping')
+            return
+
+        if len(archeio.graphio.getOutputs(self.graphDb[-1])) == 0:
+            print('Error: Input netlist does not have an output')
+            return
+
+        if not args.minimum:
+            if args.col != None:
+                col = args.col
+            else:
+                col = self.col
+            feasible,solution = archetech.smr.optiRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
+                    len(self.graphDb[-1].vs),\
+                    archeio.graphio.getOutputs(self.graphDb[-1]),\
+                    col,\
+                    args.steps,\
+                    args.verbose)
+            if feasible == sat:
+                print('Solution obtained %d devices %d steps' % (args.col, args.steps))
+            else:
+                print('Solution could not be obtained')
+        else: 
+            minReg,solution= archetech.smr.minRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
+            len(self.graphDb[-1].vs),\
+            archeio.graphio.getOutputs(self.graphDb[-1]),\
+                args.steps,\
+                args.iterations,\
+                args.verbose)
+            print('Min reg needed :', minReg)
+
+    psParser = argparse.ArgumentParser()
+    psParser.add_argument('-f', '--file', type=str, help='write mapping stats to file')
+    @cmd2.with_argparser(psParser)
     def do_ps(self, arg, opts=None):
         ''' print the statistics of mapping '''
-        if self.debug : print(opts.file) 
+        if self.debug : print(args.file) 
         if (self.techMapper == None):
             print('Map a circuit before printing stats')
         else:
-            if opts.file != None:
-                with open(opts.file,'a') as f:
+            if args.file != None:
+                with open(args.file,'a') as f:
                     f.write(self.graphFile[-1]+','+self.techMapper.getStats()+'\n')
             print('benchmark,#pi,#po,#gates,#level,delay,speedup,r,c,#devices, utilization')
             print(self.graphFile[-1],self.techMapper.getStats())
 
 
-    def do_read(self,arg, opts=None):
+    def do_read(self,arg ):
         ''' Read a mapped verilog netlist file '''
         print('read file :' , arg)
         self.graphFile.append(arg)
@@ -102,7 +125,7 @@ class ArcheTech(Cmd):
         if self.debug : print(g['pi'])
         self.graphDb.append(g) 
 
-    def do_showgraph(self,arg,opts=None):
+    def do_showgraph(self,arg):
         ''' write the graph in .gml format'''
         if len(self.graphDb) <= 0:
             print('No graphs loaded')
