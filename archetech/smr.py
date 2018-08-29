@@ -1,9 +1,15 @@
 
 from __future__ import print_function
 from z3 import *
+import copy
 import sys
 import itertools
 import math
+
+assigned_ = dict()
+vertices_ = list() 
+T_  = 0
+model_ = None
 
 def boolP(s):
     if(s):
@@ -12,13 +18,14 @@ def boolP(s):
         return 0
         
 def optiRegAlloc(g,V,out,N,T,verbose=False):
+    global assigned_,vertices_,T_,model_
     if N > V:
         print('Reducing number of available registers to number of nodes')
         N = V
     print("Generating Constraints:")
     print("#Nodes: %d, #PO: %d" % (V, len(out)), end="")
     print(" #Devices: %d, #Cycles: %d" % (N,T))
-    
+    g = copy.deepcopy(g) 
        # remove nodes that are leaves/pi
     piPurge = True
     if piPurge:
@@ -88,8 +95,12 @@ def optiRegAlloc(g,V,out,N,T,verbose=False):
     print('Solver result:',feasible)
     print(s.statistics())
     if(feasible == sat):
+        vertices_ = copy.deepcopy(vertices)
+        assigned_ = copy.deepcopy(assigned)
+        T_ = T
         m = s.model()
         model = m
+        model_ = s.model()
         if verbose: print("Assignment q->v")
         if verbose: print('t   |',end='')
         for v in vertices:
@@ -109,6 +120,69 @@ def optiRegAlloc(g,V,out,N,T,verbose=False):
                 if verbose: print("",end="\n")
  
     return feasible, model
+
+def writeSolution(verbose=False):
+    solution = dict()
+    for t in range(T_+1):
+        solution[t] = list()
+        for v in vertices_:
+            solution[t].append( boolP(model_[assigned_[v][t]]))
+    needed_step = list()
+    # eliminate steps without any computation
+    for t in range(1,T_+1):
+        if solution[t-1] != solution[t]:
+            needed_step.append(t)
+    for v in vertices_:
+        if verbose: print(v,' ',end='')
+    if verbose: print("")
+    stack = list()
+    reg = 0 
+    alloc = dict()
+    for v in range(len(vertices_)):
+        alloc[v] = None
+    insSeq = list() # type, node, device 
+    for i in range(len(needed_step)):
+        if verbose: print(solution[t])
+        
+        if i!= 0:
+            for v in range(len(vertices_)):
+                if alloc[v]  != None and (solution[needed_step[i]][v] == 0) :
+                    insSeq.append(['Reset',vertices_[v], alloc[v]])
+                    print(len(insSeq),'Reset',vertices_[v], alloc[v])
+                    stack.append(alloc[v])
+                    alloc[v] = None
+        for v in range(len(vertices_)):
+            if (i == 0 or alloc[v] == None) and solution[needed_step[i]][v] == 1:
+                if stack != list():
+                    allocReg = stack.pop()
+                else:
+                    reg = reg+1
+                    allocReg = reg
+                alloc[v] = allocReg 
+                insSeq.append(['MAGIC',vertices_[v], alloc[v]])
+                print(len(insSeq),'MAGIC',vertices_[v], alloc[v])
+    print('----------')
+                
+    # eliminate redundant resets    
+    eliminateComp = list()
+    for i in range(len(insSeq)):
+
+        if insSeq[i][0] == 'Reset':
+            used = False
+            for j in range(i+1, len(insSeq)):
+                if insSeq[j][0] == 'MAGIC' and insSeq[j][2] == insSeq[i][2]:
+                    used = True
+                    break
+            if not used:
+                eliminateComp.append(i) 
+    print(eliminateComp)
+    for i in reversed(eliminateComp):
+        insSeq.pop(i)
+    for ins in insSeq:
+        print('%s %4d [Dev %3d]' % (ins[0],ins[1],ins[2]))
+   
+
+
 
 def minRegAlloc(g,V,out,T=None,lim=None,verbose=False):
     if T == None or T <= 0:
@@ -152,7 +226,7 @@ def minRegAlloc(g,V,out,T=None,lim=None,verbose=False):
             print(p, ' ', end = '')
         print()
 
-
+    writeSolution()
     return succReg, succSolution
 
 if __name__ == '__main__':
