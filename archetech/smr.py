@@ -5,6 +5,7 @@ import copy
 import sys
 import itertools
 import math
+import time
 
 assigned_ = dict()
 vertices_ = list() 
@@ -17,7 +18,7 @@ def boolP(s):
     else:
         return 0
         
-def optiRegAlloc(g,V,out,N,T,verbose=False):
+def optiRegAlloc(g,V,out,N,T,logfile=None,verbose=False,timeLimit=None):
     global assigned_,vertices_,T_,model_
     if N > V:
         print('Reducing number of available registers to number of nodes')
@@ -47,6 +48,9 @@ def optiRegAlloc(g,V,out,N,T,verbose=False):
 
 
     s = Solver()
+    if timeLimit != None:
+        s.set("timeout", timeLimit )
+        
     # all vertices are not assigned at the start
     for v in vertices:
        s.add(assigned[v][0] == False) 
@@ -194,15 +198,26 @@ def writeSolution(verbose=False):
 
 
 
-def minRegAlloc(g,V,out,T=None,lim=None,verbose=False):
+def minRegAlloc(g,V,out,T=None,lim=None,logfile=None,verbose=False,timeLimit=None):
     if T == None or T <= 0:
         T = int(V*math.log(V))
     N = V
-
+    if logfile != None:
+        log = True
+    else:
+        log = False
+    if log: logf = open(logfile,'a+')
     count = 0
     bottom = 1
     top = N
-    feasible,solution = optiRegAlloc(g, V, out, top, T, verbose)
+    if log:
+        logf.write('nodes : ' + str(V) + 'available :' + str(T)+'\n')
+    if N > 1024 : # limit the size of the network
+        print('The network is too large (%s nodes)' % (V))
+        if log: logf.write('Network too large\n')
+        return -1, None  
+
+    feasible,solution = optiRegAlloc(g, V, out, top, T, None, verbose, timeLimit)
     succReg = None
     succSolution = None
     if feasible != sat:
@@ -212,11 +227,23 @@ def minRegAlloc(g,V,out,T=None,lim=None,verbose=False):
         print('Trivial allocation successful.')
         succReg = N
         succSolution = solution 
+    timeRemaining = 0 
     while top >= bottom:
         mid = int((top+bottom)/2)
         count = count + 1
-  
-        feasible,solution = optiRegAlloc(g, V, out, mid, T, verbose)
+        limit = timeLimit
+        if timeLimit != None:
+            timeLimit = limit + timeRemaining
+            
+            print("Allocated time: %d " % timeLimit)
+        start = time.time() 
+        feasible,solution = optiRegAlloc(g, V, out, mid, T, verbose, timeLimit)
+        end = time.time()
+
+        elapsed = (end - start)
+        if elapsed - timeLimit < 0:
+            timeRemaining = timeLimit - elapsed
+        print("Execution time: %d s " % elapsed)
         # check if number of iterations was exhausted
         if lim != None and count >= lim:
             if feasible == sat:

@@ -62,9 +62,11 @@ class ArcheTech(Cmd):
     rowsatParser = argparse.ArgumentParser()
     rowsatParser.add_argument('-c', '--col', type=int, action='store', help='specify number of devices in a column [ignored by -m flag]')
     rowsatParser.add_argument('-d', '--dir', action='store_true', help='specifies output directory [optional]')
+    rowsatParser.add_argument('-f', '--file', type=str, help='write mapping stats to file')
     rowsatParser.add_argument('-i', '--iterations', type=int, action='store', help='constraint on number of iterations to find minimum number of devices [0 = unconstrained]')
     rowsatParser.add_argument('-m', '--minimum', action='store_true', help='find minimum number of devices required for mapping')
     rowsatParser.add_argument('-s', '--steps', type=int, action='store', help='constraint on number of cycles available for mapping')
+    rowsatParser.add_argument('-t', '--timelimit', type=int, action='store', help='constraint on runtime of sat solver')
     rowsatParser.add_argument('-v', '--verbose', action='store_true', help='print intermediate results')
     @cmd2.with_argparser(rowsatParser)      
     def do_rowsat(self, args):
@@ -87,7 +89,9 @@ class ArcheTech(Cmd):
                     archeio.graphio.getOutputs(self.graphDb[-1]),\
                     col,\
                     args.steps,\
-                    args.verbose)
+                    args.file,\
+                    args.verbose,\
+                    args.timelimit)
             if feasible == sat:
                 print('Solution obtained %d devices %d steps' % (args.col, args.steps))
             else:
@@ -98,7 +102,9 @@ class ArcheTech(Cmd):
             archeio.graphio.getOutputs(self.graphDb[-1]),\
                 args.steps,\
                 args.iterations,\
-                args.verbose)
+                args.file,\
+                args.verbose,\
+                args.timelimit)
             print('Min reg needed :', minReg)
 
     psParser = argparse.ArgumentParser()
