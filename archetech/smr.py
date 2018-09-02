@@ -2,6 +2,7 @@
 from __future__ import print_function
 from z3 import *
 import copy
+import logging
 import sys
 import itertools
 import math
@@ -206,20 +207,27 @@ def minRegAlloc(g,V,out,T=None,lim=None,logfile=None,verbose=False,timeLimit=Non
         log = True
     else:
         log = False
-    if log: logf = open(logfile,'a+')
+    
     count = 0
     bottom = 1
     top = N
-    if log:
-        logf.write('nodes : ' + str(V) + 'available :' + str(T)+'\n')
+    logger = logging.getLogger(__name__)
+    logging.info('#nodes :%d, #reg :%d, #steps :%d' % (V, N, T)) 
     if N > 1024 : # limit the size of the network
         print('The network is too large (%s nodes)' % (V))
-        if log: logf.write('Network too large\n')
+        logging.warning('Network too large (%s nodes)' % (V) )
         return -1, None  
 
+    start = time.time() 
     feasible,solution = optiRegAlloc(g, V, out, top, T, None, verbose, timeLimit)
+    end = time.time()
+    elapsed = (end - start)
+    print("Execution time: %d s " % elapsed)
+    logging.info("Execution time: %ds" % elapsed) 
     succReg = None
     succSolution = None
+
+    logging.info('Trivial allocation result (%s reg): %s' % (N,str(feasible)))
     if feasible != sat:
         print('Trivial allocation failed. Check netlist\n')
         return None,None
@@ -231,20 +239,24 @@ def minRegAlloc(g,V,out,T=None,lim=None,logfile=None,verbose=False,timeLimit=Non
     while top >= bottom:
         mid = int((top+bottom)/2)
         count = count + 1
+        logging.info('#nodes :%d, #reg :%d, #steps :%d' % (V, mid, T)) 
         limit = timeLimit
         if timeLimit != None:
             timeLimit = limit + timeRemaining
             
             print("Allocated time: %d " % timeLimit)
+            logging.info('timelimit : %d s' % timeLimit)
         start = time.time() 
         feasible,solution = optiRegAlloc(g, V, out, mid, T, verbose, timeLimit)
         end = time.time()
 
         elapsed = (end - start)
-        if elapsed - timeLimit < 0:
+        logging.info("Execution time: %ds" % elapsed) 
+        if timeLimit!= None and elapsed - timeLimit < 0:
             timeRemaining = timeLimit - elapsed
         print("Execution time: %d s " % elapsed)
         # check if number of iterations was exhausted
+        logging.info('Allocation result (%s reg): %s' % (mid,str(feasible)))
         if lim != None and count >= lim:
             if feasible == sat:
                 return mid,solution

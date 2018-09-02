@@ -14,7 +14,7 @@ import archeio.hdlread
 import archeio.graphio 
 import archetech.smr
 import archetech.techmagic  
-
+import logging
 
 history_file = os.path.expanduser('~/.arche_history')
 if not os.path.exists(history_file):
@@ -40,6 +40,7 @@ class ArcheTech(Cmd):
         self.settable.update({'row': 'Number of crossbar rows'})
         self.settable.update({'col': 'Number of crossbar columns'})
         self.settable.update({'dev': '1S1R or VTEAM'})
+        logging.basicConfig(filename='example.log', filemode='w', level=logging.DEBUG)  
         Cmd.__init__(self)
 
     mapParser = argparse.ArgumentParser()
@@ -62,7 +63,7 @@ class ArcheTech(Cmd):
     rowsatParser = argparse.ArgumentParser()
     rowsatParser.add_argument('-c', '--col', type=int, action='store', help='specify number of devices in a column [ignored by -m flag]')
     rowsatParser.add_argument('-d', '--dir', action='store_true', help='specifies output directory [optional]')
-    rowsatParser.add_argument('-f', '--file', type=str, help='write mapping stats to file')
+    rowsatParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')
     rowsatParser.add_argument('-i', '--iterations', type=int, action='store', help='constraint on number of iterations to find minimum number of devices [0 = unconstrained]')
     rowsatParser.add_argument('-m', '--minimum', action='store_true', help='find minimum number of devices required for mapping')
     rowsatParser.add_argument('-s', '--steps', type=int, action='store', help='constraint on number of cycles available for mapping')
@@ -70,7 +71,8 @@ class ArcheTech(Cmd):
     rowsatParser.add_argument('-v', '--verbose', action='store_true', help='print intermediate results')
     @cmd2.with_argparser(rowsatParser)      
     def do_rowsat(self, args):
-        '''maps the loaded netlist '''
+        '''maps the loaded net)list '''
+        print(args.filename)
         if args.steps == None and not args.minimum:
             print(' the option --cycles must be specified for SAT based mapping')
             return
@@ -78,7 +80,7 @@ class ArcheTech(Cmd):
         if len(archeio.graphio.getOutputs(self.graphDb[-1])) == 0:
             print('Error: Input netlist does not have an output')
             return
-
+        logging.info('min reg allocation command execution start')
         if not args.minimum:
             if args.col != None:
                 col = args.col
@@ -89,7 +91,7 @@ class ArcheTech(Cmd):
                     archeio.graphio.getOutputs(self.graphDb[-1]),\
                     col,\
                     args.steps,\
-                    args.file,\
+                    args.filename,\
                     args.verbose,\
                     args.timelimit)
             if feasible == sat:
@@ -102,11 +104,12 @@ class ArcheTech(Cmd):
             archeio.graphio.getOutputs(self.graphDb[-1]),\
                 args.steps,\
                 args.iterations,\
-                args.file,\
+                args.filename,\
                 args.verbose,\
                 args.timelimit)
             print('Min reg needed :', minReg)
 
+        logging.info('min reg allocation command execution complete')
     psParser = argparse.ArgumentParser()
     psParser.add_argument('-f', '--file', type=str, help='write mapping stats to file')
     @cmd2.with_argparser(psParser)
