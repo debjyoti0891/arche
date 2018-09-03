@@ -2,6 +2,7 @@
 from __future__ import print_function
 from z3 import *
 import copy
+import datetime
 import logging
 import sys
 import itertools
@@ -24,7 +25,7 @@ def optiRegAlloc(g,V,out,N,T,logfile=None,verbose=False,timeLimit=None):
     if N > V:
         print('Reducing number of available registers to number of nodes')
         N = V
-    print("Generating Constraints ")
+    print("Generating Constraints ", datetime.datetime.now())
     print("#Nodes: %d, #PO: %d" % (V, len(out)), end="")
     print(" #Devices: %d, #Cycles: %d" % (N,T))
     if timeLimit != None:
@@ -97,7 +98,7 @@ def optiRegAlloc(g,V,out,N,T,logfile=None,verbose=False,timeLimit=None):
             for v in vertices:
                 s.add(firstAlloc[v][t] == Or(firstAlloc[v][t-1], And(Not(assigned[v][t]), assigned[v][t-1])))
                 s.add(Implies(firstAlloc[v][t-1], Not(assigned[v][t])))
-        
+    print('Started solving ', datetime.datetime.now())         
     feasible = s.check() 
     model = None
     print('Solver result:',feasible)

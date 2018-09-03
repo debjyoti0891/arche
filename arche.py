@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # coding=utf-8
 """
 Arche 
@@ -40,7 +41,6 @@ class ArcheTech(Cmd):
         self.settable.update({'row': 'Number of crossbar rows'})
         self.settable.update({'col': 'Number of crossbar columns'})
         self.settable.update({'dev': '1S1R or VTEAM'})
-        logging.basicConfig(filename='example.log',  level=logging.DEBUG)  
         Cmd.__init__(self)
 
     mapParser = argparse.ArgumentParser()
@@ -110,21 +110,33 @@ class ArcheTech(Cmd):
             print('Min reg needed :', minReg)
 
         logging.info('min reg allocation command execution complete')
+    
     psParser = argparse.ArgumentParser()
-    psParser.add_argument('-f', '--file', type=str, help='write mapping stats to file')
+    psParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')
     @cmd2.with_argparser(psParser)
-    def do_ps(self, arg, opts=None):
+    def do_ps(self, args):
         ''' print the statistics of mapping '''
-        if self.debug : print(args.file) 
+        if self.debug : print(args.filename) 
         if (self.techMapper == None):
             print('Map a circuit before printing stats')
         else:
-            if args.file != None:
+            if args.filename != None:
                 with open(args.file,'a') as f:
                     f.write(self.graphFile[-1]+','+self.techMapper.getStats()+'\n')
             print('benchmark,#pi,#po,#gates,#level,delay,speedup,r,c,#devices, utilization')
             print(self.graphFile[-1],self.techMapper.getStats())
 
+
+    logParser = argparse.ArgumentParser()
+    logParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')
+    @cmd2.with_argparser(logParser)
+    def do_setlog(self, args):
+        ''' set the log file name ''' 
+        print('set log file :', args.filename)
+        if args.filename != None:
+            logging.basicConfig(filename=args.filename,  level=logging.DEBUG)  
+        else:
+            print('Filename must be specified')
 
     def do_read(self,arg ):
         ''' Read a mapped verilog netlist file '''
@@ -167,6 +179,6 @@ class ArcheTech(Cmd):
             print('Keyboard Interrupt Received. Quitting\n')
             sys.exit(0)
 if __name__ == '__main__':
-    stdin = open('in')
+    #stdin = open('in')
     c = ArcheTech()
     c.cmdloop_with_keyboard_interrupt()
