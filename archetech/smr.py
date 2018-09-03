@@ -2,17 +2,18 @@
 from __future__ import print_function
 from z3 import *
 import copy
-import logging
-import sys
 import itertools
+import logging
 import math
+import multiprocessing
+import sys
 import time
 
 assigned_ = dict()
 vertices_ = list() 
 T_  = 0
 model_ = None
-
+feasible_ = None
 def boolP(s):
     if(s):
         return 1
@@ -20,7 +21,8 @@ def boolP(s):
         return 0
         
 def optiRegAlloc(g,V,out,N,T,logfile=None,verbose=False,timeLimit=None):
-    global assigned_,vertices_,T_,model_
+    global assigned_,vertices_,T_,model_,feasible_
+    feasible_ = None
     if N > V:
         print('Reducing number of available registers to number of nodes')
         N = V
@@ -99,6 +101,7 @@ def optiRegAlloc(g,V,out,N,T,logfile=None,verbose=False,timeLimit=None):
                 s.add(Implies(firstAlloc[v][t-1], Not(assigned[v][t])))
         
     feasible = s.check() 
+    feasible_ = feasible
     model = None
     print('Solver result:',feasible)
     print(s.statistics())
@@ -204,6 +207,7 @@ def writeSolution(verbose=False):
 
 
 def minRegAlloc(g,V,out,T=None,lim=None,logfile=None,verbose=False,timeLimit=None):
+    global feasible_,model_ 
     if T == None or T <= 0:
         T = int(V*math.log(V))
     N = V
@@ -223,7 +227,8 @@ def minRegAlloc(g,V,out,T=None,lim=None,logfile=None,verbose=False,timeLimit=Non
         return -1, None  
 
     start = time.time() 
-    feasible,solution = optiRegAlloc(g, V, out, top, T, None, verbose, timeLimit)
+    optiRegAlloc(g, V, out, top, T, None, verbose, timeLimit)
+    feasible,solution = feasible_,model_ 
     end = time.time()
     elapsed = (end - start)
     print("Execution time: %d s " % elapsed)
