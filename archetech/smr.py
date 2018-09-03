@@ -24,9 +24,11 @@ def optiRegAlloc(g,V,out,N,T,logfile=None,verbose=False,timeLimit=None):
     if N > V:
         print('Reducing number of available registers to number of nodes')
         N = V
-    print("Generating Constraints:")
+    print("Generating Constraints ")
     print("#Nodes: %d, #PO: %d" % (V, len(out)), end="")
     print(" #Devices: %d, #Cycles: %d" % (N,T))
+    if timeLimit != None:
+        print('Time limit: %d' % timeLimit) 
     g = copy.deepcopy(g) 
        # remove nodes that are leaves/pi
     piPurge = True
@@ -48,9 +50,10 @@ def optiRegAlloc(g,V,out,N,T,logfile=None,verbose=False,timeLimit=None):
 
 
 
-    s = Solver()
-    if timeLimit != None:
-        s.set("timeout", timeLimit )
+    #s = Solver()
+    s = Then('simplify','smt').solver()
+    #if timeLimit != None:
+        #s.set('timeout', timeLimit )
         
     # all vertices are not assigned at the start
     for v in vertices:
@@ -196,6 +199,7 @@ def writeSolution(verbose=False):
             resetCount = resetCount+1
 
     print("Cycles: %s MAGIC count: %s Reset count: %s" % (len(insSeq),magicCount, resetCount))
+    logging.info("Cycles: %s MAGIC count: %s Reset count: %s" % (len(insSeq),magicCount, resetCount))
 
 
 

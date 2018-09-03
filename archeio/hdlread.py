@@ -4,7 +4,6 @@ import sys
 def read_mappedverilog(fname, debug = False):
     ''' the method reads a mapped verilog generated using abc 
         and maps it to a igraph data structure ''' 
-    debug = True
     f = open(fname)
     gateTypes = ['inv1', 'nor2', 'nor3', 'nor4']
     directAssign = ['one', 'buf']

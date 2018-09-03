@@ -40,7 +40,7 @@ class ArcheTech(Cmd):
         self.settable.update({'row': 'Number of crossbar rows'})
         self.settable.update({'col': 'Number of crossbar columns'})
         self.settable.update({'dev': '1S1R or VTEAM'})
-        logging.basicConfig(filename='example.log', filemode='w', level=logging.DEBUG)  
+        logging.basicConfig(filename='example.log',  level=logging.DEBUG)  
         Cmd.__init__(self)
 
     mapParser = argparse.ArgumentParser()
@@ -72,7 +72,7 @@ class ArcheTech(Cmd):
     @cmd2.with_argparser(rowsatParser)      
     def do_rowsat(self, args):
         '''maps the loaded net)list '''
-        print(args.filename)
+        print(args.filename, args.timelimit)
         if args.steps == None and not args.minimum:
             print(' the option --cycles must be specified for SAT based mapping')
             return
@@ -130,7 +130,7 @@ class ArcheTech(Cmd):
         ''' Read a mapped verilog netlist file '''
         print('read file :' , arg)
         self.graphFile.append(arg)
-        g = archeio.hdlread.read_mappedverilog(arg)
+        g = archeio.hdlread.read_mappedverilog(arg,False)
         if self.debug : print(g['pi'])
         self.graphDb.append(g) 
 
@@ -159,9 +159,14 @@ class ArcheTech(Cmd):
         else:
             print('invalid device')
             self.dev = old
-
-
+     
+    def cmdloop_with_keyboard_interrupt(self):
+        try:
+            self.cmdloop()
+        except KeyboardInterrupt:
+            print('Keyboard Interrupt Received. Quitting\n')
+            sys.exit(0)
 if __name__ == '__main__':
     stdin = open('in')
     c = ArcheTech()
-    c.cmdloop()
+    c.cmdloop_with_keyboard_interrupt()
