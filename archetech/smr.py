@@ -256,15 +256,26 @@ def minRegAlloc(g,V,out,T=None,lim=None,logfile=None,verbose=False,timeLimit=Non
             print("Allocated time: %d " % timeLimit)
             logging.info('timelimit : %d s' % timeLimit)
         start = time.time() 
-        feasible,solution = optiRegAlloc(g, V, out, mid, T, verbose, timeLimit)
+        p = multiprocessing.Process(target=optiRegAlloc, name="optiRegAlloc", args=(g, V, out, mid, T, verbose, timeLimit,)) 
+        p.start()
+        time.sleep(10) #p.join(timeLimit)
+        print('sleep over')
+        feasible,solution = feasible_,model_ 
+        if p.is_alive():
+            p.terminate()
+            print('killed')
+            p.join()
+        
         end = time.time()
-
         elapsed = (end - start)
         logging.info("Execution time: %ds" % elapsed) 
         if timeLimit!= None and elapsed - timeLimit < 0:
             timeRemaining = timeLimit - elapsed
         print("Execution time: %d s " % elapsed)
         # check if number of iterations was exhausted
+        if feasible==None:
+            feasible = 'Timeout' 
+            print('Execution timed out')
         logging.info('Allocation result (%s reg): %s' % (mid,str(feasible)))
         if lim != None and count >= lim:
             if feasible == sat:
