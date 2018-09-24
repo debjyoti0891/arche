@@ -33,13 +33,17 @@ def optiRegAlloc(g,V,out,N,T,logfile=None,verbose=False,timeLimit=None):
     g = copy.deepcopy(g) 
        # remove nodes that are leaves/pi
     piPurge = True
+    #for v,l in g.items():
+    #    print(v,'<',l)
+    #print('vertices:', g.keys(), out)
     if piPurge:
         purge = set()
         for node,predList in g.items():
             if predList == list():
                 purge.add(node)
         for node in purge:
-            g.pop(node,None)
+            if node not in out: #out driven by BUF
+                g.pop(node,None)
         for node in g.keys():
             predSet = set(g[node])
             g[node] = list(predSet-purge)
@@ -190,23 +194,26 @@ def writeSolution(verbose=False):
     i = 0
     magicCount = 0
     resetCount = 0 
+    old = None
     for ins in insSeq:
-        i = i+1
+        if not (old == 'Reset' and ins[0] == 'Reset'):
+            i = i+1
         print('[%3d] %s %4d [Dev %3d]' % (i,ins[0],ins[1],ins[2]))
+        old = ins[0]
         if ins[0] == 'MAGIC':
             magicCount = magicCount+1
 
         elif ins[0] == 'Reset':
             resetCount = resetCount+1
 
-    print("Cycles: %s MAGIC count: %s Reset count: %s" % (len(insSeq),magicCount, resetCount))
-    logging.info("Cycles: %s MAGIC count: %s Reset count: %s" % (len(insSeq),magicCount, resetCount))
+    print("Cycles: %s MAGIC count: %s Reset count: %s" % (i,magicCount, resetCount))
+    logging.info("Cycles: %s MAGIC count: %s Reset count: %s" % (i,magicCount, resetCount))
 
 
 
 def minRegAlloc(g,V,out,T=None,lim=None,logfile=None,verbose=False,timeLimit=None):
     if T == None or T <= 0:
-        T = int(V*math.log(V))
+        T = 2*V 
     N = V
     if logfile != None:
         log = True
