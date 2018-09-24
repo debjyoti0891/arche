@@ -142,7 +142,7 @@ class ArcheTech(Cmd):
         ''' Read a mapped verilog netlist file '''
         print('read file :' , arg)
         self.graphFile.append(arg)
-        g = archeio.hdlread.read_mappedverilog(arg,False)
+        g = archeio.hdlread.read_mappedverilog(arg,self.debug)
         if self.debug : print(g['pi'])
         self.graphDb.append(g) 
 

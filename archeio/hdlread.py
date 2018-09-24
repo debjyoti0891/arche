@@ -33,11 +33,11 @@ def read_mappedverilog(fname, debug = False):
             g = gateTypes.index(w)
             if debug : print(l)
             l = l[l.find('(')+1: l.rfind(')')] 
-            #print(l)
+            l = l.split(',')
             inputs = []
-            for i in range(g+2):
-                v =  l[l.find('(')+1: l.find(')')]
-                l =  l[ l.find(')')+1: ] 
+            for gatevar in l:
+                gatevar = gatevar.strip()
+                v =  gatevar[gatevar.find('(')+1: gatevar.rfind(')')]
                 variables.add(v.strip())
 
                 inputs.append(v.strip())
@@ -137,12 +137,13 @@ def read_mappedverilog(fname, debug = False):
         if po not in gateMap.keys():
             gateMap[po] = i
             i = i+1
-
+    for k in gateMap.keys():
+        print('gatemapkey:',k)
     d = True
     ckt_outputs = set(ckt_outputs)
     actual_out = list(ckt_outputs.difference(trivialOut))
     actual_out.sort()
-    if debug : print(ckt_outputs, actual_out) 
+    if debug : print('Circuit output:',ckt_outputs, actual_out) 
     ''' populate graph '''
     g = Graph(directed=True)
     g.add_vertices(i)
