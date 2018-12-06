@@ -53,6 +53,7 @@ def optiRegAlloc(g,V,out,N,T,logfile=None,verbose=False,timeLimit=None):
     for v in vertices:
         assigned[v] = [ Bool("assigned_%s_%s" % (v, t)) for t in range(T+1) ] 
 
+    logging.info("Considered nodes : %s, Devices: %s" % (len(vertices),N))
 
 
     #s = Solver()
@@ -107,6 +108,7 @@ def optiRegAlloc(g,V,out,N,T,logfile=None,verbose=False,timeLimit=None):
     model = None
     print('Solver result:',feasible)
     print(s.statistics())
+    cycle = None
     if(feasible == sat):
         vertices_ = copy.deepcopy(vertices)
         assigned_ = copy.deepcopy(assigned)
@@ -131,8 +133,9 @@ def optiRegAlloc(g,V,out,N,T,logfile=None,verbose=False,timeLimit=None):
         #        for v in vertices:
         #            if verbose: print(' %3d'% ( boolP(m[firstAlloc[v][t]])), end="")
         #        if verbose: print("",end="\n")
-        if verbose: writeSolution() 
-    return feasible, model
+        # if verbose: writeSolution() 
+        cycle, magic, reset = writeSolution()
+    return feasible, model, cycle
 
 def writeSolution(verbose=False):
     solution = dict()
@@ -206,32 +209,44 @@ def writeSolution(verbose=False):
         elif ins[0] == 'Reset':
             resetCount = resetCount+1
 
-    print("Cycles: %s MAGIC count: %s Reset count: %s" % (i,magicCount, resetCount))
-    logging.info("Cycles: %s MAGIC count: %s Reset count: %s" % (i,magicCount, resetCount))
+    print("Cycles: %s MAGIC count: %s Reset count: %s, Devices: %s" % (i,magicCount, resetCount,reg))
+    logging.info("Cycles: %s MAGIC count: %s Reset count: %s, Devices: %s" % (i,magicCount, resetCount,reg))
+    return i,magicCount,resetCount
 
 
-
-def minRegAlloc(g,V,out,T=None,lim=None,logfile=None,verbose=False,timeLimit=None):
+def minRegAlloc(g,V,out,D=None,T=None,optiType=1,lim=None,logfile=None,verbose=False,timeLimit=None):
+    ''' optiType = 1 [minimum devices]
+                 = 2 [minimum cycles]
+                 = 3 [minimum devices followed by minimum cycles] '''    
+    if optiType != 2:
+        if D == None:
+            print('Error: Number of devices must be specified for min cycles.\n')
+            return None,None
+    
     if T == None or T <= 0:
         T = 2*V 
     N = V
+    
     if logfile != None:
         log = True
     else:
         log = False
     
     count = 0
-    bottom = 1
-    top = N
+
     logger = logging.getLogger(__name__)
     logging.info('#nodes :%d, #reg :%d, #steps :%d' % (V, N, T)) 
     if N > 1024 : # limit the size of the network
         print('The network is too large (%s nodes)' % (V))
         logging.warning('Network too large (%s nodes)' % (V) )
-        return -1, None  
+        return -1,None, None  
 
     start = time.time() 
-    feasible,solution = optiRegAlloc(g, V, out, top, T, None, verbose, timeLimit)
+    if optiType == 2:
+        dev = D
+    else:
+        dev = V
+    feasible,solution,cycles = optiRegAlloc(g, V, out, dev, T, None, verbose, timeLimit)
     end = time.time()
     elapsed = (end - start)
     print("Execution time: %d s " % elapsed)
@@ -239,27 +254,41 @@ def minRegAlloc(g,V,out,T=None,lim=None,logfile=None,verbose=False,timeLimit=Non
     succReg = None
     succSolution = None
 
-    logging.info('Trivial allocation result (%s reg): %s' % (N,str(feasible)))
+    logging.info('Trivial allocation result (%s reg): %s' % (dev,str(feasible)))
     if feasible != sat:
         print('Trivial allocation failed. Check netlist\n')
-        return None,None
+        return None,None,None
     else:
         print('Trivial allocation successful.')
-        succReg = N
+        succReg = V
+        succT = T
         succSolution = solution 
-    timeRemaining = 0 
+    timeRemaining = 0
+    if optiType == 2:
+        bottom = 1
+        top = T
+        dev = D
+    else:
+        bottom = 1
+        top = N
+        
+                    
     while top >= bottom:
         mid = int((top+bottom)/2)
         count = count + 1
-        logging.info('#nodes :%d, #reg :%d, #steps :%d' % (V, mid, T)) 
+        if optiType == 2:
+            T = mid 
+        else:
+            dev = mid
+            
+        logging.info('[Pebble game start] #nodes :%d, #reg :%d, #steps :%d' % (V, dev, T)) 
         limit = timeLimit
         if timeLimit != None:
             timeLimit = limit + timeRemaining
             
             print("Allocated time: %d " % timeLimit)
-            logging.info('timelimit : %d s' % timeLimit)
         start = time.time() 
-        feasible,solution = optiRegAlloc(g, V, out, mid, T, verbose, timeLimit)
+        feasible,solution,cycles = optiRegAlloc(g, V, out, dev, T, verbose, timeLimit)
         end = time.time()
 
         elapsed = (end - start)
@@ -268,27 +297,32 @@ def minRegAlloc(g,V,out,T=None,lim=None,logfile=None,verbose=False,timeLimit=Non
             timeRemaining = timeLimit - elapsed
         print("Execution time: %d s " % elapsed)
         # check if number of iterations was exhausted
-        logging.info('Allocation result (%s reg): %s' % (mid,str(feasible)))
+        logging.info('[Pebble game end] Allocation result (%s reg %s steps): %s' % (dev,T,str(feasible)))
         if lim != None and count >= lim:
             if feasible == sat:
-                return mid,solution
+                return dev,cycles,solution
             else:
-                return succReg,succSolution
+                return succReg,succCycles,succSolution
         
         if feasible == sat:
-            succReg = mid 
+            succReg = dev 
+            succT = T
+            succCycles = cycles
             succSolution = solution
             top = mid-1
         else:
             bottom = mid+1
-    for v,li in g.items():
-        print(v,"<" , end = '')
-        for p in li:
-            print(p, ' ', end = '')
-        print()
+    if optiType == 3:
+        return minRegAlloc(g,V,out,succReg,T,2,lim,logfile,verbose,timeLimit)
+    if verbose:
+        for v,li in g.items():
+            print(v,"<" , end = '')
+            for p in li:
+                print(p, ' ', end = '')
+            print()
 
-    writeSolution()
-    return succReg, succSolution
+    
+    return succReg, succCycles, succSolution
 
 if __name__ == '__main__':
     

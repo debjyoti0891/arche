@@ -65,7 +65,8 @@ class ArcheTech(Cmd):
     rowsatParser.add_argument('-d', '--dir', action='store_true', help='specifies output directory [optional]')
     rowsatParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')
     rowsatParser.add_argument('-i', '--iterations', type=int, action='store', help='constraint on number of iterations to find minimum number of devices [0 = unconstrained]')
-    rowsatParser.add_argument('-m', '--minimum', action='store_true', help='find minimum number of devices required for mapping')
+    rowsatParser.add_argument('-md', '--mindev', action='store_true', help='find minimum number of devices required for mapping')
+    rowsatParser.add_argument('-ms', '--minstep', action='store_true', help='find minimum number of steps required for mapping')
     rowsatParser.add_argument('-s', '--steps', type=int, action='store', help='constraint on number of cycles available for mapping')
     rowsatParser.add_argument('-t', '--timelimit', type=int, action='store', help='constraint on runtime of sat solver')
     rowsatParser.add_argument('-v', '--verbose', action='store_true', help='print intermediate results')
@@ -73,7 +74,7 @@ class ArcheTech(Cmd):
     def do_rowsat(self, args):
         '''maps the loaded net)list '''
         print(args.filename, args.timelimit)
-        if args.steps == None and not args.minimum:
+        if args.steps == None and not (args.mindev or args.minstep):
             print(' the option --cycles must be specified for SAT based mapping')
             return
 
@@ -81,11 +82,11 @@ class ArcheTech(Cmd):
             print('Error: Input netlist does not have an output')
             return
         logging.info('min reg allocation command execution start')
-        if not args.minimum:
-            if args.col != None:
-                col = args.col
-            else:
-                col = self.col
+        if args.col != None:
+            col = args.col
+        else:
+            col = self.col
+        if not (args.mindev or args.minstep) :
             feasible,solution = archetech.smr.optiRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
                     len(self.graphDb[-1].vs),\
                     archeio.graphio.getOutputs(self.graphDb[-1]),\
@@ -99,18 +100,32 @@ class ArcheTech(Cmd):
             else:
                 print('Solution could not be obtained')
         else: 
-            minReg,solution= archetech.smr.minRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
+            if args.mindev and args.minstep:
+                optiType = 3
+            elif args.minstep:
+                optiType = 2;
+            else :
+                optiType = 1;    
+                 
+            minReg,steps,solution= archetech.smr.minRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
             len(self.graphDb[-1].vs),\
             archeio.graphio.getOutputs(self.graphDb[-1]),\
+                col,\
                 args.steps,\
+                optiType,\
                 args.iterations,\
                 args.filename,\
                 args.verbose,\
                 args.timelimit)
-            print('Min reg needed :', minReg)
-
-        logging.info('min reg allocation command execution complete')
-    
+            
+            if args.mindev and args.minstep:
+                print('Min devices : %d Min steps : %d'% (minReg,steps))
+            elif args.minstep:
+                print('Devices : %d Min Steps : %d'% (minReg,steps))
+            else :
+                print('Min Devices : %d Steps : %d'% (minReg,steps))    
+        logging.info('Min sat allocation command execution complete')
+        logging.info('Devices: %d, Cycles: %s, Optitype : %s' % (minReg,steps,optiType)) 
     psParser = argparse.ArgumentParser()
     psParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')
     @cmd2.with_argparser(psParser)

@@ -4,8 +4,10 @@ set row 100
 ps -f stats.txt
 setlog -f log_test_map.v
 read test_map.v
-map
 showgraph test.gml
 rowsat -c 12 -s 152 -t 600
+rowsat -c 12 -ms -t 600
+rowsat  -md -t 600
+rowsat -ms -md -t 600
 quit
 
