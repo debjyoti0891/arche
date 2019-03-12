@@ -140,7 +140,22 @@ class ArcheTech(Cmd):
                     f.write(self.graphFile[-1]+','+self.techMapper.getStats()+'\n')
             print('benchmark,#pi,#po,#gates,#level,delay,speedup,r,c,#devices, utilization')
             print(self.graphFile[-1],self.techMapper.getStats())
-
+    
+    crossbarParse = argparse.ArgumentParser()
+    crossbarParse.add_argument('-d', '--dir', type=str, help='write output files to directory')
+    crossbarParse.add_argument( '--delay', action='store_true', help='minimize delay of technology mapping with word length constraint')
+    crossbarParse.add_argument( '--area', action='store_true', help='minimize delay of technology mapping with crossbar dimension constraint')
+    crossbarParse.add_argument( '-f', '--file', type=str, help='write the instructions to the specified directory')
+    @cmd2.with_argparser(crossbarParse)
+    def do_mapcrossbar(self, args):
+        ''' Maps a netlist to a crossbar using ReVAMP instructions ''' 
+        if args.file == None:
+            print('Error: Benchmark must be specified using --file option')
+            return
+        if args.delay:
+            print('Mapping with word length %d' % (self.col))
+        else :
+            print('Mapping with crossbar dimension %dX%d' %(self.row, self.col))
 
     logParser = argparse.ArgumentParser()
     logParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')
@@ -169,8 +184,8 @@ class ArcheTech(Cmd):
             g = self.graphDb[-1]
             if arg == None:
                 arg = 'graph.gml'
-            #g.write_edgelist(arg)
-            g.save(arg,format='gml')
+            g.write_edgelist(arg)
+            #g.save(f,format='gml')
             # TODO : generate a ps out of the gml
             # gmltogv graph.gml bla.dot
             # dot -Tps bla.dot -o graph.ps 
