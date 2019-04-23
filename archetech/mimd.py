@@ -143,8 +143,54 @@ class MIMD:
         return True 
 
     def genSolution(self):
-        pass 
-      
+        
+        
+        # create the variables for ni and ci
+        colorVars = dict()
+        timeVars  = dict()
+        
+        # z3 solver
+        s = Solver() 
+        
+        maxSteps = 0
+        for graph in self.graphs:
+            maxSteps = maxSteps + len(graph.vs)
+        
+        for i in range(self.__graphCount):
+            graph = self.__graphs[i]
+            colorVars[i] = dict()
+            timeVars[i] = dict()
+            
+            for v in graph.vs:
+                colorVars[i][v['name']] = Int('c_'+v['name']+'_'+str(i))
+                timeVars[i][v['name']] = Int('t_'+v['name']+'_'+str(i))
+                
+                s.add(colorVars[i][v['name']] > 0, colorVars[i][v['name']] <= maxSteps)
+                s.add(timeVars[i][v['name']] > 0, timeVars[i][v['name']] <= maxSteps)
+            #distinct 
+            Distinct(list(colorVars[i].values()))
+            Distinct(list(timeVars[i].values()))
+            
+            s.check()
+    
+            printSolution(s)
+            
+    def printSolution(s, colorVar, timeVars, outf=None):
+        if s.check() == sat:
+            m = s.model()
+            ''' Print format 
+                cycle color g1 g2 ...
+             
+            '''
+            #TODO : update
+            
+            r = [ [ m.evaluate(X[i][j]) for j in range(9) ]
+                  for i in range(9) ]
+                  
+            print_matrix(r)
+        else:
+            print("failed to solve")
+            
 if __name__ == '__main__':
     if len(sys.argv) < 4:
         print('Usage: python3 mimd.py graph1 graph2 solution')
