@@ -6,6 +6,7 @@ import sys
 import itertools
 import math
 import time
+from z3 import *
 
 
 
@@ -148,34 +149,86 @@ class MIMD:
         # create the variables for ni and ci
         colorVars = dict()
         timeVars  = dict()
-        
+        degreeGroups = dict() 
+
         # z3 solver
-        s = Solver() 
+        s = Optimize() 
         
         maxSteps = 0
-        for graph in self.graphs:
+        for graph in self.__graphs:
             maxSteps = maxSteps + len(graph.vs)
-        
+        cost = Int('delay')
+
         for i in range(self.__graphCount):
             graph = self.__graphs[i]
             colorVars[i] = dict()
             timeVars[i] = dict()
-            
             for v in graph.vs:
                 colorVars[i][v['name']] = Int('c_'+v['name']+'_'+str(i))
                 timeVars[i][v['name']] = Int('t_'+v['name']+'_'+str(i))
                 
                 s.add(colorVars[i][v['name']] > 0, colorVars[i][v['name']] <= maxSteps)
                 s.add(timeVars[i][v['name']] > 0, timeVars[i][v['name']] <= maxSteps)
+                s.add(cost> timeVars[i][v['name']])
+            print(graph.degree(type='in'))
+            
+            for v in graph.vs:
+                #precedence constraints 
+                for p in graph.neighbors(v,IN):
+                    pname = graph.vs[p]['name']
+                    s.add(timeVars[i][v['name']] > timeVars[i][pname])
+
+              
             #distinct 
-            Distinct(list(colorVars[i].values()))
-            Distinct(list(timeVars[i].values()))
+            s.add(Distinct(list(colorVars[i].values())))
+            s.add(Distinct(list(timeVars[i].values())))
             
-            s.check()
+        for i in range(self.__graphCount):
+            graphi = self.__graphs[i]
+            degi = graphi.degree(type='in')
+            for j in range(i+1, self.__graphCount):
+                graphj = self.__graphs[j] 
+                
+                degj = graphi.degree(type='in')
+
+                for di in range(len(degi)):
+                    viname = graphi.vs[di]['name']
+                    
+                    for dj in range(len(degj)):
+                        vjname = graphj.vs[dj]['name']
+                            
+                        if degi[di] != degj[dj] or \
+                             (len(graphi.neighbors(graphi.vs[di],IN)) != \
+                             len(graphj.neighbors(graphj.vs[dj],IN)) ):
+                            s.add(timeVars[i][viname] != timeVars[j][vjname])
+                        elif degi[di] != 0: #two nodes might be executed in parallel 
+                            
+                            predi = graphi.vs(graphi.neighbors(graphi.vs[di],IN))
+                            predj = graphj.vs(graphj.neighbors(graphj.vs[dj],IN))
+                            for perm in itertools.permutations(predj):
+                                print(di,dj,perm, predi)
+
+                            orClause = False
+                            
+                            for perm in itertools.permutations(predj):
+                                andClause = True 
+                                for k in range(len(perm)):
+                                    pi = predi[k]['name']
+                                    pj = perm[k]['name']
+                                    print(colorVars[i][pi])
+                                    print(colorVars[j][pj])
+                                    andClause = And(andClause,\
+                                     colorVars[i][pi]==colorVars[j][pj])
+                                orClause = Or(orClause, andClause)
+                            
+                            s.add(If(orClause,
+                                timeVars[i][viname] == timeVars[j][vjname],
+                                timeVars[i][viname] != timeVars[j][vjname]))    
+        h = s.minimize(cost)
     
-            printSolution(s)
+        self.printSolution(s,colorVars, timeVars)
             
-    def printSolution(s, colorVar, timeVars, outf=None):
+    def printSolution(self,s, colorVars, timeVars, outf=None):
         if s.check() == sat:
             m = s.model()
             ''' Print format 
@@ -184,10 +237,13 @@ class MIMD:
             '''
             #TODO : update
             
-            r = [ [ m.evaluate(X[i][j]) for j in range(9) ]
-                  for i in range(9) ]
+            for i in range(self.__graphCount):
+                graph = self.__graphs[i] 
+
+                for v in graph.vs:
+                    print("graph" ,i,":",m.evaluate(timeVars[i][v['name']]), \
+                            m.evaluate(colorVars[i][v['name']]))
                   
-            print_matrix(r)
         else:
             print("failed to solve")
             
@@ -197,5 +253,6 @@ if __name__ == '__main__':
         sys.exit()
     techMapper = MIMD([])
     techMapper.readGraph([sys.argv[1],sys.argv[2]])
+    techMapper.genSolution()
     techMapper.checkSolution(sys.argv[3])
     
