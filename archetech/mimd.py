@@ -157,7 +157,10 @@ class MIMD:
         maxSteps = 0
         for graph in self.__graphs:
             maxSteps = maxSteps + len(graph.vs)
+            for v in graph.vs:
+                print(v['name'])
         cost = Int('delay')
+        
 
         for i in range(self.__graphCount):
             graph = self.__graphs[i]
@@ -180,8 +183,20 @@ class MIMD:
 
               
             #distinct 
-            s.add(Distinct(list(colorVars[i].values())))
-            s.add(Distinct(list(timeVars[i].values())))
+            print(*colorVars[i].values())
+            dColors = Distinct(*colorVars[i].values())
+            s.add(dColors)
+            dTime = Distinct(*timeVars[i].values())
+            s.add(dTime)
+            
+            # adding n^2 distiction constraints 
+            l = list(colorVars[i].values())
+            dis = list()
+            for vali in range(len(l)):
+                for valj in range(vali+1,len(l)):
+                   dis.append(Not(l[vali] == l[valj]))
+            s.add(And(*dis))            
+            #[s.add(ci != cj) for ci in colorVars[i].values() for cj in colorVars[i].values if ci != cj]
             
         for i in range(self.__graphCount):
             graphi = self.__graphs[i]
@@ -205,8 +220,8 @@ class MIMD:
                             
                             predi = graphi.vs(graphi.neighbors(graphi.vs[di],IN))
                             predj = graphj.vs(graphj.neighbors(graphj.vs[dj],IN))
-                            for perm in itertools.permutations(predj):
-                                print(di,dj,perm, predi)
+                            #for perm in itertools.permutations(predj):
+                                #print(di,dj,perm, predi)
 
                             orClause = False
                             
@@ -215,8 +230,7 @@ class MIMD:
                                 for k in range(len(perm)):
                                     pi = predi[k]['name']
                                     pj = perm[k]['name']
-                                    print(colorVars[i][pi])
-                                    print(colorVars[j][pj])
+                                    print(colorVars[i][pi], colorVars[j][pj])
                                     andClause = And(andClause,\
                                      colorVars[i][pi]==colorVars[j][pj])
                                 orClause = Or(orClause, andClause)
@@ -226,8 +240,10 @@ class MIMD:
                                 timeVars[i][viname] != timeVars[j][vjname]))    
         h = s.minimize(cost)
     
-        self.printSolution(s,colorVars, timeVars)
-            
+        self.printSolution(s,colorVars, timeVars, 'solved.txt')
+        self.checkSolution('solved.txt')
+        
+        
     def printSolution(self,s, colorVars, timeVars, outf=None):
         if s.check() == sat:
             m = s.model()
@@ -236,23 +252,56 @@ class MIMD:
              
             '''
             #TODO : update
+            timeline = dict()
+            maxTime = -1
             
             for i in range(self.__graphCount):
                 graph = self.__graphs[i] 
-
+                timeline[i] = dict()
                 for v in graph.vs:
-                    print("graph" ,i,":",m.evaluate(timeVars[i][v['name']]), \
+                    print("graph" ,i, ": [" , v['name'],']:',m.evaluate(timeVars[i][v['name']]), \
                             m.evaluate(colorVars[i][v['name']]))
-                  
+                    timeStep = m[timeVars[i][v['name']]].as_long()
+                    device   = m[colorVars[i][v['name']]].as_long()
+                    timeline[i][timeStep] = [v['name'], device]
+                    maxTime = max(maxTime, timeStep)
+        
+            print('Solution with %d steps found' % (maxTime))
+            print(timeline.keys())
+            sol = list()
+            for t in range(maxTime):
+                sol.append([t+1, '-'] + [ '-' for j in range(self.__graphCount)])
+                
+                for g in range(self.__graphCount):
+                    if t+1 in timeline[g].keys():
+                        sol[-1][1] = timeline[g][t+1][1] #device 
+                        if sol[-1][1] != '-' and sol[-1][1] != timeline[g][t+1][1]:
+                            print('Invalid solution. Two different device columns used in same cycle')
+                            print(timeline[g][t+1][1], sol[-1][1])
+                            return
+                        sol[-1][2+g] = timeline[g][t+1][0] #node
+                print(t, sol[-1])
+        
+            if outf != None:
+                with open(outf,'w') as f:
+                    for t in range(maxTime):
+                        for val in range(2+self.__graphCount):
+                            f.write(str(sol[t][val])+' ')
+                        f.write('\n')
+            else:
+                for t in range(maxTime):
+                    for val in range(2+self.__graphCount):
+                        print('%4s' % (str(sol[t][val])+' '), end = '')
+                    print('', end='\n')
         else:
             print("failed to solve")
             
 if __name__ == '__main__':
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 3:
         print('Usage: python3 mimd.py graph1 graph2 solution')
         sys.exit()
     techMapper = MIMD([])
     techMapper.readGraph([sys.argv[1],sys.argv[2]])
     techMapper.genSolution()
-    techMapper.checkSolution(sys.argv[3])
+    #techMapper.checkSolution(sys.argv[3])
     
