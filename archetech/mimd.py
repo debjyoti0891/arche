@@ -170,7 +170,7 @@ class MIMD:
                 colorVars[i][v['name']] = Int('c_'+v['name']+'_'+str(i))
                 timeVars[i][v['name']] = Int('t_'+v['name']+'_'+str(i))
                 
-                s.add(colorVars[i][v['name']] > 0, colorVars[i][v['name']] <= maxSteps)
+                s.add(colorVars[i][v['name']] > 0, colorVars[i][v['name']] <= 10)
                 s.add(timeVars[i][v['name']] > 0, timeVars[i][v['name']] <= maxSteps)
                 s.add(cost> timeVars[i][v['name']])
             print(graph.degree(type='in'))
@@ -183,41 +183,52 @@ class MIMD:
 
               
             #distinct 
-            print(*colorVars[i].values())
+            print('colorvars;',colorVars[i])
             dColors = Distinct(*colorVars[i].values())
             s.add(dColors)
             dTime = Distinct(*timeVars[i].values())
             s.add(dTime)
-            
+            '''
             # adding n^2 distiction constraints 
             l = list(colorVars[i].values())
             dis = list()
             for vali in range(len(l)):
                 for valj in range(vali+1,len(l)):
                    dis.append(Not(l[vali] == l[valj]))
-            s.add(And(*dis))            
+            s.add(And(*dis))
+            '''            
             #[s.add(ci != cj) for ci in colorVars[i].values() for cj in colorVars[i].values if ci != cj]
-            
+        #h = s.minimize(cost)
+    
+        #self.printSolution(s,colorVars, timeVars, 'solved.txt')
+        
         for i in range(self.__graphCount):
             graphi = self.__graphs[i]
             degi = graphi.degree(type='in')
             for j in range(i+1, self.__graphCount):
                 graphj = self.__graphs[j] 
                 
-                degj = graphi.degree(type='in')
+                degj = graphj.degree(type='in')
 
                 for di in range(len(degi)):
                     viname = graphi.vs[di]['name']
                     
                     for dj in range(len(degj)):
                         vjname = graphj.vs[dj]['name']
+                        # nodes without same column 
+                        # can never be executed in parallel
+                        s.add(
+                            Implies(colorVars[i][viname] != colorVars[j][vjname], timeVars[i][viname] != timeVars[j][vjname]))  
                             
+                              
                         if degi[di] != degj[dj] or \
                              (len(graphi.neighbors(graphi.vs[di],IN)) != \
                              len(graphj.neighbors(graphj.vs[dj],IN)) ):
                             s.add(timeVars[i][viname] != timeVars[j][vjname])
                         elif degi[di] != 0: #two nodes might be executed in parallel 
+                           
                             
+                            print('parallel ', degi[di],':', viname, vjname)
                             predi = graphi.vs(graphi.neighbors(graphi.vs[di],IN))
                             predj = graphj.vs(graphj.neighbors(graphj.vs[dj],IN))
                             #for perm in itertools.permutations(predj):
@@ -235,9 +246,12 @@ class MIMD:
                                      colorVars[i][pi]==colorVars[j][pj])
                                 orClause = Or(orClause, andClause)
                             
-                            s.add(If(orClause,
+                            s.add(Implies(timeVars[i][viname] == timeVars[j][vjname],
+                            And(orClause, colorVars[i][viname] == colorVars[j][vjname])))
+                            '''s.add(If(orClause,
                                 timeVars[i][viname] == timeVars[j][vjname],
                                 timeVars[i][viname] != timeVars[j][vjname]))    
+                            '''
         h = s.minimize(cost)
     
         self.printSolution(s,colorVars, timeVars, 'solved.txt')
@@ -274,11 +288,12 @@ class MIMD:
                 
                 for g in range(self.__graphCount):
                     if t+1 in timeline[g].keys():
-                        sol[-1][1] = timeline[g][t+1][1] #device 
+                        
                         if sol[-1][1] != '-' and sol[-1][1] != timeline[g][t+1][1]:
                             print('Invalid solution. Two different device columns used in same cycle')
                             print(timeline[g][t+1][1], sol[-1][1])
                             return
+                        sol[-1][1] = timeline[g][t+1][1] #device 
                         sol[-1][2+g] = timeline[g][t+1][0] #node
                 print(t, sol[-1])
         
