@@ -143,7 +143,7 @@ class MIMD:
         print('Solution is valid')
         return True 
 
-    def genSolution(self):
+    def genSolution(self,outf = None):
         
         
         # create the variables for ni and ci
@@ -253,9 +253,9 @@ class MIMD:
                                 timeVars[i][viname] != timeVars[j][vjname]))    
                             '''
         h = s.minimize(cost)
-    
-        self.printSolution(s,colorVars, timeVars, 'solved.txt')
-        self.checkSolution('solved.txt')
+        
+        self.printSolution(s,colorVars, timeVars, outf)
+        #self.checkSolution('solved.txt')
         
         
     def printSolution(self,s, colorVars, timeVars, outf=None):

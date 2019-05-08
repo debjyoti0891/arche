@@ -15,6 +15,7 @@ import archeio.hdlread
 import archeio.graphio 
 import archetech.smr
 import archetech.techmagic  
+import archetech.mimd
 import logging
 
 history_file = os.path.expanduser('~/.arche_history')
@@ -37,7 +38,8 @@ class ArcheTech(Cmd):
     graphFile = []
     techMapper = None 
 
-    def __init__(self):
+    def __init__(self,persistent_history_file=history_file):
+        super().__init__()
         self.settable.update({'row': 'Number of crossbar rows'})
         self.settable.update({'col': 'Number of crossbar columns'})
         self.settable.update({'dev': '1S1R or VTEAM'})
@@ -156,6 +158,7 @@ class ArcheTech(Cmd):
             print('Mapping with word length %d' % (self.col))
         else :
             print('Mapping with crossbar dimension %dX%d' %(self.row, self.col))
+            
 
     logParser = argparse.ArgumentParser()
     logParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')
@@ -190,8 +193,45 @@ class ArcheTech(Cmd):
             # gmltogv graph.gml bla.dot
             # dot -Tps bla.dot -o graph.ps 
 
-
-
+    mimdParser = argparse.ArgumentParser()
+    mimdParser.add_argument('-f','--files', type=str, nargs='+')
+    mimdParser.add_argument('-o','--output', type=str)
+    mimdParser.add_argument('-md', '--mindev', type=int)
+    mimdParser.add_argument('-cs', '--checksol', action='store_true')
+    @cmd2.with_argparser(mimdParser)
+    def do_mimd(self,arg):
+        ''' maps two or more functions using MAGIC operation.
+            Each function is mapped to  a single row.
+            The method uses Z3 to maximimze parallel operations for the input functions and reduce delay. Secondary goal to minimize number of colors used. '''
+        if arg.files == None or len(arg.files) < 2:
+            print('two or more benchmark files required for mimd')
+            return 
+        if arg.output == None:
+            print('Output file must be specified')
+            return 
+        print(arg.files, arg.output, arg.mindev, arg.checksol)
+        for f in arg.files:
+            self.do_read(f)
+       
+        # convert the files into edge lists 
+        edgeLists = []
+        i = 0
+        for g in self.graphDb[len(self.graphDb)-len(arg.files):]:
+            i = i +1
+            edgeLists.append('/tmp/edge_'+str(i))
+            g.write_edgelist(edgeLists[-1])
+        
+        #call mimd instance
+        techMapper = archetech.mimd.MIMD([])
+        techMapper.readGraph(edgeLists)
+        
+        #TODO : still doesnt support mindev parameter
+        techMapper.genSolution(arg.output)
+        if arg.checksol:
+            techMapper.checkSolution(arg.output)
+        
+        
+        
     def _onchange_dev(self, old, new):
         # change the voltage params based on device
         if new == '1S1R':
