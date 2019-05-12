@@ -1,0 +1,14 @@
+// load ~a
+Apply 0 0 01 00 1 0 1 1
+Apply 1 0 01 00 1 0 1 1
+// load ~b
+Apply 2 0 01 00 1 0 1 1
+// read and apply b to compute ~a.b
+Read 2
+Apply 0 1 00 00 1 0 1 1
+// read and apply b to compute ~a+b
+Apply 1 1 01 00 1 0 1 1
+// read ~a+b and apply compute a XOR b
+Read 1
+Apply 0 1 01 00 1 0 1 1
+
