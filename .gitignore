@@ -31,7 +31,10 @@ wheels/
 *.manifest
 *.spec
 *.swp
-
+# doc related
+_build
+_static
+_templates
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
