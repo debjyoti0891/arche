@@ -1,0 +1,2 @@
+mimd -f map_majority.blif.v map_b1.blif.v -o sol_small
+quit 

@@ -152,16 +152,23 @@ class MIMD:
         degreeGroups = dict() 
 
         # z3 solver
-        s = Optimize() 
+        #s = Optimize() 
+        s = Solver()
         
         maxSteps = 0
+        minCost = -1
         for graph in self.__graphs:
             maxSteps = maxSteps + len(graph.vs)
-            for v in graph.vs:
-                print(v['name'])
+            minCost = max(minCost, len(graph.vs))
+            #for v in graph.vs:
+            #    print(v['name'])
         cost = Int('delay')
         
-
+        lower = int(0.7*maxSteps)
+        # bound the cost TODO: remove if using optimize!!!
+        s.add(cost == lower )
+        print('Max delay : %d Permitted: %d' % (maxSteps,lower))
+        
         for i in range(self.__graphCount):
             graph = self.__graphs[i]
             colorVars[i] = dict()
@@ -170,7 +177,7 @@ class MIMD:
                 colorVars[i][v['name']] = Int('c_'+v['name']+'_'+str(i))
                 timeVars[i][v['name']] = Int('t_'+v['name']+'_'+str(i))
                 
-                s.add(colorVars[i][v['name']] > 0, colorVars[i][v['name']] <= 10)
+                s.add(colorVars[i][v['name']] > 0, colorVars[i][v['name']] <= maxSteps)
                 s.add(timeVars[i][v['name']] > 0, timeVars[i][v['name']] <= maxSteps)
                 s.add(cost> timeVars[i][v['name']])
             print(graph.degree(type='in'))
@@ -181,14 +188,15 @@ class MIMD:
                     pname = graph.vs[p]['name']
                     s.add(timeVars[i][v['name']] > timeVars[i][pname])
 
-              
+            
             #distinct 
             print('colorvars;',colorVars[i])
             dColors = Distinct(*colorVars[i].values())
             s.add(dColors)
             dTime = Distinct(*timeVars[i].values())
-            s.add(dTime)
+            s.add(dTime) 
             '''
+            
             # adding n^2 distiction constraints 
             l = list(colorVars[i].values())
             dis = list()
@@ -220,7 +228,7 @@ class MIMD:
                         s.add(
                             Implies(colorVars[i][viname] != colorVars[j][vjname], timeVars[i][viname] != timeVars[j][vjname]))  
                             
-                              
+                             
                         if degi[di] != degj[dj] or \
                              (len(graphi.neighbors(graphi.vs[di],IN)) != \
                              len(graphj.neighbors(graphj.vs[dj],IN)) ):
@@ -248,11 +256,13 @@ class MIMD:
                             
                             s.add(Implies(timeVars[i][viname] == timeVars[j][vjname],
                             And(orClause, colorVars[i][viname] == colorVars[j][vjname])))
-                            '''s.add(If(orClause,
+                            '''
+                            s.add(If(orClause,
                                 timeVars[i][viname] == timeVars[j][vjname],
                                 timeVars[i][viname] != timeVars[j][vjname]))    
                             '''
-        h = s.minimize(cost)
+        
+        #h = s.minimize(cost)
         
         self.printSolution(s,colorVars, timeVars, outf)
         #self.checkSolution('solved.txt')
