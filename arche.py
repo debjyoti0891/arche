@@ -230,7 +230,7 @@ class ArcheTech(Cmd):
         if arg.timelimit == None:
             techMapper.genSolution(arg.output)
         else:
-            techMapper.genSolution(arg.output)
+            techMapper.genSolution(arg.output,arg.timelimit)
         if arg.checksol:
             techMapper.checkSolution(arg.output)
         

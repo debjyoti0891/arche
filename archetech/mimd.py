@@ -144,7 +144,7 @@ class MIMD:
         return True 
 
     
-    def genSolution(self,outf = None):
+    def genSolution(self,outf = None,timelimit = None,printSol=None):
         
         
         # create the variables for ni and ci
@@ -155,7 +155,9 @@ class MIMD:
         # z3 solver
         #s = Optimize() 
         s = Solver()
-        s.set("timeout", 6000)
+        if timelimit != None:
+            s.set("timeout", timelimit)
+            print('Timelimit of sat solving set to %d ms' % (timelimit))
         
         maxSteps = 0
         minCost = -1
@@ -287,10 +289,21 @@ class MIMD:
         
         #h = s.minimize(cost)
         
-        self.printSolution(s,colorVars, timeVars, outf)
+        if printSol != None:
+            self.printSolution(s,colorVars, timeVars, outf)
         #self.checkSolution('solved.txt')
-        
-        
+        if s.check() == sat:
+            return  #TODO : mindelay,maxdelay,delay,colors 
+        else:
+            return  #TODO : mindelay,maxdelay,None,None 
+    
+    def graphStats(self,i):
+        if i >= self.__graphCount:
+            print('Invalid graph id. Graph id : <= %d' % (self.__graphCount))
+            return 
+        # TODO : return number of nodes, pi, po
+            
+            
     def printSolution(self,s, colorVars, timeVars, outf=None):
         if s.check() == sat:
             m = s.model()
