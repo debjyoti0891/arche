@@ -197,6 +197,7 @@ class ArcheTech(Cmd):
     mimdParser.add_argument('-f','--files', type=str, nargs='+')
     mimdParser.add_argument('-o','--output', type=str)
     mimdParser.add_argument('-md', '--mindev', type=int)
+    mimdParser.add_argument('-t', '--timelimit', type=int)
     mimdParser.add_argument('-cs', '--checksol', action='store_true')
     @cmd2.with_argparser(mimdParser)
     def do_mimd(self,arg):
@@ -226,7 +227,10 @@ class ArcheTech(Cmd):
         techMapper.readGraph(edgeLists)
         
         #TODO : still doesnt support mindev parameter
-        techMapper.genSolution(arg.output)
+        if arg.timelimit == None:
+            techMapper.genSolution(arg.output)
+        else:
+            techMapper.genSolution(arg.output)
         if arg.checksol:
             techMapper.checkSolution(arg.output)
         

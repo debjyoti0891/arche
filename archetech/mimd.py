@@ -143,6 +143,7 @@ class MIMD:
         print('Solution is valid')
         return True 
 
+    
     def genSolution(self,outf = None):
         
         
@@ -154,20 +155,42 @@ class MIMD:
         # z3 solver
         #s = Optimize() 
         s = Solver()
+        s.set("timeout", 6000)
         
         maxSteps = 0
         minCost = -1
+        maxDegGraph = -1
+        degiGraphs = dict()
+        g = 0
         for graph in self.__graphs:
             maxSteps = maxSteps + len(graph.vs)
             minCost = max(minCost, len(graph.vs))
+            degi = graph.degree(type='in')
+            maxdeg = max(degi)
+            maxDegGraph = max(maxdeg, maxDegGraph)
+            degiGraphs[g] = dict()
+            
+            for i in range(maxdeg):
+                degiGraphs[g][i] = degi.count(i)
+            g = g+1
+        print(degiGraphs)
+        
+        minDelay = 0
+        for d in range(maxDegGraph):
+            maxdelay = 0
+            for i in range(g):
+                if d in degiGraphs[i].keys():
+                    maxdelay = max(maxdelay, degiGraphs[i][d])
+            minDelay = minDelay + maxdelay
+            
             #for v in graph.vs:
             #    print(v['name'])
         cost = Int('delay')
         
         lower = int(0.7*maxSteps)
         # bound the cost TODO: remove if using optimize!!!
-        s.add(cost == lower )
-        print('Max delay : %d Permitted: %d' % (maxSteps,lower))
+        s.add(cost == lower+2 )
+        print('Min delay: %d Max delay : %d Permitted: %d' % (minDelay, maxSteps, lower))
         
         for i in range(self.__graphCount):
             graph = self.__graphs[i]
@@ -180,7 +203,7 @@ class MIMD:
                 s.add(colorVars[i][v['name']] > 0, colorVars[i][v['name']] <= maxSteps)
                 s.add(timeVars[i][v['name']] > 0, timeVars[i][v['name']] <= maxSteps)
                 s.add(cost> timeVars[i][v['name']])
-            print(graph.degree(type='in'))
+            #print(graph.degree(type='in'))
             
             for v in graph.vs:
                 #precedence constraints 
@@ -190,7 +213,7 @@ class MIMD:
 
             
             #distinct 
-            print('colorvars;',colorVars[i])
+            #print('colorvars;',colorVars[i])
             dColors = Distinct(*colorVars[i].values())
             s.add(dColors)
             dTime = Distinct(*timeVars[i].values())
@@ -236,7 +259,7 @@ class MIMD:
                         elif degi[di] != 0: #two nodes might be executed in parallel 
                            
                             
-                            print('parallel ', degi[di],':', viname, vjname)
+                            #print('parallel ', degi[di],':', viname, vjname)
                             predi = graphi.vs(graphi.neighbors(graphi.vs[di],IN))
                             predj = graphj.vs(graphj.neighbors(graphj.vs[dj],IN))
                             #for perm in itertools.permutations(predj):
@@ -249,7 +272,7 @@ class MIMD:
                                 for k in range(len(perm)):
                                     pi = predi[k]['name']
                                     pj = perm[k]['name']
-                                    print(colorVars[i][pi], colorVars[j][pj])
+                                    #print(colorVars[i][pi], colorVars[j][pj])
                                     andClause = And(andClause,\
                                      colorVars[i][pi]==colorVars[j][pj])
                                 orClause = Or(orClause, andClause)
@@ -283,8 +306,8 @@ class MIMD:
                 graph = self.__graphs[i] 
                 timeline[i] = dict()
                 for v in graph.vs:
-                    print("graph" ,i, ": [" , v['name'],']:',m.evaluate(timeVars[i][v['name']]), \
-                            m.evaluate(colorVars[i][v['name']]))
+                    #print("graph" ,i, ": [" , v['name'],']:',m.evaluate(timeVars[i][v['name']]), \
+                           # m.evaluate(colorVars[i][v['name']]))
                     timeStep = m[timeVars[i][v['name']]].as_long()
                     device   = m[colorVars[i][v['name']]].as_long()
                     timeline[i][timeStep] = [v['name'], device]
