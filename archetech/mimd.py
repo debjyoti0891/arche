@@ -142,6 +142,8 @@ class MIMD:
             return False
         print('Solution is valid')
         return True 
+        
+        
     def genMinSolution(self,outf = None,timelimit = None,printSol=None):
         minDelay, maxSteps = self.graphStats()
         
@@ -161,7 +163,7 @@ class MIMD:
         while minval < maxval:
             midval = int( (minval+maxval)/2)
             print('Solving %d target delay [%d %d]' % (midval, minval,maxval))
-            delay, devices = self.genSolution(outf,timelimit,printSol,maxval)
+            delay, devices = self.genSolution(outf,timelimit,printSol,midval)
             
             if delay == None:
                 print('Solution failed for target delay %d' % (midval))
