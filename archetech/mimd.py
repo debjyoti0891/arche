@@ -142,11 +142,41 @@ class MIMD:
             return False
         print('Solution is valid')
         return True 
-
+    def genMinSolution(self,outf = None,timelimit = None,printSol=None):
+        minDelay, maxSteps = self.graphStats()
+        
+        minval = minDelay 
+        maxval = maxSteps 
+        
+        solDelay = None 
+        solDev = None
+        
+        delay, devices = self.genSolution(outf,timelimit,printSol,maxval)
+        if delay == None:
+            print('Trivial solution failed. Target delay : %d' % (maxval))
+            return None,None
+        solDelay, solDev = delay, devices
+        
+        print('Trivial solution passed')
+        while minval < maxval:
+            midval = int( (minval+maxval)/2)
+            print('Solving %d target delay [%d %d]' % (midval, minval,maxval))
+            delay, devices = self.genSolution(outf,timelimit,printSol,maxval)
+            
+            if delay == None:
+                print('Solution failed for target delay %d' % (midval))
+                minval = midval + 1
+            else:
+                print('Solution found  for target delay %d with %d device' % (delay, devices))
+                solDelay, solDev = delay, devices
+                maxval = midval - 1
+        return solDelay, solDev
+            
+         
     
-    def genSolution(self,outf = None,timelimit = None,printSol=None):
+    def genSolution(self, outf = None, timelimit = None, printSol=None, targetDelay=None): 
         
-        
+        minDelay, maxSteps = self.graphStats()
         # create the variables for ni and ci
         colorVars = dict()
         timeVars  = dict()
@@ -159,40 +189,12 @@ class MIMD:
             s.set("timeout", timelimit)
             print('Timelimit of sat solving set to %d ms' % (timelimit))
         
-        maxSteps = 0
-        minCost = -1
-        maxDegGraph = -1
-        degiGraphs = dict()
-        g = 0
-        for graph in self.__graphs:
-            maxSteps = maxSteps + len(graph.vs)
-            minCost = max(minCost, len(graph.vs))
-            degi = graph.degree(type='in')
-            maxdeg = max(degi)
-            maxDegGraph = max(maxdeg, maxDegGraph)
-            degiGraphs[g] = dict()
-            
-            for i in range(maxdeg):
-                degiGraphs[g][i] = degi.count(i)
-            g = g+1
-        print(degiGraphs)
-        
-        minDelay = 0
-        for d in range(maxDegGraph):
-            maxdelay = 0
-            for i in range(g):
-                if d in degiGraphs[i].keys():
-                    maxdelay = max(maxdelay, degiGraphs[i][d])
-            minDelay = minDelay + maxdelay
-            
-            #for v in graph.vs:
-            #    print(v['name'])
         cost = Int('delay')
-        
-        lower = int(0.7*maxSteps)
+        if targetDelay == None:
+            targetDelay = int(0.8*maxSteps)
         # bound the cost TODO: remove if using optimize!!!
-        s.add(cost == lower+2 )
-        print('Min delay: %d Max delay : %d Permitted: %d' % (minDelay, maxSteps, lower))
+        s.add(cost == targetDelay )
+        print('Min delay: %d Max delay : %d Permitted: %d' % (minDelay, maxSteps, targetDelay))
         
         for i in range(self.__graphCount):
             graph = self.__graphs[i]
@@ -289,22 +291,43 @@ class MIMD:
         
         #h = s.minimize(cost)
         
-        if printSol != None:
-            self.printSolution(s,colorVars, timeVars, outf)
-        #self.checkSolution('solved.txt')
-        if s.check() == sat:
-            return  #TODO : mindelay,maxdelay,delay,colors 
-        else:
-            return  #TODO : mindelay,maxdelay,None,None 
-    
-    def graphStats(self,i):
-        if i >= self.__graphCount:
-            print('Invalid graph id. Graph id : <= %d' % (self.__graphCount))
-            return 
-        # TODO : return number of nodes, pi, po
+        
+        delay, devices = self.printSolution(s,colorVars, timeVars, outf)
+        
+        return delay, devices 
+        
+    def graphStats(self):
+        ''' determines the minimum and maximum delay for 
+            scheduling the set of given graphs '''
+        maxSteps = 0
+        maxDegGraph = -1
+        degiGraphs = dict()
+        g = 0
+        for graph in self.__graphs:
+            maxSteps = maxSteps + len(graph.vs)
+           
+            degi = graph.degree(type='in')
+            maxdeg = max(degi)
+            maxDegGraph = max(maxdeg, maxDegGraph)
+            degiGraphs[g] = dict()
+            
+            for i in range(maxdeg):
+                degiGraphs[g][i] = degi.count(i)
+            g = g+1
+        
+        
+        minDelay = 0
+        for d in range(maxDegGraph):
+            maxdelay = 0
+            for i in range(g):
+                if d in degiGraphs[i].keys():
+                    maxdelay = max(maxdelay, degiGraphs[i][d])
+            minDelay = minDelay + maxdelay
+        
+        return minDelay, maxSteps
             
             
-    def printSolution(self,s, colorVars, timeVars, outf=None):
+    def printSolution(self,s, colorVars, timeVars, outf=None, verbose = True):
         if s.check() == sat:
             m = s.model()
             ''' Print format 
@@ -314,7 +337,7 @@ class MIMD:
             #TODO : update
             timeline = dict()
             maxTime = -1
-            
+            maxDevice = -1
             for i in range(self.__graphCount):
                 graph = self.__graphs[i] 
                 timeline[i] = dict()
@@ -325,9 +348,10 @@ class MIMD:
                     device   = m[colorVars[i][v['name']]].as_long()
                     timeline[i][timeStep] = [v['name'], device]
                     maxTime = max(maxTime, timeStep)
-        
+                    maxDevice = max(maxDevice, device)
+                    
             print('Solution with %d steps found' % (maxTime))
-            print(timeline.keys())
+            #print(timeline.keys())
             sol = list()
             for t in range(maxTime):
                 sol.append([t+1, '-'] + [ '-' for j in range(self.__graphCount)])
@@ -341,7 +365,7 @@ class MIMD:
                             return
                         sol[-1][1] = timeline[g][t+1][1] #device 
                         sol[-1][2+g] = timeline[g][t+1][0] #node
-                print(t, sol[-1])
+                if verbose: print(t, sol[-1])
         
             if outf != None:
                 with open(outf,'w') as f:
@@ -352,10 +376,14 @@ class MIMD:
             else:
                 for t in range(maxTime):
                     for val in range(2+self.__graphCount):
-                        print('%4s' % (str(sol[t][val])+' '), end = '')
-                    print('', end='\n')
+                        if verbose: print('%4s' % (str(sol[t][val])+' '), end = '')
+                    if verbose: print('', end='\n')
+                    
+            # return number of cycles and number of devices required to map 
+            return maxTime, maxDevice
         else:
-            print("failed to solve")
+            print("Failed to solve")
+            return None, None 
             
 if __name__ == '__main__':
     if len(sys.argv) < 3:

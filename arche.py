@@ -199,9 +199,10 @@ class ArcheTech(Cmd):
     mimdParser = argparse.ArgumentParser()
     mimdParser.add_argument('-f','--files', type=str, nargs='+')
     mimdParser.add_argument('-o','--output', type=str)
-    mimdParser.add_argument('-md', '--mindev', type=int)
+    mimdParser.add_argument('-md', '--mindev', action='store_true')
     mimdParser.add_argument('-t', '--timelimit', type=int)
     mimdParser.add_argument('-cs', '--checksol', action='store_true')
+    mimdParser.add_argument('-v', '--verbose', action='store_true')
     @cmd2.with_argparser(mimdParser)
     def do_mimd(self,arg):
         ''' maps two or more functions using MAGIC operation.
@@ -229,11 +230,11 @@ class ArcheTech(Cmd):
         techMapper = archetech.mimd.MIMD([])
         techMapper.readGraph(edgeLists)
         
-        #TODO : still doesnt support mindev parameter
-        if arg.timelimit == None:
-            techMapper.genSolution(arg.output)
+        if not arg.mindev:
+            techMapper.genSolution(arg.output, arg.timelimit, arg.verbose)
         else:
-            techMapper.genSolution(arg.output,arg.timelimit)
+            techMapper.genMinSolution(arg.output, arg.timelimit, arg.verbose)
+            
         if arg.checksol:
             techMapper.checkSolution(arg.output)
         
