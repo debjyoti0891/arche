@@ -9,7 +9,10 @@ import argparse
 import readline
 from cmd2 import Cmd 
 import cmd2
+import random
 from z3 import sat
+import time 
+
 # custom packages 
 import archeio.hdlread
 import archeio.graphio 
@@ -219,7 +222,7 @@ class ArcheTech(Cmd):
         i = 0
         for g in self.graphDb[len(self.graphDb)-len(arg.files):]:
             i = i +1
-            edgeLists.append('/tmp/edge_'+str(i))
+            edgeLists.append('/tmp/edge_'+str(i)+'_'+str(time.time())+'_'+str(random.randint(1,100)))
             g.write_edgelist(edgeLists[-1])
         
         #call mimd instance
