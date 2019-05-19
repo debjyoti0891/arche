@@ -245,9 +245,9 @@ class ArcheTech(Cmd):
             
         if arg.checksol:
             techMapper.checkSolution(arg.output)
-        end = time.time() 
+        end = time.time()
+         
         self.__sol.addParam('time',"%.2f"%(end-start))
-        
         print(self.__sol.getSolution())    
         
         

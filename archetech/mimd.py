@@ -8,6 +8,8 @@ import math
 import time
 from z3 import *
 
+import archeio.solution
+
 
 
 class MIMD:
@@ -28,6 +30,7 @@ class MIMD:
         self.__devLimit = devLimit 
         self.__reuse = reuse 
         self.__graphCount = 0
+        self.__sol = archeio.solution.Solution()
         
     def readGraph(self,edgeFiles):
         ''' reads a graph in edge list format 
@@ -38,6 +41,14 @@ class MIMD:
         for edgeFile in edgeFiles:
             graph= Graph.Read_Ncol(edgeFile, directed=True)   
             self.__graphs.append(graph)
+            
+            if self.__sol.getParam('vertices') == None:
+                self.__sol.addParam('vertices', [])
+            
+            vertices = self.__sol.getParam('vertices')
+            vertices.append(len(graph.vs))
+            self.__sol.addParam('vertices', vertices)
+            
         self.__graphCount = len(self.__graphs)
     
     
@@ -144,6 +155,8 @@ class MIMD:
         
     def genMinSolution(self,outf = None,timelimit = None,printSol=None):
         minDelay, maxSteps = self.graphStats()
+        self.__sol.addParam('minDelay', minDelay)
+        self.__sol.addParam('maxDelay', maxSteps)
         
         minval = minDelay 
         maxval = maxSteps 
@@ -154,7 +167,10 @@ class MIMD:
         delay, devices = self.genSolution(outf,timelimit,printSol,maxval)
         if delay == None:
             print('Trivial solution failed. Target delay : %d' % (maxval))
+            self.__sol.addParam('trivial',False)
             return None,None
+            
+        self.__sol.addParam('trivial',True)    
         solDelay, solDev = delay, devices
         
         print('Trivial solution passed')
@@ -170,6 +186,10 @@ class MIMD:
                 print('Solution found  for target delay %d with %d device' % (delay, devices))
                 solDelay, solDev = delay, devices
                 maxval = midval - 1
+                
+        self.__sol.addParam('delay', solDelay)
+        self.__sol.addParam('devices', solDev)
+        
         return solDelay, solDev
             
          
@@ -358,13 +378,15 @@ class MIMD:
             # enable device sharing across graphs for serial operations
             commonDevice = deviceSet[0]
             deviceUsage = dict()
-            deviceUsage[0] = len(commonDevice)
+            
             devMap = dict()
             
                 
             for i in range(1,self.__graphCount):
                 commonDevice = commonDevice.intersection(deviceSet[i])
+            
             # track device usage per graph 
+            deviceUsage[0] = len(commonDevice)
             for i in range(1,self.__graphCount):
                 deviceUsage[i] = len(commonDevice)
             
@@ -374,8 +396,6 @@ class MIMD:
                 d = d+1
                 devMap[dev] = d
             
-            
-                    
             print('Solution with %d steps found' % (maxTime))
             #print(timeline.keys())
             sol = list()
@@ -391,8 +411,10 @@ class MIMD:
                             
                             timeline[g][t+1][1] = devMap[timeline[g][t+1][1]]
                         else:
-                            # increment device id 
+                            # increment device id
+                              
                             deviceUsage[g] = deviceUsage[g] + 1
+                            
                             timeline[g][t+1][1] = deviceUsage[g]
                             
                         if sol[-1][1] != '-' and sol[-1][1] != timeline[g][t+1][1]:
@@ -400,7 +422,7 @@ class MIMD:
                             print(timeline[g][t+1][1], sol[-1][1])
                             return    
                             
-                        sol[-1][1] = timeline[g][t+1][1] #device 
+                        sol[-1][1]   = timeline[g][t+1][1] #device 
                         sol[-1][2+g] = timeline[g][t+1][0] #node
                 if verbose: print(t, sol[-1])
         
@@ -417,7 +439,9 @@ class MIMD:
                         if verbose: print('%4s' % (str(sol[t][val])+' '), end = '')
                     if verbose: print('', end='\n')
                     
-            # return number of cycles and number of devices required to map 
+            # return number of cycles and
+            # number of devices required to map 
+            maxDevice = max(deviceUsage.values())
             return maxTime, maxDevice
         else:
             print("Failed to solve")
