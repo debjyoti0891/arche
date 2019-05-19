@@ -1,3 +1,4 @@
 set debug true
+setlog -f logfiles
 mimd -f map_majority.blif.v map_b1.blif.v -o sol_small -t 10000 -md -v 
 quit 

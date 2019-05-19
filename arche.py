@@ -9,6 +9,7 @@ import argparse
 import readline
 from cmd2 import Cmd 
 import cmd2
+import json
 import random
 from z3 import sat
 import time 
@@ -25,7 +26,6 @@ import logging
 history_file = os.path.expanduser('~/.arche_history')
 if not os.path.exists(history_file):
     with open(history_file, "w") as fobj:
-        fobj.write("")
         readline.read_history_file(history_file)
         atexit.register(readline.write_history_file, history_file)
 
@@ -40,7 +40,8 @@ class ArcheTech(Cmd):
     debug = False
     graphDb = [] 
     graphFile = []
-    __sol = archeio.solution.Solution()
+    __sol     = archeio.solution.Solution()
+    __logFile = None
     techMapper = None 
 
     def __init__(self,persistent_history_file=history_file):
@@ -171,10 +172,12 @@ class ArcheTech(Cmd):
     def do_setlog(self, args):
         ''' set the log file name ''' 
         print('set log file :', args.filename)
+        
         if args.filename != None:
             logging.basicConfig(filename=args.filename,  level=logging.DEBUG)  
         else:
             print('Filename must be specified')
+        self.__logFile = args.filename
 
     def do_read(self,arg ):
         ''' Read a mapped verilog netlist file '''
@@ -218,6 +221,7 @@ class ArcheTech(Cmd):
             return 
         print(arg.files, arg.output, arg.mindev, arg.checksol)
         self.__sol.startSol()
+        self.__sol.addParam('arg', 'mimd')
         self.__sol.addParam('files',arg.files)
         self.__sol.addParam('minDev', arg.mindev)
         self.__sol.addParam('checksol',arg.checksol)
@@ -248,7 +252,13 @@ class ArcheTech(Cmd):
         end = time.time()
          
         self.__sol.addParam('time',"%.2f"%(end-start))
-        print(self.__sol.getSolution())    
+        #print(self.__sol.getSolution())   
+        
+        
+        if self.__logFile != None:
+            with open(self.__logFile, 'a') as fp:
+                json.dump(self.__sol.getSolution(), fp)
+                fp.write('\n')     
         
         
         
