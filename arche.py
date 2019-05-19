@@ -16,6 +16,7 @@ import time
 # custom packages 
 import archeio.hdlread
 import archeio.graphio 
+import archeio.solution 
 import archetech.smr
 import archetech.techmagic  
 import archetech.mimd
@@ -39,6 +40,7 @@ class ArcheTech(Cmd):
     debug = False
     graphDb = [] 
     graphFile = []
+    __sol = archeio.solution.Solution()
     techMapper = None 
 
     def __init__(self,persistent_history_file=history_file):
@@ -215,6 +217,12 @@ class ArcheTech(Cmd):
             print('Output file must be specified')
             return 
         print(arg.files, arg.output, arg.mindev, arg.checksol)
+        self.__sol.startSol()
+        self.__sol.addParam('files',arg.files)
+        self.__sol.addParam('minDev', arg.mindev)
+        self.__sol.addParam('checksol',arg.checksol)
+        self.__sol.addParam('outfile',arg.output)
+        start = time.time()
         for f in arg.files:
             self.do_read(f)
        
@@ -237,6 +245,10 @@ class ArcheTech(Cmd):
             
         if arg.checksol:
             techMapper.checkSolution(arg.output)
+        end = time.time() 
+        self.__sol.addParam('time',"%.2f"%(end-start))
+        
+        print(self.__sol.getSolution())    
         
         
         

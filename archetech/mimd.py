@@ -39,9 +39,7 @@ class MIMD:
             graph= Graph.Read_Ncol(edgeFile, directed=True)   
             self.__graphs.append(graph)
         self.__graphCount = len(self.__graphs)
-            
-    def readSolution(self,solFile):
-        pass 
+    
     
     def checkSolution(self, solution):
         ''' Does a feasibility check of the given solution 
