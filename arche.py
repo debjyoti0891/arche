@@ -226,6 +226,7 @@ class ArcheTech(Cmd):
         self.__sol.addParam('minDev', arg.mindev)
         self.__sol.addParam('checksol',arg.checksol)
         self.__sol.addParam('outfile',arg.output)
+        self.__sol.addParam('timelimit', arg.timelimit)
         start = time.time()
         for f in arg.files:
             self.do_read(f)
