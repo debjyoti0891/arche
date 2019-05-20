@@ -63,7 +63,7 @@ do
             
             
             echo "setlog -f logmap" > $archeInput
-            echo "mimd -f $b1 $b2 -o sol_${b1}_${b2} -t $2 -md -v -cs" >> $archeInput 
+            echo "mimd -f $file1 $file2 -o sol_${b1}_${b2} -t $2 -md -v -cs" >> $archeInput 
             echo "quit" >> $archeInput 
             #python3 arche.py < $archeInput 
             #screen -dm -S "${b1}_${b2}"
