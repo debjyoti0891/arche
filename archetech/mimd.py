@@ -40,6 +40,7 @@ class MIMD:
         '''
         for edgeFile in edgeFiles:
             graph= Graph.Read_Ncol(edgeFile, directed=True)   
+            
             self.__graphs.append(graph)
             
             if self.__sol.getParam('vertices') == None:
@@ -48,8 +49,12 @@ class MIMD:
             vertices = self.__sol.getParam('vertices')
             vertices.append(len(graph.vs))
             self.__sol.addParam('vertices', vertices)
+            if len(vertices) > 100:
+                print('Benchmark size is too large %d' % (vertics))
+                return None
             
         self.__graphCount = len(self.__graphs)
+        return self.__graphCount
     
     
     def checkSolution(self, solution):

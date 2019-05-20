@@ -241,15 +241,17 @@ class ArcheTech(Cmd):
         
         #call mimd instance
         techMapper = archetech.mimd.MIMD([])
-        techMapper.readGraph(edgeLists)
-        
-        if not arg.mindev:
-            techMapper.genSolution(arg.output, arg.timelimit, arg.verbose)
+        readStatus = techMapper.readGraph(edgeLists)
+        if readStatus == None:
+            self.__sol.addParam('failed', True)
         else:
-            techMapper.genMinSolution(arg.output, arg.timelimit, arg.verbose)
-            
-        if arg.checksol:
-            techMapper.checkSolution(arg.output)
+            if not arg.mindev:
+                techMapper.genSolution(arg.output, arg.timelimit, arg.verbose)
+            else:
+                techMapper.genMinSolution(arg.output, arg.timelimit, arg.verbose)
+                
+            if arg.checksol:
+                techMapper.checkSolution(arg.output)
         end = time.time()
          
         self.__sol.addParam('time',"%.2f"%(end-start))
