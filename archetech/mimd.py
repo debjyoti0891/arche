@@ -49,7 +49,7 @@ class MIMD:
             vertices = self.__sol.getParam('vertices')
             vertices.append(len(graph.vs))
             self.__sol.addParam('vertices', vertices)
-            if len(vertices) > 100:
+            if len(graph.vs) > 100:
                 print('Benchmark size is too large %d' % (vertics))
                 return None
             
