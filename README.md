@@ -20,7 +20,7 @@ The following command tries to find a solution for mapping the read verilog file
 
 The command can also be invoked to find solution to single row mapping of a file with a constraint on the number of steps (option `-s`) and the number of devices (option `-c`) avaiable for mapping. 
 
-``` rowsat -s steps -c devices ```:w 
+``` rowsat -s steps -c devices ``` 
 
 The output is shown in the terminal.
 
