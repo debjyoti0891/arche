@@ -9,7 +9,8 @@ The repository has been tested with Python 3.6.7 on Ubuntu 14.04 and 18.04.
 ### View list of available commands
 ``` help ```
 
-### Read a NOR/NOT mapped verilog file
+### Read a mapped verilog file
+The mapped file is obtained by using [ABC](https://github.com/berkeley-abc/abc) and consists of only NOR and NOT gates. A script for generating a NOR/NOT mapped netlist from .aig files is available in [NetListGenerator](https://github.com/debjyoti0891/M)AGICNetlistGen. 
 ``` read test_map.v ```
 
 ### Single row technology mapping for MAGIC
