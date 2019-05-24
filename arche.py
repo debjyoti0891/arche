@@ -89,7 +89,7 @@ class ArcheTech(Cmd):
         else:
             col = self.col
         if not (args.mindev or args.minstep) :
-            feasible,solution = archetech.smr.optiRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
+            feasible,model,solution = archetech.smr.optiRegAlloc(archeio.graphio.getPredList(self.graphDb[-1]),\
                     len(self.graphDb[-1].vs),\
                     archeio.graphio.getOutputs(self.graphDb[-1]),\
                     col,\
@@ -99,8 +99,12 @@ class ArcheTech(Cmd):
                     args.timelimit)
             if feasible == sat:
                 print('Solution obtained %d devices %d steps' % (args.col, args.steps))
+                minReg = args.col
+                steps = args.steps
             else:
                 print('Solution could not be obtained')
+                minReg = -1
+                steps = -1
         else: 
             if args.mindev and args.minstep:
                 optiType = 3
@@ -126,8 +130,8 @@ class ArcheTech(Cmd):
                 print('Devices : %d Min Steps : %d'% (minReg,steps))
             else :
                 print('Min Devices : %d Steps : %d'% (minReg,steps))    
-        logging.info('Min sat allocation command execution complete')
-        logging.info('Devices: %d, Cycles: %s, Optitype : %s' % (minReg,steps,optiType)) 
+            logging.info('Min sat allocation command execution complete')
+            logging.info('Devices: %d, Cycles: %s, Optitype : %s' % (minReg,steps,optiType)) 
     psParser = argparse.ArgumentParser()
     psParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')
     @cmd2.with_argparser(psParser)
