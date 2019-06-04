@@ -65,6 +65,7 @@ The output is shown in the terminal.
 
 ```[cycle number] operation nodeid [Dev deviceid]```
 
+Details of the algorithm can be found in the following link : [OptiSIMPLER](https://github.com/debjyoti0891/arche/blob/master/optisimpler.pdf)
 
 ### Quit the tool
 ``` quit```
