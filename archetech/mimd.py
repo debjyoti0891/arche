@@ -8,6 +8,8 @@ import math
 import time
 from z3 import *
 
+import archeio.solution
+
 
 
 class MIMD:
@@ -28,6 +30,7 @@ class MIMD:
         self.__devLimit = devLimit 
         self.__reuse = reuse 
         self.__graphCount = 0
+        self.__sol = archeio.solution.Solution()
         
     def readGraph(self,edgeFiles):
         ''' reads a graph in edge list format 
@@ -37,11 +40,22 @@ class MIMD:
         '''
         for edgeFile in edgeFiles:
             graph= Graph.Read_Ncol(edgeFile, directed=True)   
-            self.__graphs.append(graph)
-        self.__graphCount = len(self.__graphs)
             
-    def readSolution(self,solFile):
-        pass 
+            self.__graphs.append(graph)
+            
+            if self.__sol.getParam('vertices') == None:
+                self.__sol.addParam('vertices', [])
+            
+            vertices = self.__sol.getParam('vertices')
+            vertices.append(len(graph.vs))
+            self.__sol.addParam('vertices', vertices)
+            if len(graph.vs) > 100:
+                print('Benchmark size is too large %d' % (vertics))
+                return None
+            
+        self.__graphCount = len(self.__graphs)
+        return self.__graphCount
+    
     
     def checkSolution(self, solution):
         ''' Does a feasibility check of the given solution 
@@ -142,26 +156,71 @@ class MIMD:
             return False
         print('Solution is valid')
         return True 
-
-    def genSolution(self,outf = None):
         
         
+    def genMinSolution(self,outf = None,timelimit = None,printSol=None):
+        minDelay, maxSteps = self.graphStats()
+        self.__sol.addParam('minDelay', minDelay)
+        self.__sol.addParam('maxDelay', maxSteps)
+        
+        minval = minDelay 
+        maxval = maxSteps 
+        
+        solDelay = None 
+        solDev = None
+        
+        delay, devices = self.genSolution(outf,timelimit,printSol,maxval)
+        if delay == None:
+            print('Trivial solution failed. Target delay : %d' % (maxval))
+            self.__sol.addParam('trivial',False)
+            return None,None
+            
+        self.__sol.addParam('trivial',True)    
+        solDelay, solDev = delay, devices
+        
+        print('Trivial solution passed')
+        while minval < maxval:
+            midval = int( (minval+maxval)/2)
+            print('Solving %d target delay [%d %d]' % (midval, minval,maxval))
+            delay, devices = self.genSolution(outf,timelimit,printSol,midval)
+            
+            if delay == None:
+                print('Solution failed for target delay %d' % (midval))
+                minval = midval + 1
+            else:
+                print('Solution found  for target delay %d with %d device' % (delay, devices))
+                solDelay, solDev = delay, devices
+                maxval = midval - 1
+                
+        self.__sol.addParam('delay', solDelay)
+        self.__sol.addParam('devices', solDev)
+        
+        return solDelay, solDev
+            
+         
+    
+    def genSolution(self, outf = None, timelimit = None, printSol=None, targetDelay=None): 
+        
+        minDelay, maxSteps = self.graphStats()
         # create the variables for ni and ci
         colorVars = dict()
         timeVars  = dict()
         degreeGroups = dict() 
 
         # z3 solver
-        s = Optimize() 
+        #s = Optimize() 
+        s = Solver()
+        if timelimit != None:
+            s.set("timeout", timelimit)
+            print('Timelimit of sat solving set to %d ms' % (timelimit))
         
-        maxSteps = 0
-        for graph in self.__graphs:
-            maxSteps = maxSteps + len(graph.vs)
-            for v in graph.vs:
-                print(v['name'])
         cost = Int('delay')
+        if targetDelay == None:
+            targetDelay = int(0.8*maxSteps)
+        # bound the cost TODO: remove if using optimize!!!
+        s.add(cost == targetDelay )
+        print('Min delay: %d Max delay : %d Permitted: %d' % (minDelay, maxSteps, targetDelay))
         
-
         for i in range(self.__graphCount):
             graph = self.__graphs[i]
             colorVars[i] = dict()
@@ -170,10 +229,10 @@ class MIMD:
                 colorVars[i][v['name']] = Int('c_'+v['name']+'_'+str(i))
                 timeVars[i][v['name']] = Int('t_'+v['name']+'_'+str(i))
                 
-                s.add(colorVars[i][v['name']] > 0, colorVars[i][v['name']] <= 10)
+                s.add(colorVars[i][v['name']] > 0, colorVars[i][v['name']] <= maxSteps)
                 s.add(timeVars[i][v['name']] > 0, timeVars[i][v['name']] <= maxSteps)
                 s.add(cost> timeVars[i][v['name']])
-            print(graph.degree(type='in'))
+            #print(graph.degree(type='in'))
             
             for v in graph.vs:
                 #precedence constraints 
@@ -181,14 +240,15 @@ class MIMD:
                     pname = graph.vs[p]['name']
                     s.add(timeVars[i][v['name']] > timeVars[i][pname])
 
-              
+            
             #distinct 
-            print('colorvars;',colorVars[i])
+            #print('colorvars;',colorVars[i])
             dColors = Distinct(*colorVars[i].values())
             s.add(dColors)
             dTime = Distinct(*timeVars[i].values())
-            s.add(dTime)
+            s.add(dTime) 
             '''
+            
             # adding n^2 distiction constraints 
             l = list(colorVars[i].values())
             dis = list()
@@ -220,7 +280,7 @@ class MIMD:
                         s.add(
                             Implies(colorVars[i][viname] != colorVars[j][vjname], timeVars[i][viname] != timeVars[j][vjname]))  
                             
-                              
+                             
                         if degi[di] != degj[dj] or \
                              (len(graphi.neighbors(graphi.vs[di],IN)) != \
                              len(graphj.neighbors(graphj.vs[dj],IN)) ):
@@ -228,7 +288,7 @@ class MIMD:
                         elif degi[di] != 0: #two nodes might be executed in parallel 
                            
                             
-                            print('parallel ', degi[di],':', viname, vjname)
+                            #print('parallel ', degi[di],':', viname, vjname)
                             predi = graphi.vs(graphi.neighbors(graphi.vs[di],IN))
                             predj = graphj.vs(graphj.neighbors(graphj.vs[dj],IN))
                             #for perm in itertools.permutations(predj):
@@ -241,24 +301,58 @@ class MIMD:
                                 for k in range(len(perm)):
                                     pi = predi[k]['name']
                                     pj = perm[k]['name']
-                                    print(colorVars[i][pi], colorVars[j][pj])
+                                    #print(colorVars[i][pi], colorVars[j][pj])
                                     andClause = And(andClause,\
                                      colorVars[i][pi]==colorVars[j][pj])
                                 orClause = Or(orClause, andClause)
                             
                             s.add(Implies(timeVars[i][viname] == timeVars[j][vjname],
                             And(orClause, colorVars[i][viname] == colorVars[j][vjname])))
-                            '''s.add(If(orClause,
+                            '''
+                            s.add(If(orClause,
                                 timeVars[i][viname] == timeVars[j][vjname],
                                 timeVars[i][viname] != timeVars[j][vjname]))    
                             '''
-        h = s.minimize(cost)
         
-        self.printSolution(s,colorVars, timeVars, outf)
-        #self.checkSolution('solved.txt')
+        #h = s.minimize(cost)
         
         
-    def printSolution(self,s, colorVars, timeVars, outf=None):
+        delay, devices = self.printSolution(s,colorVars, timeVars, outf)
+        
+        return delay, devices 
+        
+    def graphStats(self):
+        ''' determines the minimum and maximum delay for 
+            scheduling the set of given graphs '''
+        maxSteps = 0
+        maxDegGraph = -1
+        degiGraphs = dict()
+        g = 0
+        for graph in self.__graphs:
+            maxSteps = maxSteps + len(graph.vs)
+           
+            degi = graph.degree(type='in')
+            maxdeg = max(degi)
+            maxDegGraph = max(maxdeg, maxDegGraph)
+            degiGraphs[g] = dict()
+            
+            for i in range(maxdeg):
+                degiGraphs[g][i] = degi.count(i)
+            g = g+1
+        
+        
+        minDelay = 0
+        for d in range(maxDegGraph):
+            maxdelay = 0
+            for i in range(g):
+                if d in degiGraphs[i].keys():
+                    maxdelay = max(maxdelay, degiGraphs[i][d])
+            minDelay = minDelay + maxdelay
+        
+        return minDelay, maxSteps
+            
+            
+    def printSolution(self,s, colorVars, timeVars, outf=None, verbose = True):
         if s.check() == sat:
             m = s.model()
             ''' Print format 
@@ -268,20 +362,47 @@ class MIMD:
             #TODO : update
             timeline = dict()
             maxTime = -1
-            
+            maxDevice = -1
+            deviceSet = dict()
             for i in range(self.__graphCount):
                 graph = self.__graphs[i] 
+                deviceSet[i] = set()
                 timeline[i] = dict()
                 for v in graph.vs:
-                    print("graph" ,i, ": [" , v['name'],']:',m.evaluate(timeVars[i][v['name']]), \
-                            m.evaluate(colorVars[i][v['name']]))
+                    #print("graph" ,i, ": [" , v['name'],']:',m.evaluate(timeVars[i][v['name']]), \
+                           # m.evaluate(colorVars[i][v['name']]))
                     timeStep = m[timeVars[i][v['name']]].as_long()
                     device   = m[colorVars[i][v['name']]].as_long()
                     timeline[i][timeStep] = [v['name'], device]
                     maxTime = max(maxTime, timeStep)
-        
+                    maxDevice = max(maxDevice, device)
+                    deviceSet[i].add(device) 
+            
+            # reduce device count from the solution 
+            # generated by sat
+            # enable device sharing across graphs for serial operations
+            commonDevice = deviceSet[0]
+            deviceUsage = dict()
+            
+            devMap = dict()
+            
+                
+            for i in range(1,self.__graphCount):
+                commonDevice = commonDevice.intersection(deviceSet[i])
+            
+            # track device usage per graph 
+            deviceUsage[0] = len(commonDevice)
+            for i in range(1,self.__graphCount):
+                deviceUsage[i] = len(commonDevice)
+            
+            # reassign common devices across graphs
+            d = 0  
+            for dev in commonDevice:
+                d = d+1
+                devMap[dev] = d
+            
             print('Solution with %d steps found' % (maxTime))
-            print(timeline.keys())
+            #print(timeline.keys())
             sol = list()
             for t in range(maxTime):
                 sol.append([t+1, '-'] + [ '-' for j in range(self.__graphCount)])
@@ -289,14 +410,28 @@ class MIMD:
                 for g in range(self.__graphCount):
                     if t+1 in timeline[g].keys():
                         
+                        
+                        # do the actual of devices here reassignment     
+                        if timeline[g][t+1][1] in commonDevice:
+                            
+                            timeline[g][t+1][1] = devMap[timeline[g][t+1][1]]
+                        else:
+                            # increment device id
+                              
+                            deviceUsage[g] = deviceUsage[g] + 1
+                            
+                            timeline[g][t+1][1] = deviceUsage[g]
+                            
                         if sol[-1][1] != '-' and sol[-1][1] != timeline[g][t+1][1]:
                             print('Invalid solution. Two different device columns used in same cycle')
                             print(timeline[g][t+1][1], sol[-1][1])
-                            return
-                        sol[-1][1] = timeline[g][t+1][1] #device 
+                            return    
+                            
+                        sol[-1][1]   = timeline[g][t+1][1] #device 
                         sol[-1][2+g] = timeline[g][t+1][0] #node
-                print(t, sol[-1])
+                if verbose: print(t, sol[-1])
         
+            
             if outf != None:
                 with open(outf,'w') as f:
                     for t in range(maxTime):
@@ -306,10 +441,16 @@ class MIMD:
             else:
                 for t in range(maxTime):
                     for val in range(2+self.__graphCount):
-                        print('%4s' % (str(sol[t][val])+' '), end = '')
-                    print('', end='\n')
+                        if verbose: print('%4s' % (str(sol[t][val])+' '), end = '')
+                    if verbose: print('', end='\n')
+                    
+            # return number of cycles and
+            # number of devices required to map 
+            maxDevice = max(deviceUsage.values())
+            return maxTime, maxDevice
         else:
-            print("failed to solve")
+            print("Failed to solve")
+            return None, None 
             
 if __name__ == '__main__':
     if len(sys.argv) < 3:

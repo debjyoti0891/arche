@@ -9,10 +9,15 @@ import argparse
 import readline
 from cmd2 import Cmd 
 import cmd2
+import json
+import random
 from z3 import sat
+import time 
+
 # custom packages 
 import archeio.hdlread
 import archeio.graphio 
+import archeio.solution 
 import archetech.smr
 import archetech.techmagic  
 import archetech.mimd
@@ -21,7 +26,6 @@ import logging
 history_file = os.path.expanduser('~/.arche_history')
 if not os.path.exists(history_file):
     with open(history_file, "w") as fobj:
-        fobj.write("")
         readline.read_history_file(history_file)
         atexit.register(readline.write_history_file, history_file)
 
@@ -36,6 +40,8 @@ class ArcheTech(Cmd):
     debug = False
     graphDb = [] 
     graphFile = []
+    __sol     = archeio.solution.Solution()
+    __logFile = None
     techMapper = None 
 
     def __init__(self,persistent_history_file=history_file):
@@ -170,10 +176,12 @@ class ArcheTech(Cmd):
     def do_setlog(self, args):
         ''' set the log file name ''' 
         print('set log file :', args.filename)
+        
         if args.filename != None:
             logging.basicConfig(filename=args.filename,  level=logging.DEBUG)  
         else:
             print('Filename must be specified')
+        self.__logFile = args.filename
 
     def do_read(self,arg ):
         ''' Read a mapped verilog netlist file '''
@@ -200,8 +208,10 @@ class ArcheTech(Cmd):
     mimdParser = argparse.ArgumentParser()
     mimdParser.add_argument('-f','--files', type=str, nargs='+')
     mimdParser.add_argument('-o','--output', type=str)
-    mimdParser.add_argument('-md', '--mindev', type=int)
+    mimdParser.add_argument('-md', '--mindev', action='store_true')
+    mimdParser.add_argument('-t', '--timelimit', type=int)
     mimdParser.add_argument('-cs', '--checksol', action='store_true')
+    mimdParser.add_argument('-v', '--verbose', action='store_true')
     @cmd2.with_argparser(mimdParser)
     def do_mimd(self,arg):
         ''' maps two or more functions using MAGIC operation.
@@ -214,6 +224,14 @@ class ArcheTech(Cmd):
             print('Output file must be specified')
             return 
         print(arg.files, arg.output, arg.mindev, arg.checksol)
+        self.__sol.startSol()
+        self.__sol.addParam('arg', 'mimd')
+        self.__sol.addParam('files',arg.files)
+        self.__sol.addParam('minDev', arg.mindev)
+        self.__sol.addParam('checksol',arg.checksol)
+        self.__sol.addParam('outfile',arg.output)
+        self.__sol.addParam('timelimit', arg.timelimit)
+        start = time.time()
         for f in arg.files:
             self.do_read(f)
        
@@ -222,17 +240,32 @@ class ArcheTech(Cmd):
         i = 0
         for g in self.graphDb[len(self.graphDb)-len(arg.files):]:
             i = i +1
-            edgeLists.append('/tmp/edge_'+str(i))
+            edgeLists.append('/tmp/edge_'+str(i)+'_'+str(time.time())+'_'+str(random.randint(1,100)))
             g.write_edgelist(edgeLists[-1])
         
         #call mimd instance
         techMapper = archetech.mimd.MIMD([])
-        techMapper.readGraph(edgeLists)
+        readStatus = techMapper.readGraph(edgeLists)
+        if readStatus == None:
+            self.__sol.addParam('failed', True)
+        else:
+            if not arg.mindev:
+                techMapper.genSolution(arg.output, arg.timelimit, arg.verbose)
+            else:
+                techMapper.genMinSolution(arg.output, arg.timelimit, arg.verbose)
+                
+            if arg.checksol:
+                techMapper.checkSolution(arg.output)
+        end = time.time()
+         
+        self.__sol.addParam('time',"%.2f"%(end-start))
+        #print(self.__sol.getSolution())   
         
-        #TODO : still doesnt support mindev parameter
-        techMapper.genSolution(arg.output)
-        if arg.checksol:
-            techMapper.checkSolution(arg.output)
+        
+        if self.__logFile != None:
+            with open(self.__logFile, 'a') as fp:
+                json.dump(self.__sol.getSolution(), fp)
+                fp.write('\n')     
         
         
         
