@@ -35,20 +35,20 @@ For each simulation, a *configuration* file in *json* format has to be specified
 
 The individual fields are described below.
 
-    + *dim* specifies DCM with *m* wordlines and *n* bitlines
-    + *filename* specifies various files used for simulation
-      + *varin* specfies the file with input specified as variables
-      + *input* specifies the PIR contents
-      + *ins_mem* defines the contents of the instruction memory
-      + *output* specifies the prefix of the generated files
-      + *varout* specifies the details of the output generated
-    + *simulation* specifies the simulation parameters
-      + *cycles* define the number of cycles for which simulation has to be performed. 0 indicates all instructions have to simulated.
-      + *gen_pwl* specifies if pwl files for Cadence Simulation have to be generated. The *voltage* details must be specified, if this field has value 1.
-    + *voltage* specifies the parameters used in the pwl files that can be imported directly in Cadence for simulating the crossbar.
-      + 0 and 1 defines the voltage levels.
-      + *delta* specifies the time in *ns* to switch between voltage levels
-      + *period* specifies the clock time period in *ns* 
++ *dim* specifies DCM with *m* wordlines and *n* bitlines
++ *filename* specifies various files used for simulation
+  + *varin* specfies the file with input specified as variables
+  + *input* specifies the PIR contents
+  + *ins_mem* defines the contents of the instruction memory
+  + *output* specifies the prefix of the generated files
+  + *varout* specifies the details of the output generated
++ *simulation* specifies the simulation parameters
+  + *cycles* define the number of cycles for which simulation has to be performed. 0 indicates all instructions have to simulated.
+  + *gen_pwl* specifies if pwl files for Cadence Simulation have to be generated. The *voltage* details must be specified, if this field has value 1.
++ *voltage* specifies the parameters used in the pwl files that can be imported directly in Cadence for simulating the crossbar.
+  + 0 and 1 defines the voltage levels.
+  + *delta* specifies the time in *ns* to switch between voltage levels
+  + *period* specifies the clock time period in *ns* 
 
 
 To start the tool, 
