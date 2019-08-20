@@ -13,6 +13,36 @@ arche>
 ### View list of available commands
 ``` arche> help ```
 
+
+### ReVAMP simulation
+
+arche supports behavioural simulation of the [ReVAMP architecture](https://ieeexplore.ieee.org/document/7927095). The details of simulation can be found in the this [tutorial](./docs/revamp.md).
+
+``` arche> revamp -f simfile ```
+
+### ReVAMP benchmarks
+
+arche has support for mapping multiple benchmarks to the ReVAMP architecture. 
+
+## SHA-2 and SHA-3 mapping 
+
+``` arche> sha -h
+usage: sha [-h] [-t TEXT] [-g GEN] [-d DIR]
+
+Generate instructions for hashing a given text on ReVAMP
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t TEXT, --text TEXT  Text to be hashed
+  -g GEN, --gen GEN     Valid option: sha2,sha3
+  -d DIR, --dir DIR     Output directory
+```
+
+Example usage to hash *hello* and write the output to the tests directory:
+
+``` sha -t hello -g sha3 -d tests ``` 
+
+
 ### Read a mapped verilog file
 The tool supports reading verilog files consisting of only NOR and NOT gates. 
 
@@ -71,11 +101,7 @@ The output is shown in the terminal.
 
 Details of the algorithm can be found in the following link : [OptiSIMPLER](./docs/optisimpler.pdf)
 
-### ReVAMP simulation
 
-arche supports behavioural simulation of the [ReVAMP architecture](https://ieeexplore.ieee.org/document/7927095). The details of simulation can be found in the this [tutorial](./docs/revamp.md).
-
-``` arche> revamp -f simfile ```
 
 ### Quit the tool
 ``` arche> quit```
