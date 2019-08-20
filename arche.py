@@ -6,6 +6,7 @@ Arche
 import os
 import atexit
 import argparse
+import datetime
 import readline
 from cmd2 import Cmd 
 import cmd2
@@ -20,7 +21,7 @@ import archeio.graphio
 import archeio.solution 
 
 import archesim.revamp 
-
+import archesim.bench.gen_SHA3
 import archetech.smr
 import archetech.techmagic  
 import archetech.mimd
@@ -174,7 +175,7 @@ class ArcheTech(Cmd):
    
    
     revParser = argparse.ArgumentParser()
-    revParser.add_argument('-f', '--file', type=str, help='Simulate ReVAMP benchmark')
+    revParser.add_argument('-f', '--file', type=str, help='ReVAMP simulation configuration file')
     @cmd2.with_argparser(revParser)
     def do_revamp(self, args):
         ''' Simulate a benchmark using the ReVAMP architecture ''' 
@@ -186,7 +187,42 @@ class ArcheTech(Cmd):
             print('Simulation configuration file must be specified')
             return None
         
+    shaParser = argparse.ArgumentParser()
+    shaParser.add_argument('-t', '--text', type=str, help='Text to be hashed')
+    shaParser.add_argument('-g', '--gen', type=str, help='Valid option: sha2,sha3')
+    shaParser.add_argument('-d', '--dir', type=str, help='Output directory')
+    @cmd2.with_argparser(shaParser)
+    def do_sha(self, args):
+        ''' Generate instructions for hashing a given text on ReVAMP ''' 
+        
+        if args.text == None:
+            print('Text to be hashed must be specified')
+            return 
+        if args.gen == None:
+            args.gen = 'sha3'
+        
+        if args.dir == None:
+            print('Output directory must be specified ')
+            return   
+        else:
+            if args.dir[-1] != '/':
+                args.dir = args.dir+'/'
+            
+        if args.gen == 'sha3':
+            prefix = args.dir + 'h'+'{date:%Y-%m-%d_%H:%M:%S}'.format( date=datetime.datetime.now())
 
+            ins = archesim.bench.gen_SHA3.SHA3ins(prefix)
+            inp = archesim.bench.gen_SHA3.SHA3inp(prefix)
+
+            ins.Keccak()
+            inp.genInp(args.text)
+            
+            ins.genConfig()
+        
+            
+          
+        
+            
     logParser = argparse.ArgumentParser()
     logParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')
     @cmd2.with_argparser(logParser)

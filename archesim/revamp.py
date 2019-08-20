@@ -43,6 +43,7 @@ class ReVAMP:
         self.varin  = None
         self.varout = None
         self.gen_pwl = False
+        self.voltage_spec = None
 
     def loadConfig(self,config_file):
         config_error = 'Config load failed:'
@@ -108,6 +109,7 @@ class ReVAMP:
             if 'gen_pwl' not in config['simulation'].keys() or \
                     config['simulation']['gen_pwl'] == 0:
                 self.gen_pwl = False
+                
             else:
                 self.gen_pwl = True
         
@@ -549,7 +551,8 @@ class ReVAMP:
             elif ws == '11':
                 w_in = in_reg[ws]
             #print(w_in,voltage_spec)
-            curr_vol[w] = voltage_spec[str(w_in)]
+            if self.gen_pwl:
+                curr_vol[w] = voltage_spec[str(w_in)]
 
             b_in = []
             bl = 0
@@ -559,7 +562,8 @@ class ReVAMP:
                 #print('b', b, in_reg)
                 if v == '1':
                     b_in = b_in+ [in_reg[self.n-1-int(b)]] 
-                    curr_vol[self.m + bl] = voltage_spec[str(in_reg[self.n-1-int(b)])]
+                    if self.gen_pwl:
+                        curr_vol[self.m + bl] = voltage_spec[str(in_reg[self.n-1-int(b)])]
                 else:
                     b_in = b_in + ['NOP']
                 bl = bl+1
