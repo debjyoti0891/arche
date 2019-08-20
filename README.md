@@ -24,7 +24,7 @@ arche supports behavioural simulation of the [ReVAMP architecture](https://ieeex
 
 arche has support for mapping multiple benchmarks to the ReVAMP architecture. 
 
-## SHA-2 and SHA-3 mapping 
+#### SHA-2 and SHA-3 mapping 
 
 ``` arche> sha -h
 usage: sha [-h] [-t TEXT] [-g GEN] [-d DIR]
