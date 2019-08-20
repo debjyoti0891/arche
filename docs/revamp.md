@@ -52,8 +52,10 @@ The individual fields are described below.
 
 
 To start the tool, 
-``` $ python3 arche.py 
+``` 
+$python3 arche.py 
 Synthesis and technology mapping for emerging technologies
+arche>
 ```
 
 To execute the simulation, 
