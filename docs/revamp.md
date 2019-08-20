@@ -1,6 +1,4 @@
-#ReVAMP : ReRAM based VLIW architecture for in-memory computing 
-
-
+### ReVAMP : ReRAM based VLIW architecture for in-memory computing 
 
 The arche framework supports behavioural simulation of the ReVAMP architecture[[PDF]](https://ieeexplore.ieee.org/document/7927095).  
 For each simulation, a *configuration* file in *json* format has to be specified. We explain the configuration file with an example.
@@ -60,7 +58,7 @@ arche>
 
 To execute the simulation, 
 ```
-arche>revamp -f archesim/share_2inp/config_data.json 
+arche>revamp -f tests/share_2inp/config_data.json 
 Simulation started for: 0  cycles
 Loading to PIR ['0', '1']
 In reg: ['0', '1']

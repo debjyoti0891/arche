@@ -67,5 +67,11 @@ The output is shown in the terminal.
 
 Details of the algorithm can be found in the following link : [OptiSIMPLER](https://github.com/debjyoti0891/arche/blob/master/optisimpler.pdf)
 
+### ReVAMP simulation
+
+arche supports behavioural simulation of the [ReVAMP architecture](https://ieeexplore.ieee.org/document/7927095). The details of simulation can be found in the this [tutorial](./docs/revamp.md).
+
+``` revamp -f simfile ```
+
 ### Quit the tool
 ``` quit```
