@@ -18,6 +18,9 @@ import time
 import archeio.hdlread
 import archeio.graphio 
 import archeio.solution 
+
+import archesim.revamp 
+
 import archetech.smr
 import archetech.techmagic  
 import archetech.mimd
@@ -168,7 +171,21 @@ class ArcheTech(Cmd):
             print('Mapping with word length %d' % (self.col))
         else :
             print('Mapping with crossbar dimension %dX%d' %(self.row, self.col))
-            
+   
+   
+    revParser = argparse.ArgumentParser()
+    revParser.add_argument('-f', '--file', type=str, help='Simulate ReVAMP benchmark')
+    @cmd2.with_argparser(revParser)
+    def do_revamp(self, args):
+        ''' Simulate a benchmark using the ReVAMP architecture ''' 
+        
+        if args.file != None:
+            crossbar = archesim.revamp.ReVAMP()
+            crossbar.simulateConfig(args.file)
+        else:
+            print('Simulation configuration file must be specified')
+            return None
+        
 
     logParser = argparse.ArgumentParser()
     logParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')

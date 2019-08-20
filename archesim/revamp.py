@@ -59,21 +59,26 @@ class ReVAMP:
             self.m = int(config['dim']['m'])
             self.n = int(config['dim']['n'])
             self.__setupSim()
-
+        # get directory of config file
+        if '/' in config_file: 
+            config_dir = config_file[:config_file.rfind('/')+1]
+        else:
+            config_dir = ''
+            
         # load instructions and PIR
         if 'filename' not in config.keys():
             print(config_error+'filename key missing.')
             sys.exit(1)
         else:
-            self.ins_file = config['filename']['ins_mem']
-            self.out_file = config['filename']['output']
+            self.ins_file = config_dir + config['filename']['ins_mem']
+            self.out_file = config_dir + config['filename']['output']
             if 'input' in config['filename'].keys():
-                self.inp_file = config['filename']['input']
+                self.inp_file = config_dir + config['filename']['input']
             if 'varin' in config['filename'].keys():
-                self.varin = config['filename']['varin']
+                self.varin = config_dir + config['filename']['varin']
             
             if 'varout' in config['filename'].keys():
-                self.varout = config['filename']['varout']
+                self.varout = config_dir + config['filename']['varout']
                 
         # simulate
         if 'simulation' not in config.keys():
