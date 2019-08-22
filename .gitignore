@@ -39,6 +39,8 @@ _templates
 pip-log.txt
 pip-delete-this-directory.txt
 
+tests/*
+
 # Unit test / coverage reports
 htmlcov/
 .tox/

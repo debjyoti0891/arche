@@ -549,7 +549,7 @@ class ReVAMP:
             elif ws == '01':
                 w_in = 1
             elif ws == '11':
-                w_in = in_reg[ws]
+                w_in = in_reg[wb]
             #print(w_in,voltage_spec)
             if self.gen_pwl:
                 curr_vol[w] = voltage_spec[str(w_in)]

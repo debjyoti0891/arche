@@ -22,6 +22,7 @@ import archeio.solution
 
 import archesim.revamp 
 import archesim.bench.gen_SHA3
+import archesim.bench.gen_SHA2
 import archetech.smr
 import archetech.techmagic  
 import archetech.mimd
@@ -196,20 +197,21 @@ class ArcheTech(Cmd):
         ''' Generate instructions for hashing a given text on ReVAMP ''' 
         
         if args.text == None:
-            print('Text to be hashed must be specified')
+            print('Error: Text to be hashed must be specified')
             return 
         if args.gen == None:
             args.gen = 'sha3'
         
         if args.dir == None:
-            print('Output directory must be specified ')
+            print('Error: Output directory must be specified ')
             return   
         else:
             if args.dir[-1] != '/':
                 args.dir = args.dir+'/'
-            
+                
+        prefix = args.dir + 'h'+'{date:%Y-%m-%d_%H:%M:%S}'.format( date=datetime.datetime.now())
         if args.gen == 'sha3':
-            prefix = args.dir + 'h'+'{date:%Y-%m-%d_%H:%M:%S}'.format( date=datetime.datetime.now())
+            
 
             ins = archesim.bench.gen_SHA3.SHA3ins(prefix)
             inp = archesim.bench.gen_SHA3.SHA3inp(prefix)
@@ -218,6 +220,12 @@ class ArcheTech(Cmd):
             inp.genInp(args.text)
             
             ins.genConfig()
+        elif args.gen == 'sha2':
+            
+            sha2obj = archesim.bench.gen_SHA2.SHA2512(prefix,args.text,True)
+        else:
+            print('Error: Invalid hashing algorithm specified. Supported: sha2, sha3')
+
         
             
           
