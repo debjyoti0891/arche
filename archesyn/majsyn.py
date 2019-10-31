@@ -1,5 +1,7 @@
 import datetime
 import math
+from subprocess import PIPE, run
+import json
 
 class BitonicSort:
 
@@ -37,8 +39,8 @@ class BitonicSort:
         output = 'majority'
         outf = open(outfile,'w')
         # header
-        outf.write('//Benchmark written by "arche" on {}\n'.format(datetime.datetime.now()))
-        outf.write('// Majority-{} constructed with {} Majority-3 nodes\n'.format(N, len(self.__compNetwork)*2))
+        #outf.write('//Benchmark written by "arche" on {}\n'.format(datetime.datetime.now()))
+        #outf.write('// Majority-{} constructed with {} Majority-3 nodes\n'.format(N, len(self.__compNetwork)*2))
         outf.write('module maj{} (\n'.format(N))
         for i in range(N):
             outf.write('v{} , '.format(i))
@@ -61,7 +63,7 @@ class BitonicSort:
         varTrack = ['v{}'.format(i) for i in range(N)]
         c = 0
         for comp in self.__compNetwork[:-1]:
-            print(comp)
+            #print(comp)
             in1 = comp[0]
             in2 = comp[1]
 
@@ -84,7 +86,7 @@ class BitonicSort:
             varTrack[in1] = out1
             varTrack[in2] = out2 
 
-        print(self.__compNetwork[-1])
+        #print(self.__compNetwork[-1])
         comp = self.__compNetwork[-1]
         inp0 = varTrack[comp[0]]
         inp1 = varTrack[comp[1]]
@@ -100,6 +102,50 @@ class BitonicSort:
         # tail
         outf.write('endmodule')
         outf.close()
+        self.optimizeNetwork(outfile)
+    
+    def optimizeNetwork(self,outfile):
+        if '/' in outfile:
+            outdir = outfile[:outfile.rfind('/')]
+            basename = outfile[outfile.rfind('/')+1:]
+        else:
+            outdir = './'
+            basename = outfile 
+        # rewrite the MIG using cirkit
+        outf = outdir + 'opti_'+ basename
+        circinp = 'read_verilog -m '+ outfile +'\n ps -m \n mighty --strategy 0 --area_aware\n' +\
+                'ps -m \n write_verilog '+outf+'\nquit\n'
+        with open(outdir+'circin','w') as f:
+            f.write(circinp)
+        command = ['cirkit', '-f', outdir+'circin', '-l' , outdir+'circlog.txt']
+        result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        
+        print(result.returncode, result.stdout, result.stderr) 
+        if result.stderr != '':
+            print('Error: '+basename+' could not be processed by cirkit\n')
+            print('Cirkit output\n--------------------')
+            print(result.stderr)
+            return None 
+        else:
+            print('Completed rewriting benchmark '+basename)  
+            
+            #print(result.stdout)
+            
+            # log the results
+            logfile = open(outdir + 'outlog.txt', 'a')
+            
+            with open(outdir+'circlog.txt') as json_file:
+                data = json.load(json_file)
+                outdata = basename + ','
+                initial = data[1]
+                outdata = outdata +  '{},{},{},{},'.format(initial['pis'],initial['pos'],initial['gates'], initial['depth'])
+                initial = data[3]
+                outdata = outdata +  '{},{},{}\n'.format(initial['gates'], initial['depth'],initial['time'])
+                logfile.write(outdata)
+                    
+                #print(json.dumps(data, indent=4, sort_keys=True))
+            
+            logfile.close()
 
 
     def __purge(self):
@@ -119,7 +165,8 @@ class BitonicSort:
                 touched[comp[0]] = True 
                 touched[comp[1]] = True 
             else:
-                print('purging {} -> {}'.format(i, len(self.__compNetwork)-1-i))
+                #print('purging {} -> {}'.format(i, len(self.__compNetwork)-1-i))
+                print('purging {} -> {}'.format(i, len(self.__compNetwork)-1-i), end='\r', flush=True)
                 purgeArr.append(len(self.__compNetwork)-1-i)
                 
             if i % 10 == 0 and (False not in touched):
@@ -177,7 +224,7 @@ if __name__ == '__main__':
     
     
     with open('majres.csv','w') as f:
-        for i in range(5,10,4):
+        for i in range(5,12,2):
             net = bs.getNetwork(i)
             bs.writeNetwork('maj{}.v'.format(i))
             f.write(str(i)+','+str(len(net))+'\n')
