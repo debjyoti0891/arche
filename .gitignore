@@ -41,6 +41,9 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 tests/*
+!tests/*py
+!tests/fixtures
+!tests/fixtures/*
 
 # Unit test / coverage reports
 htmlcov/
