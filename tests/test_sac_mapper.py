@@ -1,6 +1,7 @@
 import unittest
 import os
 from archetech.spirit.sac_mapper import SACMapper
+from archetech.spirit.mapping_solution import verifyOutput
 import shutil
 
 
@@ -17,6 +18,11 @@ class SacAdderTest(BasicSacTest):
         benchfile = "./tests/fixtures/full_adder_1bit.v"
         newObj = SACMapper(benchfile,self.benchdir,'logs.txt', True, True)
         newObj.mapBenchmark(8, 8, 2)
+        res,out = verifyOutput(benchfile, \
+            'tests/genfiles/Cr_8_8_k2_full_adder_1bit.v.v', self.benchdir)
+        if not res:
+            print(out)
+        self.assertEqual(res, True, "Generated file is not functionally same")
     
 class SacSmallTest(BasicSacTest):
     def test_sac_cm151a_blif(self):

@@ -5,13 +5,15 @@ from .solution import Solution
 
 def verifyOutput(file1, file2, tempdir):
     # verify equivalence using ABC
+    print('Verifying equivalence of {} and {}'.format(file1,file2))
     with open(tempdir + "abcverify", "w") as f:
-        f.write("cec -n {} {}".format(file1, file2))
+        f.write("cec {} {}".format(file1, file2))
     command = ["abc", "-f", tempdir + "abcverify"]
     result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+    print('Verifying completed with return code {}'.format(result.returncode))
     output = result.stdout
     if result.returncode != 0:
-        return False, output
+        return False, result.stderr
     else:
 
         if "are equivalent" in output:
@@ -30,13 +32,14 @@ def verifyOutput(file1, file2, tempdir):
 
 class MappingSolExplorer:
     def __init__(
-        self, steps, lutGraph, R,C, alloc, debug=False, sol=None
+        self, steps, lutGraph, R,C, alloc, posOutAlloc, debug=False, sol=None
     ):
         self.__steps = steps
         self.__lutGraph = lutGraph
         self.__R = R
         self.__C = C
         self.__alloc = alloc
+        self.__posOutAlloc = posOutAlloc
         self.__debug = False
         self.__log = Solution()
         
@@ -176,9 +179,9 @@ class MappingSolExplorer:
                     else:
                         s = "0"
                 else:
-                    loc = self.__alloc[vertex]
+                    loc = self.__posOutAlloc[vertex]
                     s = state[(loc[0], loc[1])]
-
+                print(loc, s, outName)
                 f.write("assign {} = {} ;\n".format(outName, s))
                 # print('{} -> {}: {}'.format(outName,vout,s))
 

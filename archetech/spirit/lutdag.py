@@ -6,6 +6,8 @@ import igraph
 import logging
 import os
 import re
+import sys
+
 from .solution import Solution
 from subprocess import PIPE, run
 
@@ -231,7 +233,7 @@ class LutGraph:
 
     def getLUTFunc(self, assignment):
         """ Get the SOP representation of the LUT using ABC """
-
+        
         tempfiles = [self.__benchdir + "lut.v"]
         self.__writeLUTFile(assignment, self.__benchdir + "lut.v")
 
@@ -408,9 +410,10 @@ class LutGraph:
             lutObj.setConstant(isConstant)
 
         # clean temporary files
-        for tempf in tempfiles:
+        # for tempf in tempfiles:
 
-            if os.path.exists(tempf):
-                os.remove(tempf)
-
+        #     if os.path.exists(tempf):
+        #         os.remove(tempf)
+        
+        
         return output, lutObj

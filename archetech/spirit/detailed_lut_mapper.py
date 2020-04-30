@@ -45,6 +45,7 @@ class DetailedMapper:
         
         for s in range(2,slotMax+1):
             if self.__debug: print('t{} [{}]: {}'.format(s,schedule[s][0],schedule[s][1]))
+        
         # create an empty crossbar
         crossbar = [[1 for j in range(C)] for i in range(R)] 
         start = time.time()
@@ -53,13 +54,22 @@ class DetailedMapper:
             steps = newSteps 
         else:
             print('Mapping failed')
-            return None 
-        
+            return None, None 
+        posSteps, posOutAlloc = self.__computeFinalOutput(\
+                                                    alloc, lutGraph, crossbar)
         end = time.time()
+        
+        steps = steps + posSteps
         if self.__debug: print('Time:',start,end,end-start)
         self.__log.addParam('detailedMapTime', "{:.3f}".format(end-start))
+         
+        if not self.__fastMode:self.__printCrossbar(crossbar, 'Finished placement')
+        if not self.__fastMode:self.__showSteps(status,crossbar,steps)
         
-        
+        return steps, posOutAlloc
+
+    def __computeFinalOutput(self, alloc, lutGraph, crossbar):
+        steps = []
         # final set of steps to compute positive copy of the outputs 
         # can be omitted for some LUTs
         placedOut = list(alloc.keys())
@@ -109,7 +119,7 @@ class DetailedMapper:
             if freeCol != None: 
                 for l,r in luts:
                     flipSteps.append(['NOT', [(r,col),(r,freeCol)], lutGraph.vs[l]['name']])
-                    posLUTAlloc[l] = (r,col)
+                    posLUTAlloc[l] = (r,freeCol)
                     crossbar[r][freeCol] = 'RE_'+lutGraph.vs[l]['name']
                 steps.append(flipSteps)
                 
@@ -131,11 +141,12 @@ class DetailedMapper:
                                 alloc = False 
                     if not alloc:
                         print('Positive result for {} failed'.format(l))
-                        return None 
-        if not self.__fastMode:self.__printCrossbar(crossbar, 'Finished placement')
-        if not self.__fastMode:self.__showSteps(status,crossbar,steps)
-        
-        return steps
+                        return None
+                        
+        print('Positive copy of outputs created.')
+        print(posLUTAlloc, steps)
+        return steps,  posLUTAlloc
+
 
     def __flattenPath(self,path,goal):
         ''' returns the path from source to goal '''

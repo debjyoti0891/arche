@@ -80,7 +80,9 @@ class SACMapper:
             print('Detailed placement starts.')
             dmap = DetailedMapper(self.__benchname, self.__benchdir, self.__logfile, self.__debug, self.__fastMode)
             
-            steps = dmap.computeBenchmark(lutGraph, R, C, alloc, schedule, placed)
+            steps, posOutAlloc = dmap.computeBenchmark(lutGraph, R, C, alloc, schedule, placed)
+
+            
             if steps is None:
                 int('Detailed placement for {} failed.'.\
                     format(self.__basename))
@@ -89,9 +91,11 @@ class SACMapper:
                 return 
             print('Detailed placement completed.')
 
+
+
             # analyse the solution
             self.__log.addParam('cycles',"{}".format(len(steps)))
-            solexp = MappingSolExplorer(steps,lutGraph,R,C,alloc,self.__debug)
+            solexp = MappingSolExplorer(steps,lutGraph,R,C,alloc, posOutAlloc, self.__debug)
             opCycles, opCount = solexp.getSteps(steps)
 
             # generate verilog output
