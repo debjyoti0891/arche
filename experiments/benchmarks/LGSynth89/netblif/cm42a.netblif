@@ -1,0 +1,33 @@
+.model CM42
+.inputs a b c d
+.outputs e f g h i j k l m n
+.gate nor1 a=d y=[103]
+.gate nor2 a=c b=d y=o0
+.gate nor1 a=o0 y=[104]
+.gate nor1 a=a y=[100]
+.gate nor1 a=b y=[101]
+.gate nor3 a=[104] b=a c=b y=[0]
+.gate nor1 a=[0] y=e
+.gate nor3 a=[104] b=b c=[100] y=[1]
+.gate nor1 a=[1] y=f
+.gate nor3 a=[104] b=a c=[101] y=[2]
+.gate nor1 a=[2] y=g
+.gate nor3 a=[104] b=[100] c=[101] y=[3]
+.gate nor1 a=[3] y=h
+.gate nor2 a=o0 b=d y=p0
+.gate nor1 a=p0 y=[109]
+.gate nor3 a=[109] b=a c=b y=[4]
+.gate nor1 a=[4] y=i
+.gate nor3 a=[109] b=b c=[100] y=[5]
+.gate nor1 a=[5] y=j
+.gate nor3 a=[109] b=a c=[101] y=[6]
+.gate nor1 a=[6] y=k
+.gate nor3 a=[109] b=[100] c=[101] y=[7]
+.gate nor1 a=[7] y=l
+.gate nor3 a=[103] b=b c=c y=n0
+.gate nor1 a=n0 y=[114]
+.gate nor2 a=a b=[114] y=[8]
+.gate nor1 a=[8] y=m
+.gate nor2 a=[100] b=[114] y=[9]
+.gate nor1 a=[9] y=n
+.end

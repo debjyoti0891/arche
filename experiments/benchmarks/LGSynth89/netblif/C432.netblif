@@ -1,0 +1,218 @@
+.model C432.iscas
+.inputs 1GAT(0) 4GAT(1) 8GAT(2) 11GAT(3) 14GAT(4) 17GAT(5) 21GAT(6) 24GAT(7) \
+27GAT(8) 30GAT(9) 34GAT(10) 37GAT(11) 40GAT(12) 43GAT(13) 47GAT(14) 50GAT(15) \
+53GAT(16) 56GAT(17) 60GAT(18) 63GAT(19) 66GAT(20) 69GAT(21) 73GAT(22) \
+76GAT(23) 79GAT(24) 82GAT(25) 86GAT(26) 89GAT(27) 92GAT(28) 95GAT(29) \
+99GAT(30) 102GAT(31) 105GAT(32) 108GAT(33) 112GAT(34) 115GAT(35)
+.outputs 223GAT(84) 329GAT(133) 370GAT(163) 421GAT(188) 430GAT(193) \
+431GAT(194) 432GAT(195)
+.gate nor1 a=63GAT(19) O=[525]
+.gate nor1 a=69GAT(21) O=[526]
+.gate nor2 a=63GAT(19) b=[526] O=171GAT(65)
+.gate nor1 a=171GAT(65) O=[527]
+.gate nor1 a=76GAT(23) O=[528]
+.gate nor1 a=82GAT(25) O=[529]
+.gate nor2 a=76GAT(23) b=[529] O=174GAT(62)
+.gate nor1 a=174GAT(62) O=[530]
+.gate nor1 a=89GAT(27) O=[532]
+.gate nor1 a=95GAT(29) O=[533]
+.gate nor2 a=89GAT(27) b=[533] O=177GAT(59)
+.gate nor1 a=177GAT(59) O=[534]
+.gate nor1 a=102GAT(31) O=[535]
+.gate nor1 a=108GAT(33) O=[536]
+.gate nor2 a=102GAT(31) b=[536] O=180GAT(56)
+.gate nor1 a=180GAT(56) O=[537]
+.gate nor4 a=171GAT(65) b=174GAT(62) c=177GAT(59) d=180GAT(56) O=[478]
+.gate nor1 a=[478] O=[1350]
+.gate nor1 a=24GAT(7) O=[513]
+.gate nor1 a=30GAT(9) O=[514]
+.gate nor2 a=24GAT(7) b=[514] O=162GAT(74)
+.gate nor1 a=162GAT(74) O=[515]
+.gate nor1 a=1GAT(0) O=[506]
+.gate nor1 a=4GAT(1) O=[507]
+.gate nor2 a=1GAT(0) b=[507] O=154GAT(80)
+.gate nor1 a=154GAT(80) O=[508]
+.gate nor1 a=11GAT(3) O=[509]
+.gate nor1 a=17GAT(5) O=[510]
+.gate nor2 a=11GAT(3) b=[510] O=159GAT(77)
+.gate nor1 a=159GAT(77) O=[511]
+.gate nor3 a=162GAT(74) b=154GAT(80) c=159GAT(77) O=[486]
+.gate nor1 a=[486] O=[1356]
+.gate nor1 a=37GAT(11) O=[517]
+.gate nor1 a=43GAT(13) O=[518]
+.gate nor2 a=37GAT(11) b=[518] O=165GAT(71)
+.gate nor1 a=165GAT(71) O=[519]
+.gate nor1 a=50GAT(15) O=[520]
+.gate nor1 a=56GAT(17) O=[521]
+.gate nor2 a=50GAT(15) b=[521] O=168GAT(68)
+.gate nor1 a=168GAT(68) O=[522]
+.gate nor4 a=[1350] b=[1356] c=165GAT(71) d=168GAT(68) O=199GAT(81)
+.gate nor1 a=199GAT(81) O=223GAT(84)
+.gate nor2 a=199GAT(81) b=[527] O=[67]
+.gate nor2 a=223GAT(84) b=171GAT(65) O=[68]
+.gate nor2 a=[67] b=[68] O=239GAT(91)
+.gate nor1 a=73GAT(22) O=[559]
+.gate nor3 a=239GAT(91) b=73GAT(22) c=[526] O=276GAT(110)
+.gate nor1 a=276GAT(110) O=[561]
+.gate nor2 a=199GAT(81) b=[530] O=[65]
+.gate nor2 a=223GAT(84) b=174GAT(62) O=[66]
+.gate nor2 a=[65] b=[66] O=243GAT(89)
+.gate nor1 a=86GAT(26) O=[562]
+.gate nor3 a=243GAT(89) b=86GAT(26) c=[529] O=279GAT(108)
+.gate nor1 a=279GAT(108) O=[564]
+.gate nor2 a=199GAT(81) b=[534] O=[63]
+.gate nor2 a=223GAT(84) b=177GAT(59) O=[64]
+.gate nor2 a=[63] b=[64] O=247GAT(87)
+.gate nor1 a=99GAT(30) O=[566]
+.gate nor3 a=247GAT(87) b=99GAT(30) c=[533] O=282GAT(106)
+.gate nor1 a=282GAT(106) O=[568]
+.gate nor2 a=199GAT(81) b=[537] O=[61]
+.gate nor2 a=223GAT(84) b=180GAT(56) O=[62]
+.gate nor2 a=[61] b=[62] O=251GAT(85)
+.gate nor1 a=112GAT(34) O=[569]
+.gate nor3 a=251GAT(85) b=112GAT(34) c=[536] O=285GAT(104)
+.gate nor1 a=285GAT(104) O=[571]
+.gate nor4 a=276GAT(110) b=279GAT(108) c=282GAT(106) d=285GAT(104) O=[372]
+.gate nor1 a=[372] O=[1336]
+.gate nor2 a=199GAT(81) b=[515] O=[73]
+.gate nor2 a=223GAT(84) b=162GAT(74) O=[74]
+.gate nor2 a=[73] b=[74] O=230GAT(97)
+.gate nor1 a=34GAT(10) O=[547]
+.gate nor3 a=230GAT(97) b=34GAT(10) c=[514] O=267GAT(116)
+.gate nor1 a=267GAT(116) O=[549]
+.gate nor2 a=199GAT(81) b=[508] O=[77]
+.gate nor2 a=223GAT(84) b=154GAT(80) O=[78]
+.gate nor2 a=[77] b=[78] O=224GAT(101)
+.gate nor1 a=8GAT(2) O=[540]
+.gate nor3 a=224GAT(101) b=8GAT(2) c=[507] O=260GAT(120)
+.gate nor1 a=260GAT(120) O=[542]
+.gate nor2 a=199GAT(81) b=[511] O=[75]
+.gate nor2 a=223GAT(84) b=159GAT(77) O=[76]
+.gate nor2 a=[75] b=[76] O=227GAT(99)
+.gate nor1 a=21GAT(6) O=[543]
+.gate nor3 a=227GAT(99) b=21GAT(6) c=[510] O=264GAT(118)
+.gate nor1 a=264GAT(118) O=[545]
+.gate nor3 a=267GAT(116) b=260GAT(120) c=264GAT(118) O=[380]
+.gate nor1 a=[380] O=[1342]
+.gate nor2 a=199GAT(81) b=[519] O=[71]
+.gate nor2 a=223GAT(84) b=165GAT(71) O=[72]
+.gate nor2 a=[71] b=[72] O=233GAT(95)
+.gate nor1 a=47GAT(14) O=[551]
+.gate nor3 a=233GAT(95) b=47GAT(14) c=[518] O=270GAT(114)
+.gate nor1 a=270GAT(114) O=[553]
+.gate nor2 a=199GAT(81) b=[522] O=[69]
+.gate nor2 a=223GAT(84) b=168GAT(68) O=[70]
+.gate nor2 a=[69] b=[70] O=236GAT(93)
+.gate nor1 a=60GAT(18) O=[554]
+.gate nor3 a=236GAT(93) b=60GAT(18) c=[521] O=273GAT(112)
+.gate nor1 a=273GAT(112) O=[556]
+.gate nor4 a=[1336] b=[1342] c=270GAT(114) d=273GAT(112) O=296GAT(122)
+.gate nor1 a=296GAT(122) O=329GAT(133)
+.gate nor2 a=296GAT(122) b=[561] O=[49]
+.gate nor2 a=329GAT(133) b=276GAT(110) O=[50]
+.gate nor2 a=[49] b=[50] O=337GAT(141)
+.gate nor1 a=79GAT(24) O=[593]
+.gate nor4 a=337GAT(141) b=239GAT(91) c=79GAT(24) d=[526] O=353GAT(155)
+.gate nor2 a=296GAT(122) b=[564] O=[47]
+.gate nor2 a=329GAT(133) b=279GAT(108) O=[48]
+.gate nor2 a=[47] b=[48] O=339GAT(139)
+.gate nor1 a=92GAT(28) O=[596]
+.gate nor4 a=339GAT(139) b=243GAT(89) c=92GAT(28) d=[529] O=354GAT(154)
+.gate nor2 a=296GAT(122) b=[568] O=[45]
+.gate nor2 a=329GAT(133) b=282GAT(106) O=[46]
+.gate nor2 a=[45] b=[46] O=341GAT(137)
+.gate nor1 a=105GAT(32) O=[600]
+.gate nor4 a=341GAT(137) b=247GAT(87) c=105GAT(32) d=[533] O=355GAT(153)
+.gate nor2 a=296GAT(122) b=[571] O=[43]
+.gate nor2 a=329GAT(133) b=285GAT(104) O=[44]
+.gate nor2 a=[43] b=[44] O=343GAT(135)
+.gate nor1 a=115GAT(35) O=[603]
+.gate nor4 a=343GAT(135) b=251GAT(85) c=115GAT(35) d=[536] O=356GAT(152)
+.gate nor4 a=353GAT(155) b=354GAT(154) c=355GAT(153) d=356GAT(152) O=[248]
+.gate nor1 a=[248] O=[1322]
+.gate nor2 a=296GAT(122) b=[549] O=[55]
+.gate nor2 a=329GAT(133) b=267GAT(116) O=[56]
+.gate nor2 a=[55] b=[56] O=332GAT(147)
+.gate nor1 a=40GAT(12) O=[581]
+.gate nor4 a=332GAT(147) b=230GAT(97) c=40GAT(12) d=[514] O=350GAT(158)
+.gate nor2 a=296GAT(122) b=[542] O=[59]
+.gate nor2 a=329GAT(133) b=260GAT(120) O=[60]
+.gate nor2 a=[59] b=[60] O=330GAT(151)
+.gate nor1 a=14GAT(4) O=[574]
+.gate nor4 a=330GAT(151) b=224GAT(101) c=14GAT(4) d=[507] O=348GAT(160)
+.gate nor2 a=296GAT(122) b=[545] O=[57]
+.gate nor2 a=329GAT(133) b=264GAT(118) O=[58]
+.gate nor2 a=[57] b=[58] O=331GAT(149)
+.gate nor1 a=27GAT(8) O=[577]
+.gate nor4 a=331GAT(149) b=227GAT(99) c=27GAT(8) d=[510] O=349GAT(159)
+.gate nor3 a=350GAT(158) b=348GAT(160) c=349GAT(159) O=[256]
+.gate nor1 a=[256] O=[1328]
+.gate nor2 a=296GAT(122) b=[553] O=[53]
+.gate nor2 a=329GAT(133) b=270GAT(114) O=[54]
+.gate nor2 a=[53] b=[54] O=333GAT(145)
+.gate nor1 a=53GAT(16) O=[585]
+.gate nor4 a=333GAT(145) b=233GAT(95) c=53GAT(16) d=[518] O=351GAT(157)
+.gate nor2 a=296GAT(122) b=[556] O=[51]
+.gate nor2 a=329GAT(133) b=273GAT(112) O=[52]
+.gate nor2 a=[51] b=[52] O=335GAT(143)
+.gate nor1 a=66GAT(20) O=[588]
+.gate nor4 a=335GAT(143) b=236GAT(93) c=66GAT(20) d=[521] O=352GAT(156)
+.gate nor4 a=[1322] b=[1328] c=351GAT(157) d=352GAT(156) O=357GAT(161)
+.gate nor1 a=357GAT(161) O=370GAT(163)
+.gate nor2 a=199GAT(81) b=[506] O=242GAT(102)
+.gate nor2 a=296GAT(122) b=[540] O=334GAT(150)
+.gate nor2 a=357GAT(161) b=[574] O=371GAT(172)
+.gate nor4 a=242GAT(102) b=[507] c=334GAT(150) d=371GAT(172) O=380GAT(181)
+.gate nor2 a=199GAT(81) b=[525] O=256GAT(92)
+.gate nor2 a=296GAT(122) b=[559] O=344GAT(140)
+.gate nor2 a=357GAT(161) b=[593] O=376GAT(167)
+.gate nor4 a=256GAT(92) b=344GAT(140) c=376GAT(167) d=[526] O=404GAT(176)
+.gate nor1 a=404GAT(176) O=[624]
+.gate nor2 a=199GAT(81) b=[528] O=257GAT(90)
+.gate nor2 a=296GAT(122) b=[562] O=345GAT(138)
+.gate nor2 a=357GAT(161) b=[596] O=377GAT(166)
+.gate nor4 a=257GAT(90) b=345GAT(138) c=377GAT(166) d=[529] O=407GAT(175)
+.gate nor1 a=407GAT(175) O=[627]
+.gate nor2 a=199GAT(81) b=[532] O=258GAT(88)
+.gate nor2 a=296GAT(122) b=[566] O=346GAT(136)
+.gate nor2 a=357GAT(161) b=[600] O=378GAT(165)
+.gate nor4 a=258GAT(88) b=346GAT(136) c=378GAT(165) d=[533] O=411GAT(174)
+.gate nor1 a=411GAT(174) O=[631]
+.gate nor2 a=199GAT(81) b=[535] O=259GAT(86)
+.gate nor2 a=296GAT(122) b=[569] O=347GAT(134)
+.gate nor2 a=357GAT(161) b=[603] O=379GAT(164)
+.gate nor4 a=259GAT(86) b=347GAT(134) c=379GAT(164) d=[536] O=414GAT(173)
+.gate nor4 a=404GAT(176) b=407GAT(175) c=411GAT(174) d=414GAT(173) O=[126]
+.gate nor1 a=[126] O=[1274]
+.gate nor2 a=199GAT(81) b=[517] O=254GAT(96)
+.gate nor2 a=296GAT(122) b=[551] O=340GAT(144)
+.gate nor2 a=357GAT(161) b=[585] O=374GAT(169)
+.gate nor4 a=254GAT(96) b=340GAT(144) c=374GAT(169) d=[518] O=393GAT(178)
+.gate nor1 a=393GAT(178) O=[617]
+.gate nor2 a=199GAT(81) b=[520] O=255GAT(94)
+.gate nor2 a=296GAT(122) b=[554] O=342GAT(142)
+.gate nor2 a=357GAT(161) b=[588] O=375GAT(168)
+.gate nor4 a=255GAT(94) b=342GAT(142) c=375GAT(168) d=[521] O=399GAT(177)
+.gate nor2 a=393GAT(178) b=399GAT(177) O=[129]
+.gate nor1 a=[129] O=[1276]
+.gate nor2 a=199GAT(81) b=[509] O=246GAT(100)
+.gate nor2 a=296GAT(122) b=[543] O=336GAT(148)
+.gate nor2 a=357GAT(161) b=[577] O=372GAT(171)
+.gate nor4 a=246GAT(100) b=336GAT(148) c=372GAT(171) d=[510] O=381GAT(180)
+.gate nor2 a=199GAT(81) b=[513] O=250GAT(98)
+.gate nor2 a=296GAT(122) b=[547] O=338GAT(146)
+.gate nor2 a=357GAT(161) b=[581] O=373GAT(170)
+.gate nor4 a=250GAT(98) b=338GAT(146) c=373GAT(170) d=[514] O=386GAT(179)
+.gate nor4 a=[1274] b=[1276] c=381GAT(180) d=386GAT(179) O=416GAT(182)
+.gate nor2 a=380GAT(181) b=416GAT(182) O=421GAT(188)
+.gate nor2 a=386GAT(179) b=[617] O=422GAT(192)
+.gate nor4 a=381GAT(180) b=386GAT(179) c=422GAT(192) d=399GAT(177) O=[4]
+.gate nor1 a=[4] O=430GAT(193)
+.gate nor4 a=386GAT(179) b=393GAT(178) c=399GAT(177) d=[624] O=425GAT(190)
+.gate nor3 a=[627] b=399GAT(177) c=393GAT(178) O=428GAT(191)
+.gate nor4 a=381GAT(180) b=386GAT(179) c=425GAT(190) d=428GAT(191) O=[5]
+.gate nor1 a=[5] O=431GAT(194)
+.gate nor4 a=386GAT(179) b=393GAT(178) c=407GAT(175) d=[631] O=429GAT(189)
+.gate nor4 a=381GAT(180) b=422GAT(192) c=425GAT(190) d=429GAT(189) O=[6]
+.gate nor1 a=[6] O=432GAT(195)
+.end

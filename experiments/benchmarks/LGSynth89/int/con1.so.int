@@ -1,0 +1,33 @@
+
+( macro Main ( x0    x1    x2    x3    x4    x5    x6    z0    z1   ) 
+
+( input '(  in_1 in_3 in_5 in_7 in_9 in_11 in_13) ) 
+
+(output '( out_1 out_3 ) ) 
+
+(local  _x0    _x1    _x2    _x3    _x4    _x5    _x6    _z0    _z1   
+ r0    r1    r2    r3    r4    r5    r6    r7    r8    ) 
+
+
+
+( o4  r0 r1 r2 r3 z0)
+( a2  x1 x4 r0)
+( a3  x0 x2 x3 r1)
+( a3  _x1 _x2 x3 r2)
+( a3  _x0 x1 x5 r3)
+
+( o5  r4 r5 r6 r7 r8 z1)
+( a2  _x1 _x4 r4)
+( a2  x0 _x4 r5)
+( a2  _x0 _x6 r6)
+( a3  _x0 x1 x4 r7)
+( a3  x0 _x1 _x3 r8)
+
+
+( i x0 _x0) 
+( i x1 _x1) 
+( i x2 _x2) 
+( i x3 _x3) 
+( i x4 _x4) 
+( i x6 _x6) 
+)

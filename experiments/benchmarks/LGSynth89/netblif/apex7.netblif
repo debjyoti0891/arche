@@ -1,0 +1,279 @@
+.model apex7
+.inputs CAPSD CAT0 CAT1 CAT2 CAT3 CAT4 CAT5 VACC MMERR IBT0 IBT1 IBT2 ICLR LSD \
+ACCRPY VERR_N RATR MARSSR VLENESR VSUMESR PLUTO0 PLUTO1 PLUTO2 PLUTO3 PLUTO4 \
+PLUTO5 ORWD_N OWL_N PY END FBI WATCH OVACC KBG_N DEL1 COMPPAR VST0 VST1 STAR0 \
+STAR1 STAR2 STAR3 BULL0 BULL1 BULL2 BULL3 BULL4 BULL5 BULL6
+.outputs SDO LSD_P ACCRPY_P VERR_F RATR_P MARSSR_P VLENESR_P VSUMESR_P \
+PLUTO0_P PLUTO1_P PLUTO2_P PLUTO3_P PLUTO4_P PLUTO5_P ORWD_F OWL_F PY_P END_P \
+FBI_P WATCH_P OVACC_P KBG_F DEL1_P COMPPAR_P VST0_P VST1_P STAR0_P STAR1_P \
+STAR2_P STAR3_P BULL0_P BULL1_P BULL2_P BULL3_P BULL4_P BULL5_P BULL6_P
+.gate nor1 a=VST0 y=[702]
+.gate nor1 a=VST0 O=inv__VST0
+.gate nor1 a=inv__VST0 O=SDO
+.gate nor1 a=STAR3 y=[704]
+.gate nor1 a=FBI y=[703]
+.gate nor1 a=STAR2 y=[706]
+.gate nor1 a=STAR0 y=[707]
+.gate nor1 a=STAR1 y=[708]
+.gate nor2 a=[707] b=[708] y=_80_m_
+.gate nor1 a=_80_m_ y=[709]
+.gate nor2 a=STAR2 b=[709] y=C2G5
+.gate nor1 a=C2G5 y=[710]
+.gate nor1 a=IBT0 y=[713]
+.gate nor2 a=CAT4 b=IBT0 y=[199]
+.gate nor2 a=CAT5 b=[713] y=[200]
+.gate nor2 a=[199] b=[200] y=[101]
+.gate nor1 a=IBT1 y=[712]
+.gate nor2 a=[101] b=[712] y=[197]
+.gate nor2 a=CAT2 b=IBT0 y=[201]
+.gate nor2 a=CAT3 b=[713] y=[202]
+.gate nor2 a=[201] b=[202] y=[102]
+.gate nor2 a=IBT1 b=[102] y=[198]
+.gate nor2 a=[197] b=[198] y=[99]
+.gate nor1 a=IBT2 y=[711]
+.gate nor2 a=[99] b=[711] y=[195]
+.gate nor2 a=CAT0 b=IBT0 y=[203]
+.gate nor2 a=CAT1 b=[713] y=[204]
+.gate nor2 a=[203] b=[204] y=[100]
+.gate nor2 a=IBT2 b=[712] y=_894_m_
+.gate nor1 a=_894_m_ y=[714]
+.gate nor2 a=[100] b=[714] y=[196]
+.gate nor2 a=[195] b=[196] y=C1G3
+.gate nor1 a=OWL_N y=[715]
+.gate nor1 a=WATCH y=[716]
+.gate nor2 a=[715] b=[716] y=C29G7
+.gate nor1 a=C29G7 y=[717]
+.gate nor2 a=C1G3 b=[717] y=_260_m_
+.gate nor1 a=_260_m_ y=[718]
+.gate nor4 a=STAR3 b=[703] c=[710] d=[718] y=[193]
+.gate nor3 a=[710] b=[703] c=[704] y=[73]
+.gate nor1 a=LSD y=[883]
+.gate nor3 a=[73] b=[715] c=[883] y=[194]
+.gate nor2 a=[193] b=[194] y=[1]
+.gate nor1 a=[1] y=LSD_P
+.gate nor2 a=C1G3 b=[716] y=[14]
+.gate nor1 a=[14] y=ORWD_F
+.gate nor2 a=[14] b=[710] y=[95]
+.gate nor2 a=[703] b=[715] y=_219_m_
+.gate nor1 a=_219_m_ y=[723]
+.gate nor2 a=[95] b=[723] y=_199_m__inv
+.gate nor1 a=_199_m__inv y=[724]
+.gate nor2 a=_199_m__inv b=[723] y=[191]
+.gate nor1 a=ACCRPY y=[885]
+.gate nor2 a=[715] b=[885] y=[192]
+.gate nor2 a=[191] b=[192] y=[2]
+.gate nor1 a=[2] y=ACCRPY_P
+.gate nor1 a=BULL0 y=[727]
+.gate nor1 a=BULL3 y=[728]
+.gate nor1 a=BULL5 y=[731]
+.gate nor1 a=BULL4 y=[730]
+.gate nor4 a=BULL0 b=BULL3 c=BULL5 d=[730] y=[631]
+.gate nor1 a=[631] y=[1663]
+.gate nor1 a=BULL2 y=[737]
+.gate nor1 a=BULL6 y=[734]
+.gate nor1 a=BULL1 y=[735]
+.gate nor4 a=[1663] b=BULL2 c=[734] d=[735] y=TIMOT
+.gate nor1 a=TIMOT y=[739]
+.gate nor2 a=[704] b=[710] y=[97]
+.gate nor4 a=CAT0 b=CAT1 c=[714] d=[716] y=[189]
+.gate nor2 a=[189] b=[14] y=[96]
+.gate nor2 a=[97] b=[96] y=_42_m_
+.gate nor2 a=_42_m_ b=[724] y=[75]
+.gate nor2 a=TIMOT b=[75] y=[187]
+.gate nor2 a=WATCH b=_199_m__inv y=[188]
+.gate nor2 a=[187] b=[188] y=[74]
+.gate nor1 a=VERR_N y=[887]
+.gate nor2 a=[74] b=[887] y=[185]
+.gate nor2 a=OWL_N b=_219_m_ y=[186]
+.gate nor2 a=[185] b=[186] y=[3]
+.gate nor1 a=[3] y=VERR_F
+.gate nor1 a=END y=[743]
+.gate nor2 a=[715] b=[743] y=_58_m__inv
+.gate nor1 a=_58_m__inv y=[744]
+.gate nor3 a=[744] b=MMERR c=VST0 y=_886_m_
+.gate nor1 a=COMPPAR y=[742]
+.gate nor2 a=COMPPAR b=[744] y=[182]
+.gate nor1 a=RATR y=[889]
+.gate nor2 a=[715] b=[889] y=[183]
+.gate nor3 a=_886_m_ b=[182] c=[183] y=[4]
+.gate nor1 a=[4] y=RATR_P
+.gate nor2 a=[717] b=[739] y=[180]
+.gate nor1 a=MARSSR y=[891]
+.gate nor2 a=[715] b=[891] y=[181]
+.gate nor2 a=[180] b=[181] y=[5]
+.gate nor1 a=[5] y=MARSSR_P
+.gate nor1 a=KBG_N y=[749]
+.gate nor2 a=VLENESR b=[749] y=[76]
+.gate nor2 a=[76] b=[715] y=VLENESR_P
+.gate nor1 a=VST1 y=[750]
+.gate nor2 a=[744] b=[750] y=[178]
+.gate nor1 a=VSUMESR y=[895]
+.gate nor2 a=[715] b=[895] y=[179]
+.gate nor2 a=[178] b=[179] y=[7]
+.gate nor1 a=[7] y=VSUMESR_P
+.gate nor2 a=VST1 b=[742] y=[98]
+.gate nor2 a=[98] b=[744] y=[174]
+.gate nor2 a=[717] b=[739] y=[175]
+.gate nor2 a=KBG_N b=[715] y=[176]
+.gate nor4 a=[174] b=[175] c=[176] d=_886_m_ y=_1015_m_
+.gate nor3 a=[714] b=IBT0 c=_1015_m_ y=[172]
+.gate nor1 a=PLUTO0 y=[897]
+.gate nor2 a=[715] b=[897] y=[173]
+.gate nor2 a=[172] b=[173] y=[8]
+.gate nor1 a=[8] y=PLUTO0_P
+.gate nor3 a=[714] b=_1015_m_ c=[713] y=[170]
+.gate nor1 a=PLUTO1 y=[899]
+.gate nor2 a=[715] b=[899] y=[171]
+.gate nor2 a=[170] b=[171] y=[9]
+.gate nor1 a=[9] y=PLUTO1_P
+.gate nor4 a=IBT0 b=IBT1 c=_1015_m_ d=[711] y=[168]
+.gate nor1 a=PLUTO2 y=[901]
+.gate nor2 a=[715] b=[901] y=[169]
+.gate nor2 a=[168] b=[169] y=[10]
+.gate nor1 a=[10] y=PLUTO2_P
+.gate nor4 a=IBT1 b=[713] c=_1015_m_ d=[711] y=[166]
+.gate nor1 a=PLUTO3 y=[903]
+.gate nor2 a=[715] b=[903] y=[167]
+.gate nor2 a=[166] b=[167] y=[11]
+.gate nor1 a=[11] y=PLUTO3_P
+.gate nor4 a=IBT0 b=[712] c=_1015_m_ d=[711] y=[164]
+.gate nor1 a=PLUTO4 y=[905]
+.gate nor2 a=[715] b=[905] y=[165]
+.gate nor2 a=[164] b=[165] y=[12]
+.gate nor1 a=[12] y=PLUTO4_P
+.gate nor4 a=[712] b=[713] c=_1015_m_ d=[711] y=[162]
+.gate nor1 a=PLUTO5 y=[907]
+.gate nor2 a=[715] b=[907] y=[163]
+.gate nor2 a=[162] b=[163] y=[13]
+.gate nor1 a=[13] y=PLUTO5_P
+.gate nor2 a=[716] b=[739] y=[77]
+.gate nor4 a=ICLR b=END c=[77] d=[749] y=OWL_F
+.gate nor1 a=DEL1 y=[772]
+.gate nor2 a=ICLR b=[703] y=_90_m_
+.gate nor1 a=_90_m_ y=[773]
+.gate nor2 a=[772] b=[773] y=[160]
+.gate nor1 a=PY y=[774]
+.gate nor2 a=ICLR b=FBI y=_89_m_
+.gate nor1 a=_89_m_ y=[775]
+.gate nor2 a=[774] b=[775] y=[161]
+.gate nor2 a=[160] b=[161] y=[16]
+.gate nor1 a=[16] y=PY_P
+.gate nor2 a=_199_m__inv b=[723] y=[158]
+.gate nor2 a=[158] b=_58_m__inv y=[17]
+.gate nor1 a=[17] y=END_P
+.gate nor1 a=ORWD_N y=[778]
+.gate nor2 a=ORWD_N b=[718] y=_99_m_
+.gate nor1 a=_99_m_ y=[779]
+.gate nor2 a=FBI b=_99_m_ y=[80]
+.gate nor2 a=_80_m_ b=[715] y=_2087_m_
+.gate nor1 a=_2087_m_ y=[776]
+.gate nor3 a=[80] b=[706] c=[776] y=[154]
+.gate nor3 a=[709] b=FBI c=[778] y=[82]
+.gate nor2 a=[82] b=[723] y=[155]
+.gate nor2 a=[154] b=[155] y=[78]
+.gate nor2 a=C2G5 b=[78] y=[152]
+.gate nor2 a=_99_m_ b=_219_m_ y=_254_m__inv
+.gate nor2 a=[709] b=[778] y=[81]
+.gate nor2 a=_254_m__inv b=[81] y=[156]
+.gate nor2 a=[156] b=FBI y=[79]
+.gate nor2 a=[79] b=[718] y=[153]
+.gate nor2 a=[152] b=[153] y=[18]
+.gate nor1 a=[18] y=FBI_P
+.gate nor1 a=OVACC y=[1009]
+.gate nor1 a=VACC y=[781]
+.gate nor3 a=[1009] b=VACC c=[715] y=[150]
+.gate nor2 a=[150] b=C29G7 y=[19]
+.gate nor1 a=[19] y=WATCH_P
+.gate nor2 a=ICLR b=[781] y=OVACC_P
+.gate nor2 a=_42_m_ b=[724] y=[83]
+.gate nor2 a=[83] b=[749] y=[148]
+.gate nor2 a=OWL_N b=_219_m_ y=[149]
+.gate nor2 a=[148] b=[149] y=[21]
+.gate nor1 a=[21] y=KBG_F
+.gate nor1 a=CAPSD y=[816]
+.gate nor2 a=ICLR b=[816] y=DEL1_P
+.gate nor2 a=[703] b=[772] y=[84]
+.gate nor3 a=[84] b=[715] c=[742] y=[146]
+.gate nor3 a=[723] b=COMPPAR c=[772] y=[147]
+.gate nor2 a=[146] b=[147] y=[23]
+.gate nor1 a=[23] y=COMPPAR_P
+.gate nor2 a=[750] b=[773] y=[144]
+.gate nor2 a=[702] b=[775] y=[145]
+.gate nor2 a=[144] b=[145] y=[24]
+.gate nor1 a=[24] y=VST0_P
+.gate nor2 a=[773] b=[774] y=[142]
+.gate nor2 a=[750] b=[775] y=[143]
+.gate nor2 a=[142] b=[143] y=[25]
+.gate nor1 a=[25] y=VST1_P
+.gate nor2 a=ORWD_N b=ORWD_F y=[139]
+.gate nor3 a=[715] b=[139] c=FBI y=_44_m__inv
+.gate nor1 a=_44_m__inv y=[788]
+.gate nor2 a=[707] b=[788] y=[137]
+.gate nor2 a=STAR0 b=_254_m__inv y=[138]
+.gate nor2 a=[137] b=[138] y=[26]
+.gate nor1 a=[26] y=STAR0_P
+.gate nor2 a=_80_m_ b=[723] y=[133]
+.gate nor2 a=STAR1 b=[779] y=[134]
+.gate nor2 a=[133] b=[134] y=[85]
+.gate nor2 a=[85] b=[707] y=[131]
+.gate nor2 a=STAR0 b=[776] y=[135]
+.gate nor2 a=[135] b=_44_m__inv y=[86]
+.gate nor2 a=[86] b=[708] y=[132]
+.gate nor2 a=[131] b=[132] y=[27]
+.gate nor1 a=[27] y=STAR1_P
+.gate nor2 a=[710] b=[779] y=[130]
+.gate nor3 a=[709] b=STAR2 c=[723] y=[128]
+.gate nor2 a=_44_m__inv b=_2087_m_ y=[87]
+.gate nor2 a=[87] b=[706] y=[129]
+.gate nor3 a=[130] b=[128] c=[129] y=[28]
+.gate nor1 a=[28] y=STAR2_P
+.gate nor4 a=STAR3 b=[706] c=_254_m__inv d=[709] y=[123]
+.gate nor2 a=STAR2 b=[715] y=[125]
+.gate nor3 a=_44_m__inv b=[125] c=_2087_m_ y=[88]
+.gate nor2 a=[88] b=[704] y=[124]
+.gate nor2 a=[123] b=[124] y=[29]
+.gate nor1 a=[29] y=STAR3_P
+.gate nor3 a=[727] b=WATCH c=[715] y=[121]
+.gate nor2 a=BULL0 b=[717] y=[122]
+.gate nor2 a=[121] b=[122] y=[30]
+.gate nor1 a=[30] y=BULL0_P
+.gate nor3 a=[717] b=BULL1 c=[727] y=[119]
+.gate nor3 a=[716] b=[727] c=[735] y=[103]
+.gate nor2 a=[103] b=[715] y=_1214_m_
+.gate nor1 a=_1214_m_ y=[797]
+.gate nor2 a=[735] b=[797] y=[120]
+.gate nor2 a=[119] b=[120] y=[31]
+.gate nor1 a=[31] y=BULL1_P
+.gate nor4 a=[727] b=[735] c=BULL2 d=[717] y=[117]
+.gate nor2 a=[737] b=[797] y=[118]
+.gate nor2 a=[117] b=[118] y=[32]
+.gate nor1 a=[32] y=BULL2_P
+.gate nor4 a=[716] b=[727] c=[735] d=[737] y=_226_m_
+.gate nor1 a=_226_m_ y=[802]
+.gate nor2 a=BULL3 b=[802] y=[115]
+.gate nor2 a=_226_m_ b=[728] y=[116]
+.gate nor2 a=[115] b=[116] y=[89]
+.gate nor2 a=[89] b=[715] y=BULL3_P
+.gate nor2 a=[728] b=[802] y=[90]
+.gate nor3 a=[90] b=[715] c=[730] y=[113]
+.gate nor3 a=[802] b=[715] c=[728] y=_873_m_
+.gate nor1 a=_873_m_ y=[805]
+.gate nor2 a=BULL4 b=[805] y=[114]
+.gate nor2 a=[113] b=[114] y=[34]
+.gate nor1 a=[34] y=BULL4_P
+.gate nor3 a=[805] b=BULL5 c=[730] y=[109]
+.gate nor2 a=[728] b=[802] y=[92]
+.gate nor2 a=[92] b=[715] y=[111]
+.gate nor2 a=[111] b=BULL4_P y=[91]
+.gate nor2 a=[91] b=[731] y=[110]
+.gate nor2 a=[109] b=[110] y=[35]
+.gate nor1 a=[35] y=BULL5_P
+.gate nor4 a=[728] b=[730] c=[731] d=[802] y=[107]
+.gate nor2 a=[107] b=BULL6 y=[93]
+.gate nor2 a=[93] b=[797] y=[106]
+.gate nor4 a=[730] b=[731] c=BULL6 d=[805] y=[104]
+.gate nor4 a=[728] b=[737] c=[730] d=[731] y=[94]
+.gate nor3 a=[94] b=[715] c=[734] y=[105]
+.gate nor3 a=[106] b=[104] c=[105] y=[36]
+.gate nor1 a=[36] y=BULL6_P
+.end

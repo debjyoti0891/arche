@@ -1,0 +1,857 @@
+.model apex6
+.inputs PSRW VFIN PFIN INFIN VYBB0 VYBB1 VZZZE PYBB0 PYBB1 PYBB2 PYBB3 PYBB4 \
+PYBB5 PYBB6 PYBB7 PYBB8 PZZZE INYBB0 INYBB1 INYBB2 INYBB3 INYBB4 INYBB5 INYBB6 \
+INYBB7 INYBB8 INZZZE MMERR ESRSUM CBT0 CBT1 CBT2 SLAD0 SLAD1 SLAD2 SLAD3 PSYNC \
+RPTEN ICLR STW_N P1ZZZ0 P1ZZZ1 P1ZZZ2 P1ZZZ3 P1ZZZ4 P1ZZZ5 P1ZZZ6 P1ZZZ7 \
+P2ZZZ0 P2ZZZ1 P2ZZZ2 P2ZZZ3 P2ZZZ4 P2ZZZ5 P2ZZZ6 P2ZZZ7 I1ZZZ0 I1ZZZ1 I1ZZZ2 \
+I1ZZZ3 I1ZZZ4 I1ZZZ5 I1ZZZ6 I1ZZZ7 I2ZZZ0 I2ZZZ1 I2ZZZ2 I2ZZZ3 I2ZZZ4 I2ZZZ5 \
+I2ZZZ6 I2ZZZ7 TXMESS_N RYZ COMPPAR RPTWIN XZFR0 XZFR1 XZFS RXZ0 RXZ1 OFS2 OFS1 \
+A B C QPR0 QPR1 QPR2 QPR3 QPR4 AXZ0 AXZ1 V1ZZZ0 V1ZZZ1 V1ZZZ2 V1ZZZ3 V1ZZZ4 \
+V1ZZZ5 V1ZZZ6 V1ZZZ7 V2ZZZ0 V2ZZZ1 V2ZZZ2 V2ZZZ3 V2ZZZ4 V2ZZZ5 V2ZZZ6 V2ZZZ7 \
+TXWRD0 TXWRD1 TXWRD2 TXWRD3 TXWRD4 TXWRD5 TXWRD6 TXWRD7 TXWRD8 TXWRD9 TXWRD10 \
+TXWRD11 TXWRD12 TXWRD13 TXWRD14 TXWRD15 XZ320 XZ321 XZ322 XZ323 XZ324 XZ160_N \
+XZ161 XZ162 XZ163 ENWIN
+.outputs SBUFF STW_F TD_P FSESR_P P1ZZZ0_P P1ZZZ1_P P1ZZZ2_P P1ZZZ3_P P1ZZZ4_P \
+P1ZZZ5_P P1ZZZ6_P P1ZZZ7_P P2ZZZ0_P P2ZZZ1_P P2ZZZ2_P P2ZZZ3_P P2ZZZ4_P \
+P2ZZZ5_P P2ZZZ6_P P2ZZZ7_P I1ZZZ0_P I1ZZZ1_P I1ZZZ2_P I1ZZZ3_P I1ZZZ4_P \
+I1ZZZ5_P I1ZZZ6_P I1ZZZ7_P I2ZZZ0_P I2ZZZ1_P I2ZZZ2_P I2ZZZ3_P I2ZZZ4_P \
+I2ZZZ5_P I2ZZZ6_P I2ZZZ7_P TXMESS_F RYZ_P COMPPAR_P RPTWIN_P XZFR0_P XZFR1_P \
+XZFS_P RXZ0_P RXZ1_P OFS2_P OFS1_P A_P B_P C_P QPR0_P QPR1_P QPR2_P QPR3_P \
+QPR4_P AXZ0_P AXZ1_P V1ZZZ0_P V1ZZZ1_P V1ZZZ2_P V1ZZZ3_P V1ZZZ4_P V1ZZZ5_P \
+V1ZZZ6_P V1ZZZ7_P V2ZZZ0_P V2ZZZ1_P V2ZZZ2_P V2ZZZ3_P V2ZZZ4_P V2ZZZ5_P \
+V2ZZZ6_P V2ZZZ7_P TXWRD0_P TXWRD1_P TXWRD2_P TXWRD3_P TXWRD4_P TXWRD5_P \
+TXWRD6_P TXWRD7_P TXWRD8_P TXWRD9_P TXWRD10_P TXWRD11_P TXWRD12_P TXWRD13_P \
+TXWRD14_P TXWRD15_P XZ320_P XZ321_P XZ322_P XZ323_P XZ324_P XZ160_F XZ161_P \
+XZ162_P XZ163_P ENWIN_P
+.gate nor1 a=RPTWIN y=[1891]
+.gate nor1 a=TXMESS_N y=[1890]
+.gate nor2 a=RPTWIN b=[1890] y=[0]
+.gate nor1 a=[0] y=SBUFF
+.gate nor1 a=A y=[1897]
+.gate nor1 a=AXZ1 y=[1900]
+.gate nor1 a=AXZ0 y=[1898]
+.gate nor3 a=[1900] b=TXMESS_N c=[1898] y=MIS11556
+.gate nor1 a=MIS11556 y=[1901]
+.gate nor2 a=[1897] b=[1901] y=[475]
+.gate nor2 a=[475] b=STW_N y=MIS16790
+.gate nor1 a=VFIN y=[1892]
+.gate nor1 a=PFIN y=[1893]
+.gate nor1 a=INFIN y=[1894]
+.gate nor2 a=PFIN b=INFIN y=MIS11547
+.gate nor1 a=MIS11547 y=[1895]
+.gate nor3 a=MIS16790 b=VFIN c=[1895] y=[473]
+.gate nor2 a=[473] b=RYZ y=[1]
+.gate nor1 a=[1] y=STW_F
+.gate nor1 a=B y=[1915]
+.gate nor1 a=C y=[1916]
+.gate nor2 a=B b=C y=MIS9255
+.gate nor1 a=MIS9255 y=[1917]
+.gate nor2 a=AXZ0 b=AXZ1 y=[461]
+.gate nor2 a=[461] b=[1897] y=MIS7401
+.gate nor1 a=TXWRD0 y=[1928]
+.gate nor3 a=MIS9255 b=MIS7401 c=[1928] y=[459]
+.gate nor1 a=MMERR y=[1930]
+.gate nor3 a=AXZ1 b=MMERR c=[1898] y=[463]
+.gate nor1 a=COMPPAR y=[1932]
+.gate nor2 a=COMPPAR b=[1898] y=[465]
+.gate nor1 a=ESRSUM y=[1921]
+.gate nor2 a=AXZ0 b=[1921] y=[466]
+.gate nor2 a=[465] b=[466] y=MIS16719
+.gate nor2 a=MIS16719 b=[1900] y=[464]
+.gate nor2 a=[463] b=[464] y=MIS16716
+.gate nor2 a=MIS16716 b=[1897] y=[460]
+.gate nor2 a=[459] b=[460] y=MIS16701
+.gate nor3 a=MIS16701 b=TXMESS_N c=RPTWIN y=[454]
+.gate nor1 a=QPR3 y=[1902]
+.gate nor1 a=QPR4 y=[1903]
+.gate nor1 a=QPR0 y=[1909]
+.gate nor1 a=SLAD1 y=[1908]
+.gate nor2 a=QPR0 b=[1908] y=[469]
+.gate nor1 a=SLAD0 y=[1910]
+.gate nor2 a=[1909] b=[1910] y=[470]
+.gate nor2 a=[469] b=[470] y=MIS16780
+.gate nor1 a=QPR1 y=[1905]
+.gate nor1 a=QPR2 y=[1906]
+.gate nor3 a=MIS16780 b=QPR1 c=[1906] y=[467]
+.gate nor1 a=SLAD3 y=[1912]
+.gate nor2 a=QPR0 b=[1912] y=[471]
+.gate nor1 a=SLAD2 y=[1913]
+.gate nor2 a=[1909] b=[1913] y=[472]
+.gate nor2 a=[471] b=[472] y=MIS16778
+.gate nor3 a=MIS16778 b=QPR2 c=[1905] y=[468]
+.gate nor2 a=[467] b=[468] y=MIS16690
+.gate nor3 a=[1917] b=RPTWIN c=MIS7401 y=[457]
+.gate nor2 a=[457] b=[0] y=MIS16710
+.gate nor4 a=QPR3 b=QPR4 c=MIS16690 d=MIS16710 y=[452]
+.gate nor1 a=RXZ1 y=[1924]
+.gate nor1 a=RXZ0 y=[1922]
+.gate nor3 a=RXZ1 b=ESRSUM c=[1922] y=[455]
+.gate nor3 a=[1924] b=RXZ0 c=[1921] y=[456]
+.gate nor2 a=[455] b=[456] y=MIS16712
+.gate nor1 a=RPTEN y=[2426]
+.gate nor3 a=MIS16712 b=[1891] c=[2426] y=[453]
+.gate nor3 a=[454] b=[452] c=[453] y=MIS16706
+.gate nor2 a=MIS16706 b=RYZ y=TD_P
+.gate nor1 a=OFS2 y=[1933]
+.gate nor1 a=OFS1 y=[1934]
+.gate nor2 a=ICLR b=[1934] y=OFS2_P
+.gate nor1 a=OFS2_P y=[1935]
+.gate nor2 a=[1933] b=[1935] y=[450]
+.gate nor1 a=XZFR1 y=[1936]
+.gate nor2 a=ICLR b=[1936] y=[451]
+.gate nor2 a=[450] b=[451] y=[3]
+.gate nor1 a=[3] y=FSESR_P
+.gate nor1 a=PYBB1 y=[1937]
+.gate nor1 a=PZZZE y=[1939]
+.gate nor1 a=PYBB0 y=[1938]
+.gate nor2 a=PZZZE b=[1938] y=MIS16883
+.gate nor1 a=MIS16883 y=[1940]
+.gate nor2 a=RYZ b=[1940] y=MIS11588
+.gate nor1 a=MIS11588 y=[1941]
+.gate nor2 a=[1937] b=[1941] y=[448]
+.gate nor1 a=P1ZZZ0 y=[1942]
+.gate nor2 a=MIS16883 b=RYZ y=MIS11587
+.gate nor1 a=MIS11587 y=[1943]
+.gate nor2 a=[1942] b=[1943] y=[449]
+.gate nor2 a=[448] b=[449] y=[4]
+.gate nor1 a=[4] y=P1ZZZ0_P
+.gate nor1 a=PYBB2 y=[1944]
+.gate nor2 a=[1941] b=[1944] y=[446]
+.gate nor1 a=P1ZZZ1 y=[1945]
+.gate nor2 a=[1943] b=[1945] y=[447]
+.gate nor2 a=[446] b=[447] y=[5]
+.gate nor1 a=[5] y=P1ZZZ1_P
+.gate nor1 a=PYBB3 y=[1946]
+.gate nor2 a=[1941] b=[1946] y=[444]
+.gate nor1 a=P1ZZZ2 y=[1947]
+.gate nor2 a=[1943] b=[1947] y=[445]
+.gate nor2 a=[444] b=[445] y=[6]
+.gate nor1 a=[6] y=P1ZZZ2_P
+.gate nor1 a=PYBB4 y=[1948]
+.gate nor2 a=[1941] b=[1948] y=[442]
+.gate nor1 a=P1ZZZ3 y=[1949]
+.gate nor2 a=[1943] b=[1949] y=[443]
+.gate nor2 a=[442] b=[443] y=[7]
+.gate nor1 a=[7] y=P1ZZZ3_P
+.gate nor1 a=PYBB5 y=[1950]
+.gate nor2 a=[1941] b=[1950] y=[440]
+.gate nor1 a=P1ZZZ4 y=[1951]
+.gate nor2 a=[1943] b=[1951] y=[441]
+.gate nor2 a=[440] b=[441] y=[8]
+.gate nor1 a=[8] y=P1ZZZ4_P
+.gate nor1 a=PYBB6 y=[1952]
+.gate nor2 a=[1941] b=[1952] y=[438]
+.gate nor1 a=P1ZZZ5 y=[1953]
+.gate nor2 a=[1943] b=[1953] y=[439]
+.gate nor2 a=[438] b=[439] y=[9]
+.gate nor1 a=[9] y=P1ZZZ5_P
+.gate nor1 a=PYBB7 y=[1954]
+.gate nor2 a=[1941] b=[1954] y=[436]
+.gate nor1 a=P1ZZZ6 y=[1955]
+.gate nor2 a=[1943] b=[1955] y=[437]
+.gate nor2 a=[436] b=[437] y=[10]
+.gate nor1 a=[10] y=P1ZZZ6_P
+.gate nor1 a=PYBB8 y=[1956]
+.gate nor2 a=[1941] b=[1956] y=[434]
+.gate nor1 a=P1ZZZ7 y=[1957]
+.gate nor2 a=[1943] b=[1957] y=[435]
+.gate nor2 a=[434] b=[435] y=[11]
+.gate nor1 a=[11] y=P1ZZZ7_P
+.gate nor2 a=[1938] b=[1939] y=MIS16885
+.gate nor1 a=MIS16885 y=[1958]
+.gate nor2 a=RYZ b=[1958] y=MIS11586
+.gate nor1 a=MIS11586 y=[1959]
+.gate nor2 a=[1937] b=[1959] y=[432]
+.gate nor1 a=P2ZZZ0 y=[1960]
+.gate nor2 a=MIS16885 b=RYZ y=MIS11585
+.gate nor1 a=MIS11585 y=[1961]
+.gate nor2 a=[1960] b=[1961] y=[433]
+.gate nor2 a=[432] b=[433] y=[12]
+.gate nor1 a=[12] y=P2ZZZ0_P
+.gate nor2 a=[1944] b=[1959] y=[430]
+.gate nor1 a=P2ZZZ1 y=[1962]
+.gate nor2 a=[1961] b=[1962] y=[431]
+.gate nor2 a=[430] b=[431] y=[13]
+.gate nor1 a=[13] y=P2ZZZ1_P
+.gate nor2 a=[1946] b=[1959] y=[428]
+.gate nor1 a=P2ZZZ2 y=[1963]
+.gate nor2 a=[1961] b=[1963] y=[429]
+.gate nor2 a=[428] b=[429] y=[14]
+.gate nor1 a=[14] y=P2ZZZ2_P
+.gate nor2 a=[1948] b=[1959] y=[426]
+.gate nor1 a=P2ZZZ3 y=[1964]
+.gate nor2 a=[1961] b=[1964] y=[427]
+.gate nor2 a=[426] b=[427] y=[15]
+.gate nor1 a=[15] y=P2ZZZ3_P
+.gate nor2 a=[1950] b=[1959] y=[424]
+.gate nor1 a=P2ZZZ4 y=[1965]
+.gate nor2 a=[1961] b=[1965] y=[425]
+.gate nor2 a=[424] b=[425] y=[16]
+.gate nor1 a=[16] y=P2ZZZ4_P
+.gate nor2 a=[1952] b=[1959] y=[422]
+.gate nor1 a=P2ZZZ5 y=[1966]
+.gate nor2 a=[1961] b=[1966] y=[423]
+.gate nor2 a=[422] b=[423] y=[17]
+.gate nor1 a=[17] y=P2ZZZ5_P
+.gate nor2 a=[1954] b=[1959] y=[420]
+.gate nor1 a=P2ZZZ6 y=[1967]
+.gate nor2 a=[1961] b=[1967] y=[421]
+.gate nor2 a=[420] b=[421] y=[18]
+.gate nor1 a=[18] y=P2ZZZ6_P
+.gate nor2 a=[1956] b=[1959] y=[418]
+.gate nor1 a=P2ZZZ7 y=[1968]
+.gate nor2 a=[1961] b=[1968] y=[419]
+.gate nor2 a=[418] b=[419] y=[19]
+.gate nor1 a=[19] y=P2ZZZ7_P
+.gate nor1 a=INYBB1 y=[1969]
+.gate nor1 a=INZZZE y=[1971]
+.gate nor1 a=INYBB0 y=[1970]
+.gate nor2 a=INZZZE b=[1970] y=MIS16891
+.gate nor1 a=MIS16891 y=[1972]
+.gate nor2 a=RYZ b=[1972] y=MIS11582
+.gate nor1 a=MIS11582 y=[1973]
+.gate nor2 a=[1969] b=[1973] y=[416]
+.gate nor1 a=I1ZZZ0 y=[1974]
+.gate nor2 a=MIS16891 b=RYZ y=MIS11581
+.gate nor1 a=MIS11581 y=[1975]
+.gate nor2 a=[1974] b=[1975] y=[417]
+.gate nor2 a=[416] b=[417] y=[20]
+.gate nor1 a=[20] y=I1ZZZ0_P
+.gate nor1 a=INYBB2 y=[1976]
+.gate nor2 a=[1973] b=[1976] y=[414]
+.gate nor1 a=I1ZZZ1 y=[1977]
+.gate nor2 a=[1975] b=[1977] y=[415]
+.gate nor2 a=[414] b=[415] y=[21]
+.gate nor1 a=[21] y=I1ZZZ1_P
+.gate nor1 a=INYBB3 y=[1978]
+.gate nor2 a=[1973] b=[1978] y=[412]
+.gate nor1 a=I1ZZZ2 y=[1979]
+.gate nor2 a=[1975] b=[1979] y=[413]
+.gate nor2 a=[412] b=[413] y=[22]
+.gate nor1 a=[22] y=I1ZZZ2_P
+.gate nor1 a=INYBB4 y=[1980]
+.gate nor2 a=[1973] b=[1980] y=[410]
+.gate nor1 a=I1ZZZ3 y=[1981]
+.gate nor2 a=[1975] b=[1981] y=[411]
+.gate nor2 a=[410] b=[411] y=[23]
+.gate nor1 a=[23] y=I1ZZZ3_P
+.gate nor1 a=INYBB5 y=[1982]
+.gate nor2 a=[1973] b=[1982] y=[408]
+.gate nor1 a=I1ZZZ4 y=[1983]
+.gate nor2 a=[1975] b=[1983] y=[409]
+.gate nor2 a=[408] b=[409] y=[24]
+.gate nor1 a=[24] y=I1ZZZ4_P
+.gate nor1 a=INYBB6 y=[1984]
+.gate nor2 a=[1973] b=[1984] y=[406]
+.gate nor1 a=I1ZZZ5 y=[1985]
+.gate nor2 a=[1975] b=[1985] y=[407]
+.gate nor2 a=[406] b=[407] y=[25]
+.gate nor1 a=[25] y=I1ZZZ5_P
+.gate nor1 a=INYBB7 y=[1986]
+.gate nor2 a=[1973] b=[1986] y=[404]
+.gate nor1 a=I1ZZZ6 y=[1987]
+.gate nor2 a=[1975] b=[1987] y=[405]
+.gate nor2 a=[404] b=[405] y=[26]
+.gate nor1 a=[26] y=I1ZZZ6_P
+.gate nor1 a=INYBB8 y=[1988]
+.gate nor2 a=[1973] b=[1988] y=[402]
+.gate nor1 a=I1ZZZ7 y=[1989]
+.gate nor2 a=[1975] b=[1989] y=[403]
+.gate nor2 a=[402] b=[403] y=[27]
+.gate nor1 a=[27] y=I1ZZZ7_P
+.gate nor2 a=[1970] b=[1971] y=MIS16887
+.gate nor1 a=MIS16887 y=[1990]
+.gate nor2 a=RYZ b=[1990] y=MIS11584
+.gate nor1 a=MIS11584 y=[1991]
+.gate nor2 a=[1969] b=[1991] y=[400]
+.gate nor1 a=I2ZZZ0 y=[1992]
+.gate nor2 a=MIS16887 b=RYZ y=MIS11583
+.gate nor1 a=MIS11583 y=[1993]
+.gate nor2 a=[1992] b=[1993] y=[401]
+.gate nor2 a=[400] b=[401] y=[28]
+.gate nor1 a=[28] y=I2ZZZ0_P
+.gate nor2 a=[1976] b=[1991] y=[398]
+.gate nor1 a=I2ZZZ1 y=[1994]
+.gate nor2 a=[1993] b=[1994] y=[399]
+.gate nor2 a=[398] b=[399] y=[29]
+.gate nor1 a=[29] y=I2ZZZ1_P
+.gate nor2 a=[1978] b=[1991] y=[396]
+.gate nor1 a=I2ZZZ2 y=[1995]
+.gate nor2 a=[1993] b=[1995] y=[397]
+.gate nor2 a=[396] b=[397] y=[30]
+.gate nor1 a=[30] y=I2ZZZ2_P
+.gate nor2 a=[1980] b=[1991] y=[394]
+.gate nor1 a=I2ZZZ3 y=[1996]
+.gate nor2 a=[1993] b=[1996] y=[395]
+.gate nor2 a=[394] b=[395] y=[31]
+.gate nor1 a=[31] y=I2ZZZ3_P
+.gate nor2 a=[1982] b=[1991] y=[392]
+.gate nor1 a=I2ZZZ4 y=[1997]
+.gate nor2 a=[1993] b=[1997] y=[393]
+.gate nor2 a=[392] b=[393] y=[32]
+.gate nor1 a=[32] y=I2ZZZ4_P
+.gate nor2 a=[1984] b=[1991] y=[390]
+.gate nor1 a=I2ZZZ5 y=[1998]
+.gate nor2 a=[1993] b=[1998] y=[391]
+.gate nor2 a=[390] b=[391] y=[33]
+.gate nor1 a=[33] y=I2ZZZ5_P
+.gate nor2 a=[1986] b=[1991] y=[388]
+.gate nor1 a=I2ZZZ6 y=[1999]
+.gate nor2 a=[1993] b=[1999] y=[389]
+.gate nor2 a=[388] b=[389] y=[34]
+.gate nor1 a=[34] y=I2ZZZ6_P
+.gate nor2 a=[1988] b=[1991] y=[386]
+.gate nor1 a=I2ZZZ7 y=[2000]
+.gate nor2 a=[1993] b=[2000] y=[387]
+.gate nor2 a=[386] b=[387] y=[35]
+.gate nor1 a=[35] y=I2ZZZ7_P
+.gate nor3 a=[1895] b=VFIN c=[1890] y=MIS11565
+.gate nor1 a=MIS11565 y=[2002]
+.gate nor2 a=RYZ b=MIS11565 y=[36]
+.gate nor1 a=[36] y=TXMESS_F
+.gate nor2 a=[1897] b=[1901] y=[384]
+.gate nor2 a=[384] b=ICLR y=[37]
+.gate nor1 a=[37] y=RYZ_P
+.gate nor2 a=[1900] b=[1921] y=[380]
+.gate nor2 a=MMERR b=[1898] y=[381]
+.gate nor2 a=[380] b=[381] y=MIS16577
+.gate nor3 a=MIS16577 b=TXMESS_N c=COMPPAR y=[375]
+.gate nor2 a=ESRSUM b=[1900] y=[378]
+.gate nor2 a=[1898] b=[1930] y=[379]
+.gate nor2 a=[378] b=[379] y=MIS16579
+.gate nor2 a=MIS16579 b=[1932] y=[376]
+.gate nor3 a=MIS11556 b=[375] c=[376] y=MIS16565
+.gate nor2 a=MIS16565 b=[1897] y=[372]
+.gate nor4 a=QPR3 b=QPR4 c=MIS16690 d=[1917] y=[382]
+.gate nor2 a=MIS9255 b=[1928] y=[383]
+.gate nor2 a=[382] b=[383] y=MIS11154
+.gate nor1 a=MIS11154 y=[2006]
+.gate nor4 a=TXMESS_N b=COMPPAR c=MIS11154 d=MIS7401 y=[370]
+.gate nor2 a=MIS7401 b=[2006] y=[373]
+.gate nor2 a=[373] b=TXMESS_N y=MIS16572
+.gate nor2 a=MIS16572 b=[1932] y=[371]
+.gate nor3 a=[372] b=[370] c=[371] y=MIS16569
+.gate nor2 a=MIS16569 b=RYZ y=COMPPAR_P
+.gate nor1 a=XZ160_N y=[2034]
+.gate nor2 a=SLAD0 b=[2034] y=[362]
+.gate nor2 a=XZ160_N b=[1910] y=[363]
+.gate nor2 a=[362] b=[363] y=MIS16866
+.gate nor1 a=XZ161 y=[2032]
+.gate nor2 a=SLAD1 b=XZ161 y=[364]
+.gate nor2 a=[1908] b=[2032] y=[365]
+.gate nor2 a=[364] b=[365] y=MIS16864
+.gate nor1 a=XZ163 y=[2029]
+.gate nor2 a=SLAD3 b=XZ163 y=[368]
+.gate nor2 a=[1912] b=[2029] y=[369]
+.gate nor2 a=[368] b=[369] y=MIS16871
+.gate nor1 a=XZ162 y=[2030]
+.gate nor2 a=SLAD2 b=XZ162 y=[366]
+.gate nor2 a=[1913] b=[2030] y=[367]
+.gate nor2 a=[366] b=[367] y=MIS16873
+.gate nor4 a=MIS16866 b=MIS16864 c=MIS16871 d=MIS16873 y=[1448]
+.gate nor1 a=[1448] y=[4628]
+.gate nor1 a=XZ321 y=[2024]
+.gate nor1 a=XZ322 y=[2025]
+.gate nor2 a=[2024] b=[2025] y=MIS11578
+.gate nor1 a=MIS11578 y=[2026]
+.gate nor1 a=XZ320 y=[2021]
+.gate nor1 a=XZ323 y=[2022]
+.gate nor3 a=[2026] b=[2021] c=[2022] y=MIS11550
+.gate nor1 a=MIS11550 y=[2027]
+.gate nor1 a=XZ324 y=[2018]
+.gate nor1 a=ENWIN y=[2019]
+.gate nor4 a=[4628] b=[2027] c=[2018] d=[2019] y=MIS15847
+.gate nor1 a=PSYNC y=[2013]
+.gate nor1 a=XZFS y=[2014]
+.gate nor4 a=SLAD2 b=SLAD3 c=[2013] d=[2014] y=MIS15650
+.gate nor1 a=MIS15650 y=[2016]
+.gate nor3 a=[2016] b=SLAD0 c=SLAD1 y=[359]
+.gate nor2 a=[1922] b=[1924] y=MIS16724
+.gate nor2 a=MIS16724 b=[1891] y=[360]
+.gate nor3 a=MIS15847 b=[359] c=[360] y=MIS16722
+.gate nor2 a=MIS16722 b=RYZ y=RPTWIN_P
+.gate nor2 a=PSYNC b=ICLR y=MIS11560
+.gate nor1 a=MIS11560 y=[2044]
+.gate nor2 a=[2021] b=[2044] y=MIS15083
+.gate nor1 a=MIS15083 y=[2045]
+.gate nor1 a=XZFR0 y=[2036]
+.gate nor3 a=XZ162 b=XZ161 c=[2034] y=[1433]
+.gate nor1 a=[1433] y=[4620]
+.gate nor3 a=[2026] b=[2018] c=[2022] y=MIS7564
+.gate nor1 a=MIS7564 y=[2040]
+.gate nor3 a=[4620] b=XZ163 c=[2040] y=MIS8027
+.gate nor1 a=MIS8027 y=[2042]
+.gate nor3 a=[2045] b=XZFR0 c=[2042] y=[355]
+.gate nor2 a=MIS8027 b=[2044] y=[357]
+.gate nor2 a=XZ320 b=[2044] y=XZ320_P
+.gate nor1 a=XZ320_P y=[2046]
+.gate nor2 a=[357] b=XZ320_P y=MIS10130
+.gate nor1 a=MIS10130 y=[2047]
+.gate nor2 a=MIS10130 b=[2036] y=[356]
+.gate nor2 a=[355] b=[356] y=[40]
+.gate nor1 a=[40] y=XZFR0_P
+.gate nor4 a=XZFR1 b=[2036] c=[2042] d=[2045] y=[351]
+.gate nor2 a=XZFR0 b=[2044] y=[353]
+.gate nor2 a=[353] b=[2047] y=MIS16613
+.gate nor2 a=MIS16613 b=[1936] y=[352]
+.gate nor2 a=[351] b=[352] y=[41]
+.gate nor1 a=[41] y=XZFR1_P
+.gate nor2 a=[1933] b=[1934] y=MIS16788
+.gate nor2 a=ICLR b=[2014] y=[349]
+.gate nor2 a=ICLR b=[2013] y=OFS1_P
+.gate nor1 a=OFS1_P y=[2051]
+.gate nor2 a=[349] b=OFS1_P y=MIS16879
+.gate nor1 a=PSRW y=[2050]
+.gate nor3 a=MIS16788 b=MIS16879 c=[2050] y=XZFS_P
+.gate nor2 a=SLAD3 b=[2029] y=MIS15854
+.gate nor2 a=SLAD2 b=[2030] y=MIS15855
+.gate nor2 a=MIS15854 b=MIS15855 y=MIS16673
+.gate nor1 a=MIS16673 y=[2054]
+.gate nor2 a=[2021] b=[2054] y=MIS12425
+.gate nor1 a=MIS12425 y=[2055]
+.gate nor2 a=XZFS b=MIS12425 y=[336]
+.gate nor2 a=XZ160_N b=[2040] y=MIS10125
+.gate nor1 a=MIS10125 y=[2056]
+.gate nor2 a=SLAD1 b=[2032] y=[343]
+.gate nor2 a=[343] b=[2019] y=MIS16027
+.gate nor1 a=MIS16027 y=[2057]
+.gate nor3 a=[2055] b=[2056] c=[2057] y=MIS16657
+.gate nor2 a=MIS16657 b=[1910] y=[337]
+.gate nor2 a=SLAD0 b=XZ160_N y=[345]
+.gate nor2 a=[345] b=[2040] y=MIS16023
+.gate nor1 a=MIS16023 y=[2060]
+.gate nor2 a=[2057] b=[2060] y=MIS16675
+.gate nor2 a=MIS15650 b=MIS16675 y=[338]
+.gate nor2 a=PSYNC b=MIS16673 y=[339]
+.gate nor4 a=[336] b=[337] c=[338] d=[339] y=[1329]
+.gate nor1 a=[1329] y=[4596]
+.gate nor3 a=[2021] b=MIS15854 c=[2030] y=MIS16670
+.gate nor2 a=MIS16670 b=[1913] y=[342]
+.gate nor3 a=[2021] b=MIS15855 c=[2029] y=MIS16665
+.gate nor2 a=MIS16665 b=[1912] y=[340]
+.gate nor4 a=[2055] b=[2060] c=[2019] d=[2032] y=MIS16646
+.gate nor2 a=MIS16646 b=[1908] y=[341]
+.gate nor4 a=[4596] b=[342] c=[340] d=[341] y=MIS15964
+.gate nor2 a=ICLR b=MIS15964 y=[334]
+.gate nor2 a=[334] b=XZ320_P y=MIS16544
+.gate nor3 a=MIS16544 b=RPTWIN c=[1922] y=[332]
+.gate nor3 a=SLAD2 b=SLAD0 c=SLAD1 y=[1309]
+.gate nor1 a=[1309] y=[4584]
+.gate nor4 a=[4584] b=[2051] c=SLAD3 d=[2014] y=[347]
+.gate nor2 a=RPTWIN b=MIS15847 y=MIS16752
+.gate nor2 a=ICLR b=MIS16752 y=[348]
+.gate nor2 a=[347] b=[348] y=MIS8641
+.gate nor2 a=RXZ0 b=MIS8641 y=[333]
+.gate nor2 a=[332] b=[333] y=[43]
+.gate nor1 a=[43] y=RXZ0_P
+.gate nor3 a=MIS8641 b=RXZ1 c=[1922] y=[328]
+.gate nor2 a=ICLR b=RXZ0 y=[330]
+.gate nor2 a=RPTWIN b=MIS16544 y=[331]
+.gate nor2 a=[330] b=[331] y=MIS16541
+.gate nor2 a=MIS16541 b=[1924] y=[329]
+.gate nor2 a=[328] b=[329] y=[44]
+.gate nor1 a=[44] y=RXZ1_P
+.gate nor3 a=[1902] b=QPR4 c=[1915] y=[326]
+.gate nor1 a=CBT2 y=[2077]
+.gate nor2 a=QPR4 b=[2077] y=MIS16750
+.gate nor2 a=QPR3 b=MIS16750 y=[327]
+.gate nor2 a=[326] b=[327] y=MIS16746
+.gate nor3 a=[1906] b=QPR1 c=[1909] y=MIS8768
+.gate nor1 a=MIS8768 y=[2075]
+.gate nor2 a=MIS16746 b=[2075] y=MIS16765
+.gate nor1 a=MIS16765 y=[2078]
+.gate nor2 a=TXMESS_N b=[2078] y=[324]
+.gate nor2 a=[324] b=A y=MIS16748
+.gate nor2 a=MIS16748 b=RYZ y=A_P
+.gate nor3 a=QPR3 b=TXMESS_N c=B y=[1249]
+.gate nor1 a=[1249] y=[4572]
+.gate nor2 a=CBT0 b=CBT1 y=[322]
+.gate nor2 a=[322] b=[2077] y=MIS15328
+.gate nor1 a=MIS15328 y=[2081]
+.gate nor4 a=[4572] b=[2075] c=QPR4 d=[2081] y=[316]
+.gate nor2 a=QPR3 b=MIS15328 y=[318]
+.gate nor4 a=[318] b=QPR4 c=TXMESS_N d=[2075] y=MIS16758
+.gate nor2 a=MIS16758 b=[1915] y=[317]
+.gate nor2 a=[316] b=[317] y=MIS16760
+.gate nor2 a=MIS16760 b=RYZ y=B_P
+.gate nor3 a=[2077] b=CBT0 c=CBT1 y=MIS16895
+.gate nor2 a=QPR4 b=MIS16895 y=[312]
+.gate nor4 a=[312] b=TXMESS_N c=QPR3 d=[2075] y=MIS9174
+.gate nor1 a=MIS9174 y=[2089]
+.gate nor2 a=C b=[2089] y=[310]
+.gate nor2 a=MIS9174 b=[1916] y=[311]
+.gate nor2 a=[310] b=[311] y=MIS16762
+.gate nor2 a=MIS16762 b=RYZ y=C_P
+.gate nor3 a=[2002] b=RYZ c=[1909] y=[308]
+.gate nor2 a=QPR0 b=TXMESS_F y=[309]
+.gate nor2 a=[308] b=[309] y=[50]
+.gate nor1 a=[50] y=QPR0_P
+.gate nor2 a=MIS11565 b=[1909] y=MIS16629
+.gate nor1 a=MIS16629 y=[2092]
+.gate nor3 a=MIS16629 b=RYZ c=[1905] y=[306]
+.gate nor3 a=TXMESS_F b=QPR1 c=[1909] y=[307]
+.gate nor2 a=[306] b=[307] y=[51]
+.gate nor1 a=[51] y=QPR1_P
+.gate nor2 a=[1905] b=[2092] y=MIS16581
+.gate nor1 a=MIS16581 y=[2095]
+.gate nor3 a=MIS16581 b=RYZ c=[1906] y=[304]
+.gate nor3 a=TXMESS_F b=[1905] c=[1909] y=MIS15843
+.gate nor1 a=MIS15843 y=[2097]
+.gate nor2 a=QPR2 b=[2097] y=[305]
+.gate nor2 a=[304] b=[305] y=[52]
+.gate nor1 a=[52] y=QPR2_P
+.gate nor2 a=[1906] b=[2095] y=MIS16548
+.gate nor1 a=MIS16548 y=[2099]
+.gate nor3 a=MIS16548 b=RYZ c=[1902] y=[302]
+.gate nor3 a=[2097] b=QPR3 c=[1906] y=[303]
+.gate nor2 a=[302] b=[303] y=[53]
+.gate nor1 a=[53] y=QPR3_P
+.gate nor4 a=[1902] b=[1906] c=QPR4 d=[2097] y=[300]
+.gate nor2 a=[1902] b=[2099] y=MIS16546
+.gate nor3 a=MIS16546 b=RYZ c=[1903] y=[301]
+.gate nor2 a=[300] b=[301] y=[54]
+.gate nor1 a=[54] y=QPR4_P
+.gate nor2 a=A b=MIS16765 y=[298]
+.gate nor2 a=[298] b=TXMESS_N y=MIS9061
+.gate nor1 a=MIS9061 y=[2104]
+.gate nor2 a=AXZ0 b=[2104] y=[296]
+.gate nor2 a=MIS9061 b=[1898] y=[297]
+.gate nor2 a=[296] b=[297] y=MIS16615
+.gate nor2 a=MIS16615 b=RYZ y=AXZ0_P
+.gate nor3 a=[2104] b=AXZ1 c=[1898] y=[294]
+.gate nor2 a=[1898] b=[2104] y=MIS16555
+.gate nor2 a=MIS16555 b=[1900] y=[295]
+.gate nor2 a=[294] b=[295] y=MIS16553
+.gate nor2 a=MIS16553 b=RYZ y=AXZ1_P
+.gate nor1 a=V1ZZZ1 y=[2106]
+.gate nor1 a=VZZZE y=[2108]
+.gate nor1 a=VYBB0 y=[2107]
+.gate nor2 a=VZZZE b=[2107] y=MIS16889
+.gate nor1 a=MIS16889 y=[2109]
+.gate nor2 a=RYZ b=[2109] y=MIS11590
+.gate nor1 a=MIS11590 y=[2110]
+.gate nor2 a=[2106] b=[2110] y=[292]
+.gate nor1 a=V1ZZZ0 y=[2111]
+.gate nor2 a=MIS16889 b=RYZ y=MIS11589
+.gate nor1 a=MIS11589 y=[2112]
+.gate nor2 a=[2111] b=[2112] y=[293]
+.gate nor2 a=[292] b=[293] y=[57]
+.gate nor1 a=[57] y=V1ZZZ0_P
+.gate nor1 a=V1ZZZ2 y=[2113]
+.gate nor2 a=[2110] b=[2113] y=[290]
+.gate nor2 a=[2106] b=[2112] y=[291]
+.gate nor2 a=[290] b=[291] y=[58]
+.gate nor1 a=[58] y=V1ZZZ1_P
+.gate nor1 a=V1ZZZ3 y=[2114]
+.gate nor2 a=[2110] b=[2114] y=[288]
+.gate nor2 a=[2112] b=[2113] y=[289]
+.gate nor2 a=[288] b=[289] y=[59]
+.gate nor1 a=[59] y=V1ZZZ2_P
+.gate nor1 a=V1ZZZ4 y=[2115]
+.gate nor2 a=[2110] b=[2115] y=[286]
+.gate nor2 a=[2112] b=[2114] y=[287]
+.gate nor2 a=[286] b=[287] y=[60]
+.gate nor1 a=[60] y=V1ZZZ3_P
+.gate nor1 a=V1ZZZ5 y=[2116]
+.gate nor2 a=[2110] b=[2116] y=[284]
+.gate nor2 a=[2112] b=[2115] y=[285]
+.gate nor2 a=[284] b=[285] y=[61]
+.gate nor1 a=[61] y=V1ZZZ4_P
+.gate nor1 a=V1ZZZ6 y=[2117]
+.gate nor2 a=[2110] b=[2117] y=[282]
+.gate nor2 a=[2112] b=[2116] y=[283]
+.gate nor2 a=[282] b=[283] y=[62]
+.gate nor1 a=[62] y=V1ZZZ5_P
+.gate nor1 a=V1ZZZ7 y=[2118]
+.gate nor2 a=[2110] b=[2118] y=[280]
+.gate nor2 a=[2112] b=[2117] y=[281]
+.gate nor2 a=[280] b=[281] y=[63]
+.gate nor1 a=[63] y=V1ZZZ6_P
+.gate nor1 a=VYBB1 y=[2119]
+.gate nor2 a=[2110] b=[2119] y=[278]
+.gate nor2 a=[2112] b=[2118] y=[279]
+.gate nor2 a=[278] b=[279] y=[64]
+.gate nor1 a=[64] y=V1ZZZ7_P
+.gate nor1 a=V2ZZZ1 y=[2120]
+.gate nor2 a=[2107] b=[2108] y=MIS16893
+.gate nor1 a=MIS16893 y=[2121]
+.gate nor2 a=RYZ b=[2121] y=MIS11592
+.gate nor1 a=MIS11592 y=[2122]
+.gate nor2 a=[2120] b=[2122] y=[276]
+.gate nor1 a=V2ZZZ0 y=[2123]
+.gate nor2 a=MIS16893 b=RYZ y=MIS11591
+.gate nor1 a=MIS11591 y=[2124]
+.gate nor2 a=[2123] b=[2124] y=[277]
+.gate nor2 a=[276] b=[277] y=[65]
+.gate nor1 a=[65] y=V2ZZZ0_P
+.gate nor1 a=V2ZZZ2 y=[2125]
+.gate nor2 a=[2122] b=[2125] y=[274]
+.gate nor2 a=[2120] b=[2124] y=[275]
+.gate nor2 a=[274] b=[275] y=[66]
+.gate nor1 a=[66] y=V2ZZZ1_P
+.gate nor1 a=V2ZZZ3 y=[2126]
+.gate nor2 a=[2122] b=[2126] y=[272]
+.gate nor2 a=[2124] b=[2125] y=[273]
+.gate nor2 a=[272] b=[273] y=[67]
+.gate nor1 a=[67] y=V2ZZZ2_P
+.gate nor1 a=V2ZZZ4 y=[2127]
+.gate nor2 a=[2122] b=[2127] y=[270]
+.gate nor2 a=[2124] b=[2126] y=[271]
+.gate nor2 a=[270] b=[271] y=[68]
+.gate nor1 a=[68] y=V2ZZZ3_P
+.gate nor1 a=V2ZZZ5 y=[2128]
+.gate nor2 a=[2122] b=[2128] y=[268]
+.gate nor2 a=[2124] b=[2127] y=[269]
+.gate nor2 a=[268] b=[269] y=[69]
+.gate nor1 a=[69] y=V2ZZZ4_P
+.gate nor1 a=V2ZZZ6 y=[2129]
+.gate nor2 a=[2122] b=[2129] y=[266]
+.gate nor2 a=[2124] b=[2128] y=[267]
+.gate nor2 a=[266] b=[267] y=[70]
+.gate nor1 a=[70] y=V2ZZZ5_P
+.gate nor1 a=V2ZZZ7 y=[2130]
+.gate nor2 a=[2122] b=[2130] y=[264]
+.gate nor2 a=[2124] b=[2129] y=[265]
+.gate nor2 a=[264] b=[265] y=[71]
+.gate nor1 a=[71] y=V2ZZZ6_P
+.gate nor2 a=[2119] b=[2122] y=[262]
+.gate nor2 a=[2124] b=[2130] y=[263]
+.gate nor2 a=[262] b=[263] y=[72]
+.gate nor1 a=[72] y=V2ZZZ7_P
+.gate nor2 a=[1894] b=[1974] y=[258]
+.gate nor2 a=INFIN b=[1893] y=MIS11546
+.gate nor1 a=MIS11546 y=[2131]
+.gate nor2 a=[1942] b=[2131] y=[256]
+.gate nor2 a=[1892] b=[2111] y=[261]
+.gate nor1 a=TXWRD1 y=[2132]
+.gate nor2 a=TXMESS_N b=MIS9255 y=MIS16792
+.gate nor1 a=MIS16792 y=[2133]
+.gate nor2 a=VFIN b=[2133] y=MIS11549
+.gate nor1 a=MIS11549 y=[2134]
+.gate nor2 a=[2132] b=[2134] y=[259]
+.gate nor2 a=VFIN b=MIS16792 y=MIS11548
+.gate nor1 a=MIS11548 y=[2135]
+.gate nor2 a=[1928] b=[2135] y=[260]
+.gate nor3 a=[261] b=[259] c=[260] y=MIS16593
+.gate nor2 a=MIS16593 b=[1895] y=[257]
+.gate nor3 a=[258] b=[256] c=[257] y=MIS16591
+.gate nor2 a=MIS16591 b=RYZ y=TXWRD0_P
+.gate nor2 a=PFIN b=[1892] y=MIS11562
+.gate nor1 a=MIS11562 y=[2139]
+.gate nor2 a=[2106] b=[2139] y=[252]
+.gate nor1 a=TXWRD2 y=[2140]
+.gate nor2 a=PFIN b=[2134] y=MIS15065
+.gate nor1 a=MIS15065 y=[2141]
+.gate nor2 a=[2140] b=[2141] y=[253]
+.gate nor2 a=PFIN b=[2135] y=MIS15062
+.gate nor1 a=MIS15062 y=[2143]
+.gate nor2 a=[2132] b=[2143] y=[254]
+.gate nor2 a=[1893] b=[1945] y=[255]
+.gate nor4 a=[252] b=[253] c=[254] d=[255] y=MIS16606
+.gate nor2 a=INFIN b=RYZ y=MIS11593
+.gate nor1 a=MIS11593 y=[2138]
+.gate nor2 a=MIS16606 b=[2138] y=[250]
+.gate nor2 a=RYZ b=[1894] y=MIS11594
+.gate nor1 a=MIS11594 y=[2145]
+.gate nor2 a=[1977] b=[2145] y=[251]
+.gate nor2 a=[250] b=[251] y=[74]
+.gate nor1 a=[74] y=TXWRD1_P
+.gate nor2 a=[1979] b=[2145] y=[244]
+.gate nor2 a=[2113] b=[2139] y=[246]
+.gate nor1 a=TXWRD3 y=[2146]
+.gate nor2 a=[2141] b=[2146] y=[247]
+.gate nor2 a=[2140] b=[2143] y=[248]
+.gate nor2 a=[1893] b=[1947] y=[249]
+.gate nor4 a=[246] b=[247] c=[248] d=[249] y=MIS16585
+.gate nor2 a=MIS16585 b=[2138] y=[245]
+.gate nor2 a=[244] b=[245] y=[75]
+.gate nor1 a=[75] y=TXWRD2_P
+.gate nor2 a=[1981] b=[2145] y=[240]
+.gate nor2 a=[1892] b=[2114] y=[243]
+.gate nor1 a=TXWRD4 y=[2149]
+.gate nor2 a=[2134] b=[2149] y=[241]
+.gate nor2 a=[2135] b=[2146] y=[242]
+.gate nor3 a=[243] b=[241] c=[242] y=MIS16726
+.gate nor2 a=PFIN b=[2138] y=MIS15080
+.gate nor1 a=MIS15080 y=[2151]
+.gate nor2 a=MIS16726 b=[2151] y=[238]
+.gate nor2 a=[1893] b=[2138] y=MIS15081
+.gate nor1 a=MIS15081 y=[2152]
+.gate nor2 a=[1949] b=[2152] y=[239]
+.gate nor3 a=[240] b=[238] c=[239] y=[76]
+.gate nor1 a=[76] y=TXWRD3_P
+.gate nor2 a=[1983] b=[2145] y=[234]
+.gate nor2 a=[1892] b=[2115] y=[237]
+.gate nor1 a=TXWRD5 y=[2154]
+.gate nor2 a=[2134] b=[2154] y=[235]
+.gate nor2 a=[2135] b=[2149] y=[236]
+.gate nor3 a=[237] b=[235] c=[236] y=MIS16728
+.gate nor2 a=MIS16728 b=[2151] y=[232]
+.gate nor2 a=[1951] b=[2152] y=[233]
+.gate nor3 a=[234] b=[232] c=[233] y=[77]
+.gate nor1 a=[77] y=TXWRD4_P
+.gate nor2 a=[1985] b=[2145] y=[228]
+.gate nor2 a=[1892] b=[2116] y=[231]
+.gate nor1 a=TXWRD6 y=[2157]
+.gate nor2 a=[2134] b=[2157] y=[229]
+.gate nor2 a=[2135] b=[2154] y=[230]
+.gate nor3 a=[231] b=[229] c=[230] y=MIS16732
+.gate nor2 a=MIS16732 b=[2151] y=[226]
+.gate nor2 a=[1953] b=[2152] y=[227]
+.gate nor3 a=[228] b=[226] c=[227] y=[78]
+.gate nor1 a=[78] y=TXWRD5_P
+.gate nor2 a=[1987] b=[2145] y=[222]
+.gate nor2 a=[1892] b=[2117] y=[225]
+.gate nor1 a=TXWRD7 y=[2160]
+.gate nor2 a=[2134] b=[2160] y=[223]
+.gate nor2 a=[2135] b=[2157] y=[224]
+.gate nor3 a=[225] b=[223] c=[224] y=MIS16633
+.gate nor2 a=MIS16633 b=[2151] y=[220]
+.gate nor2 a=[1955] b=[2152] y=[221]
+.gate nor3 a=[222] b=[220] c=[221] y=[79]
+.gate nor1 a=[79] y=TXWRD6_P
+.gate nor2 a=[1892] b=[2118] y=[219]
+.gate nor1 a=TXWRD8 y=[2164]
+.gate nor2 a=[2134] b=[2164] y=[217]
+.gate nor2 a=[2135] b=[2160] y=[218]
+.gate nor3 a=[219] b=[217] c=[218] y=MIS16620
+.gate nor2 a=MIS16620 b=[1895] y=[216]
+.gate nor2 a=[1957] b=[2131] y=[214]
+.gate nor2 a=[1894] b=[1989] y=[215]
+.gate nor3 a=[216] b=[214] c=[215] y=MIS16618
+.gate nor2 a=MIS16618 b=RYZ y=TXWRD7_P
+.gate nor2 a=[1992] b=[2145] y=[210]
+.gate nor2 a=[1892] b=[2123] y=[213]
+.gate nor1 a=TXWRD9 y=[2166]
+.gate nor2 a=[2134] b=[2166] y=[211]
+.gate nor2 a=[2135] b=[2164] y=[212]
+.gate nor3 a=[213] b=[211] c=[212] y=MIS16631
+.gate nor2 a=MIS16631 b=[2151] y=[208]
+.gate nor2 a=[1960] b=[2152] y=[209]
+.gate nor3 a=[210] b=[208] c=[209] y=[81]
+.gate nor1 a=[81] y=TXWRD8_P
+.gate nor2 a=[2120] b=[2139] y=[204]
+.gate nor1 a=TXWRD10 y=[2169]
+.gate nor2 a=[2141] b=[2169] y=[205]
+.gate nor2 a=[2143] b=[2166] y=[206]
+.gate nor2 a=[1893] b=[1962] y=[207]
+.gate nor4 a=[204] b=[205] c=[206] d=[207] y=MIS16627
+.gate nor2 a=MIS16627 b=[2138] y=[202]
+.gate nor2 a=[1994] b=[2145] y=[203]
+.gate nor2 a=[202] b=[203] y=[82]
+.gate nor1 a=[82] y=TXWRD9_P
+.gate nor2 a=[1963] b=[2131] y=[198]
+.gate nor2 a=[1894] b=[1995] y=[196]
+.gate nor2 a=[1892] b=[2125] y=[201]
+.gate nor1 a=TXWRD11 y=[2172]
+.gate nor2 a=[2134] b=[2172] y=[199]
+.gate nor2 a=[2135] b=[2169] y=[200]
+.gate nor3 a=[201] b=[199] c=[200] y=MIS16611
+.gate nor2 a=MIS16611 b=[1895] y=[197]
+.gate nor3 a=[198] b=[196] c=[197] y=MIS16609
+.gate nor2 a=RYZ b=MIS16609 y=TXWRD10_P
+.gate nor2 a=[1964] b=[2131] y=[192]
+.gate nor2 a=[1894] b=[1996] y=[190]
+.gate nor2 a=[1892] b=[2126] y=[195]
+.gate nor1 a=TXWRD12 y=[2175]
+.gate nor2 a=[2134] b=[2175] y=[193]
+.gate nor2 a=[2135] b=[2172] y=[194]
+.gate nor3 a=[195] b=[193] c=[194] y=MIS16598
+.gate nor2 a=MIS16598 b=[1895] y=[191]
+.gate nor3 a=[192] b=[190] c=[191] y=MIS16596
+.gate nor2 a=MIS16596 b=RYZ y=TXWRD11_P
+.gate nor2 a=[1965] b=[2131] y=[186]
+.gate nor2 a=[1894] b=[1997] y=[184]
+.gate nor2 a=[1892] b=[2127] y=[189]
+.gate nor1 a=TXWRD13 y=[2178]
+.gate nor2 a=[2134] b=[2178] y=[187]
+.gate nor2 a=[2135] b=[2175] y=[188]
+.gate nor3 a=[189] b=[187] c=[188] y=MIS16625
+.gate nor2 a=MIS16625 b=[1895] y=[185]
+.gate nor3 a=[186] b=[184] c=[185] y=MIS16623
+.gate nor2 a=MIS16623 b=RYZ y=TXWRD12_P
+.gate nor2 a=[1966] b=[2152] y=[180]
+.gate nor2 a=[1892] b=[2128] y=[183]
+.gate nor1 a=TXWRD14 y=[2181]
+.gate nor2 a=[2134] b=[2181] y=[181]
+.gate nor2 a=[2135] b=[2178] y=[182]
+.gate nor3 a=[183] b=[181] c=[182] y=MIS16734
+.gate nor2 a=MIS16734 b=[2151] y=[178]
+.gate nor2 a=[1998] b=[2145] y=[179]
+.gate nor3 a=[180] b=[178] c=[179] y=[86]
+.gate nor1 a=[86] y=TXWRD13_P
+.gate nor2 a=[1967] b=[2152] y=[174]
+.gate nor2 a=[1892] b=[2129] y=[177]
+.gate nor1 a=TXWRD15 y=[2184]
+.gate nor2 a=[2134] b=[2184] y=[175]
+.gate nor2 a=[2135] b=[2181] y=[176]
+.gate nor3 a=[177] b=[175] c=[176] y=MIS16736
+.gate nor2 a=MIS16736 b=[2151] y=[172]
+.gate nor2 a=[1999] b=[2145] y=[173]
+.gate nor3 a=[174] b=[172] c=[173] y=[87]
+.gate nor1 a=[87] y=TXWRD14_P
+.gate nor2 a=[1893] b=[1968] y=[171]
+.gate nor2 a=[2130] b=[2139] y=[169]
+.gate nor2 a=[2143] b=[2184] y=[170]
+.gate nor3 a=[171] b=[169] c=[170] y=MIS16583
+.gate nor2 a=MIS16583 b=[2138] y=[167]
+.gate nor2 a=[2000] b=[2145] y=[168]
+.gate nor2 a=[167] b=[168] y=[88]
+.gate nor1 a=[88] y=TXWRD15_P
+.gate nor2 a=[2024] b=[2046] y=[165]
+.gate nor2 a=XZ321 b=[2045] y=[166]
+.gate nor2 a=[165] b=[166] y=[90]
+.gate nor1 a=[90] y=XZ321_P
+.gate nor3 a=[2045] b=XZ322 c=[2024] y=[161]
+.gate nor2 a=XZ321 b=[2044] y=[163]
+.gate nor2 a=[163] b=XZ320_P y=MIS15339
+.gate nor1 a=MIS15339 y=[2189]
+.gate nor2 a=MIS15339 b=[2025] y=[162]
+.gate nor2 a=[161] b=[162] y=[91]
+.gate nor1 a=[91] y=XZ322_P
+.gate nor3 a=[2026] b=XZ323 c=[2045] y=[157]
+.gate nor2 a=XZ322 b=[2044] y=[159]
+.gate nor2 a=[159] b=[2189] y=MIS16730
+.gate nor2 a=MIS16730 b=[2022] y=[158]
+.gate nor2 a=[157] b=[158] y=[92]
+.gate nor1 a=[92] y=XZ323_P
+.gate nor3 a=[2027] b=XZ324 c=[2044] y=[153]
+.gate nor2 a=[2022] b=[2025] y=MIS16742
+.gate nor2 a=MIS16742 b=[2044] y=[155]
+.gate nor2 a=[155] b=[2189] y=MIS16740
+.gate nor2 a=MIS16740 b=[2018] y=[154]
+.gate nor2 a=[153] b=[154] y=[93]
+.gate nor1 a=[93] y=XZ324_P
+.gate nor2 a=[2045] b=[2056] y=[149]
+.gate nor2 a=MIS7564 b=[2044] y=[151]
+.gate nor2 a=[151] b=XZ320_P y=MIS16754
+.gate nor2 a=MIS16754 b=[2034] y=[150]
+.gate nor2 a=[149] b=[150] y=[94]
+.gate nor1 a=[94] y=XZ160_F
+.gate nor3 a=[2056] b=XZ161 c=[2045] y=[145]
+.gate nor2 a=MIS10125 b=[2044] y=[147]
+.gate nor2 a=[147] b=XZ320_P y=MIS9071
+.gate nor1 a=MIS9071 y=[2193]
+.gate nor2 a=MIS9071 b=[2032] y=[146]
+.gate nor2 a=[145] b=[146] y=[95]
+.gate nor1 a=[95] y=XZ161_P
+.gate nor3 a=[2056] b=[2021] c=[2032] y=MIS15848
+.gate nor1 a=MIS15848 y=[2196]
+.gate nor3 a=[2196] b=XZ162 c=[2044] y=[141]
+.gate nor2 a=XZ161 b=[2044] y=[143]
+.gate nor2 a=[143] b=[2193] y=MIS16588
+.gate nor2 a=MIS16588 b=[2030] y=[142]
+.gate nor2 a=[141] b=[142] y=[96]
+.gate nor1 a=[96] y=XZ162_P
+.gate nor4 a=XZ163 b=[2030] c=[2044] d=[2196] y=[137]
+.gate nor2 a=[2030] b=[2032] y=MIS16604
+.gate nor2 a=MIS16604 b=[2044] y=[139]
+.gate nor2 a=[139] b=[2193] y=MIS16602
+.gate nor2 a=MIS16602 b=[2029] y=[138]
+.gate nor2 a=[137] b=[138] y=[97]
+.gate nor1 a=[97] y=XZ163_P
+.gate nor2 a=[2014] b=[2051] y=[135]
+.gate nor2 a=ICLR b=[2019] y=[136]
+.gate nor2 a=[135] b=[136] y=MIS16786
+.gate nor3 a=MIS16788 b=MIS16786 c=[2050] y=ENWIN_P
+.end

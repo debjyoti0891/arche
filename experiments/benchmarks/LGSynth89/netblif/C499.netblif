@@ -1,0 +1,591 @@
+.model C499.iscas
+.inputs ID0(0) ID1(1) ID2(2) ID3(3) ID4(4) ID5(5) ID6(6) ID7(7) ID8(8) ID9(9) \
+ID10(10) ID11(11) ID12(12) ID13(13) ID14(14) ID15(15) ID16(16) ID17(17) \
+ID18(18) ID19(19) ID20(20) ID21(21) ID22(22) ID23(23) ID24(24) ID25(25) \
+ID26(26) ID27(27) ID28(28) ID29(29) ID30(30) ID31(31) IC0(32) IC1(33) IC2(34) \
+IC3(35) IC4(36) IC5(37) IC6(38) IC7(39) R(40)
+.outputs OD0(242) OD1(241) OD2(240) OD3(239) OD4(238) OD5(237) OD6(236) \
+OD7(235) OD8(234) OD9(233) OD10(232) OD11(231) OD12(230) OD13(229) OD14(228) \
+OD15(227) OD16(226) OD17(225) OD18(224) OD19(223) OD20(222) OD21(221) \
+OD22(220) OD23(219) OD24(218) OD25(217) OD26(216) OD27(215) OD28(214) \
+OD29(213) OD30(212) OD31(211)
+.gate nor1 a=ID4(4) O=[1140]
+.gate nor1 a=ID0(0) O=[1136]
+.gate nor2 a=ID4(4) b=[1136] O=[274]
+.gate nor2 a=ID0(0) b=[1140] O=[275]
+.gate nor2 a=[274] b=[275] O=XB0(79)
+.gate nor1 a=XB0(79) O=[1141]
+.gate nor1 a=ID12(12) O=[1138]
+.gate nor1 a=ID8(8) O=[1137]
+.gate nor2 a=ID12(12) b=[1137] O=[272]
+.gate nor2 a=ID8(8) b=[1138] O=[273]
+.gate nor2 a=[272] b=[273] O=XC0(71)
+.gate nor1 a=XC0(71) O=[1139]
+.gate nor2 a=XB0(79) b=[1139] O=[270]
+.gate nor2 a=XC0(71) b=[1141] O=[271]
+.gate nor2 a=[270] b=[271] O=XE0(94)
+.gate nor1 a=XE0(94) O=[1142]
+.gate nor1 a=IC0(32) O=[1630]
+.gate nor1 a=R(40) O=[1144]
+.gate nor2 a=[1630] b=[1144] O=H0(48)
+.gate nor1 a=H0(48) O=[1145]
+.gate nor1 a=ID17(17) O=[1157]
+.gate nor1 a=ID16(16) O=[1156]
+.gate nor2 a=ID17(17) b=[1156] O=[268]
+.gate nor2 a=ID16(16) b=[1157] O=[269]
+.gate nor2 a=[268] b=[269] O=XA8(64)
+.gate nor1 a=XA8(64) O=[1158]
+.gate nor1 a=ID19(19) O=[1154]
+.gate nor1 a=ID18(18) O=[1153]
+.gate nor2 a=ID19(19) b=[1153] O=[266]
+.gate nor2 a=ID18(18) b=[1154] O=[267]
+.gate nor2 a=[266] b=[267] O=XA9(61)
+.gate nor1 a=XA9(61) O=[1155]
+.gate nor2 a=XA8(64) b=[1155] O=[264]
+.gate nor2 a=XA9(61) b=[1158] O=[265]
+.gate nor2 a=[264] b=[265] O=F4(88)
+.gate nor1 a=F4(88) O=[1159]
+.gate nor1 a=ID21(21) O=[1150]
+.gate nor1 a=ID20(20) O=[1149]
+.gate nor2 a=ID21(21) b=[1149] O=[262]
+.gate nor2 a=ID20(20) b=[1150] O=[263]
+.gate nor2 a=[262] b=[263] O=XA10(58)
+.gate nor1 a=XA10(58) O=[1151]
+.gate nor1 a=ID23(23) O=[1147]
+.gate nor1 a=ID22(22) O=[1146]
+.gate nor2 a=ID23(23) b=[1146] O=[260]
+.gate nor2 a=ID22(22) b=[1147] O=[261]
+.gate nor2 a=[260] b=[261] O=XA11(57)
+.gate nor1 a=XA11(57) O=[1148]
+.gate nor2 a=XA10(58) b=[1148] O=[258]
+.gate nor2 a=XA11(57) b=[1151] O=[259]
+.gate nor2 a=[258] b=[259] O=F5(87)
+.gate nor1 a=F5(87) O=[1152]
+.gate nor2 a=F4(88) b=[1152] O=[256]
+.gate nor2 a=F5(87) b=[1159] O=[257]
+.gate nor2 a=[256] b=[257] O=G4(100)
+.gate nor1 a=G4(100) O=[1160]
+.gate nor2 a=[1145] b=[1160] O=[254]
+.gate nor2 a=H0(48) b=G4(100) O=[255]
+.gate nor2 a=[254] b=[255] O=XD0(112)
+.gate nor1 a=XD0(112) O=[1161]
+.gate nor2 a=XE0(94) b=[1161] O=[252]
+.gate nor2 a=XD0(112) b=[1142] O=[253]
+.gate nor2 a=[252] b=[253] O=S0(120)
+.gate nor1 a=S0(120) O=[1162]
+.gate nor2 a=ID22(22) b=[1153] O=[202]
+.gate nor2 a=ID18(18) b=[1146] O=[203]
+.gate nor2 a=[202] b=[203] O=XB6(60)
+.gate nor1 a=XB6(60) O=[1211]
+.gate nor1 a=ID30(30) O=[1209]
+.gate nor1 a=ID26(26) O=[1208]
+.gate nor2 a=ID30(30) b=[1208] O=[200]
+.gate nor2 a=ID26(26) b=[1209] O=[201]
+.gate nor2 a=[200] b=[201] O=XC6(52)
+.gate nor1 a=XC6(52) O=[1210]
+.gate nor2 a=XB6(60) b=[1210] O=[198]
+.gate nor2 a=XC6(52) b=[1211] O=[199]
+.gate nor2 a=[198] b=[199] O=XE6(83)
+.gate nor1 a=XE6(83) O=[1212]
+.gate nor1 a=IC6(38) O=[1642]
+.gate nor2 a=[1144] b=[1642] O=H6(42)
+.gate nor1 a=H6(42) O=[1214]
+.gate nor1 a=ID1(1) O=[1179]
+.gate nor2 a=ID1(1) b=[1136] O=[244]
+.gate nor2 a=ID0(0) b=[1179] O=[245]
+.gate nor2 a=[244] b=[245] O=XA0(80)
+.gate nor1 a=XA0(80) O=[1180]
+.gate nor1 a=ID3(3) O=[1177]
+.gate nor1 a=ID2(2) O=[1176]
+.gate nor2 a=ID3(3) b=[1176] O=[242]
+.gate nor2 a=ID2(2) b=[1177] O=[243]
+.gate nor2 a=[242] b=[243] O=XA1(77)
+.gate nor1 a=XA1(77) O=[1178]
+.gate nor2 a=XA0(80) b=[1178] O=[240]
+.gate nor2 a=XA1(77) b=[1180] O=[241]
+.gate nor2 a=[240] b=[241] O=F0(96)
+.gate nor1 a=F0(96) O=[1181]
+.gate nor1 a=ID9(9) O=[1201]
+.gate nor2 a=ID9(9) b=[1137] O=[220]
+.gate nor2 a=ID8(8) b=[1201] O=[221]
+.gate nor2 a=[220] b=[221] O=XA4(72)
+.gate nor1 a=XA4(72) O=[1202]
+.gate nor1 a=ID11(11) O=[1199]
+.gate nor1 a=ID10(10) O=[1198]
+.gate nor2 a=ID11(11) b=[1198] O=[218]
+.gate nor2 a=ID10(10) b=[1199] O=[219]
+.gate nor2 a=[218] b=[219] O=XA5(69)
+.gate nor1 a=XA5(69) O=[1200]
+.gate nor2 a=XA4(72) b=[1200] O=[216]
+.gate nor2 a=XA5(69) b=[1202] O=[217]
+.gate nor2 a=[216] b=[217] O=F2(92)
+.gate nor1 a=F2(92) O=[1203]
+.gate nor2 a=F0(96) b=[1203] O=[196]
+.gate nor2 a=F2(92) b=[1181] O=[197]
+.gate nor2 a=[196] b=[197] O=G2(103)
+.gate nor1 a=G2(103) O=[1215]
+.gate nor2 a=[1214] b=[1215] O=[194]
+.gate nor2 a=H6(42) b=G2(103) O=[195]
+.gate nor2 a=[194] b=[195] O=XD6(106)
+.gate nor1 a=XD6(106) O=[1216]
+.gate nor2 a=XE6(83) b=[1216] O=[192]
+.gate nor2 a=XD6(106) b=[1212] O=[193]
+.gate nor2 a=[192] b=[193] O=S6(114)
+.gate nor1 a=S6(114) O=[1217]
+.gate nor2 a=ID20(20) b=[1156] O=[250]
+.gate nor2 a=ID16(16) b=[1149] O=[251]
+.gate nor2 a=[250] b=[251] O=XB4(63)
+.gate nor1 a=XB4(63) O=[1166]
+.gate nor1 a=ID28(28) O=[1164]
+.gate nor1 a=ID24(24) O=[1163]
+.gate nor2 a=ID28(28) b=[1163] O=[248]
+.gate nor2 a=ID24(24) b=[1164] O=[249]
+.gate nor2 a=[248] b=[249] O=XC4(55)
+.gate nor1 a=XC4(55) O=[1165]
+.gate nor2 a=XB4(63) b=[1165] O=[246]
+.gate nor2 a=XC4(55) b=[1166] O=[247]
+.gate nor2 a=[246] b=[247] O=XE4(86)
+.gate nor1 a=XE4(86) O=[1167]
+.gate nor1 a=IC4(36) O=[1638]
+.gate nor2 a=[1144] b=[1638] O=H4(44)
+.gate nor1 a=H4(44) O=[1169]
+.gate nor1 a=ID5(5) O=[1173]
+.gate nor2 a=ID5(5) b=[1140] O=[238]
+.gate nor2 a=ID4(4) b=[1173] O=[239]
+.gate nor2 a=[238] b=[239] O=XA2(74)
+.gate nor1 a=XA2(74) O=[1174]
+.gate nor1 a=ID7(7) O=[1171]
+.gate nor1 a=ID6(6) O=[1170]
+.gate nor2 a=ID7(7) b=[1170] O=[236]
+.gate nor2 a=ID6(6) b=[1171] O=[237]
+.gate nor2 a=[236] b=[237] O=XA3(73)
+.gate nor1 a=XA3(73) O=[1172]
+.gate nor2 a=XA2(74) b=[1172] O=[234]
+.gate nor2 a=XA3(73) b=[1174] O=[235]
+.gate nor2 a=[234] b=[235] O=F1(95)
+.gate nor1 a=F1(95) O=[1175]
+.gate nor2 a=F0(96) b=[1175] O=[232]
+.gate nor2 a=F1(95) b=[1181] O=[233]
+.gate nor2 a=[232] b=[233] O=G0(104)
+.gate nor1 a=G0(104) O=[1182]
+.gate nor2 a=[1169] b=[1182] O=[230]
+.gate nor2 a=H4(44) b=G0(104) O=[231]
+.gate nor2 a=[230] b=[231] O=XD4(108)
+.gate nor1 a=XD4(108) O=[1183]
+.gate nor2 a=XE4(86) b=[1183] O=[228]
+.gate nor2 a=XD4(108) b=[1167] O=[229]
+.gate nor2 a=[228] b=[229] O=S4(116)
+.gate nor1 a=S4(116) O=[1184]
+.gate nor2 a=ID21(21) b=[1157] O=[226]
+.gate nor2 a=ID17(17) b=[1150] O=[227]
+.gate nor2 a=[226] b=[227] O=XB5(62)
+.gate nor1 a=XB5(62) O=[1188]
+.gate nor1 a=ID29(29) O=[1186]
+.gate nor1 a=ID25(25) O=[1185]
+.gate nor2 a=ID29(29) b=[1185] O=[224]
+.gate nor2 a=ID25(25) b=[1186] O=[225]
+.gate nor2 a=[224] b=[225] O=XC5(54)
+.gate nor1 a=XC5(54) O=[1187]
+.gate nor2 a=XB5(62) b=[1187] O=[222]
+.gate nor2 a=XC5(54) b=[1188] O=[223]
+.gate nor2 a=[222] b=[223] O=XE5(85)
+.gate nor1 a=XE5(85) O=[1189]
+.gate nor1 a=IC5(37) O=[1640]
+.gate nor2 a=[1144] b=[1640] O=H5(43)
+.gate nor1 a=H5(43) O=[1191]
+.gate nor1 a=ID13(13) O=[1195]
+.gate nor2 a=ID13(13) b=[1138] O=[214]
+.gate nor2 a=ID12(12) b=[1195] O=[215]
+.gate nor2 a=[214] b=[215] O=XA6(66)
+.gate nor1 a=XA6(66) O=[1196]
+.gate nor1 a=ID15(15) O=[1193]
+.gate nor1 a=ID14(14) O=[1192]
+.gate nor2 a=ID15(15) b=[1192] O=[212]
+.gate nor2 a=ID14(14) b=[1193] O=[213]
+.gate nor2 a=[212] b=[213] O=XA7(65)
+.gate nor1 a=XA7(65) O=[1194]
+.gate nor2 a=XA6(66) b=[1194] O=[210]
+.gate nor2 a=XA7(65) b=[1196] O=[211]
+.gate nor2 a=[210] b=[211] O=F3(89)
+.gate nor1 a=F3(89) O=[1197]
+.gate nor2 a=F2(92) b=[1197] O=[208]
+.gate nor2 a=F3(89) b=[1203] O=[209]
+.gate nor2 a=[208] b=[209] O=G1(101)
+.gate nor1 a=G1(101) O=[1204]
+.gate nor2 a=[1191] b=[1204] O=[206]
+.gate nor2 a=H5(43) b=G1(101) O=[207]
+.gate nor2 a=[206] b=[207] O=XD5(107)
+.gate nor1 a=XD5(107) O=[1205]
+.gate nor2 a=XE5(85) b=[1205] O=[204]
+.gate nor2 a=XD5(107) b=[1189] O=[205]
+.gate nor2 a=[204] b=[205] O=S5(115)
+.gate nor1 a=S5(115) O=[1206]
+.gate nor3 a=S6(114) b=S4(116) c=[1206] O=[657]
+.gate nor1 a=[657] O=[2706]
+.gate nor2 a=ID5(5) b=[1179] O=[178]
+.gate nor2 a=ID1(1) b=[1173] O=[179]
+.gate nor2 a=[178] b=[179] O=XB1(78)
+.gate nor1 a=XB1(78) O=[1230]
+.gate nor2 a=ID13(13) b=[1201] O=[176]
+.gate nor2 a=ID9(9) b=[1195] O=[177]
+.gate nor2 a=[176] b=[177] O=XC1(70)
+.gate nor1 a=XC1(70) O=[1229]
+.gate nor2 a=XB1(78) b=[1229] O=[174]
+.gate nor2 a=XC1(70) b=[1230] O=[175]
+.gate nor2 a=[174] b=[175] O=XE1(93)
+.gate nor1 a=XE1(93) O=[1231]
+.gate nor1 a=IC1(33) O=[1632]
+.gate nor2 a=[1144] b=[1632] O=H1(47)
+.gate nor1 a=H1(47) O=[1233]
+.gate nor2 a=ID25(25) b=[1163] O=[172]
+.gate nor2 a=ID24(24) b=[1185] O=[173]
+.gate nor2 a=[172] b=[173] O=XA12(56)
+.gate nor1 a=XA12(56) O=[1238]
+.gate nor1 a=ID27(27) O=[1219]
+.gate nor2 a=ID27(27) b=[1208] O=[170]
+.gate nor2 a=ID26(26) b=[1219] O=[171]
+.gate nor2 a=[170] b=[171] O=XA13(53)
+.gate nor1 a=XA13(53) O=[1237]
+.gate nor2 a=XA12(56) b=[1237] O=[168]
+.gate nor2 a=XA13(53) b=[1238] O=[169]
+.gate nor2 a=[168] b=[169] O=F6(84)
+.gate nor1 a=F6(84) O=[1239]
+.gate nor2 a=ID29(29) b=[1164] O=[166]
+.gate nor2 a=ID28(28) b=[1186] O=[167]
+.gate nor2 a=[166] b=[167] O=XA14(50)
+.gate nor1 a=XA14(50) O=[1235]
+.gate nor1 a=ID31(31) O=[1220]
+.gate nor2 a=ID31(31) b=[1209] O=[164]
+.gate nor2 a=ID30(30) b=[1220] O=[165]
+.gate nor2 a=[164] b=[165] O=XA15(49)
+.gate nor1 a=XA15(49) O=[1234]
+.gate nor2 a=XA14(50) b=[1234] O=[162]
+.gate nor2 a=XA15(49) b=[1235] O=[163]
+.gate nor2 a=[162] b=[163] O=F7(81)
+.gate nor1 a=F7(81) O=[1236]
+.gate nor2 a=F6(84) b=[1236] O=[160]
+.gate nor2 a=F7(81) b=[1239] O=[161]
+.gate nor2 a=[160] b=[161] O=G5(97)
+.gate nor1 a=G5(97) O=[1240]
+.gate nor2 a=[1233] b=[1240] O=[158]
+.gate nor2 a=H1(47) b=G5(97) O=[159]
+.gate nor2 a=[158] b=[159] O=XD1(111)
+.gate nor1 a=XD1(111) O=[1241]
+.gate nor2 a=XE1(93) b=[1241] O=[156]
+.gate nor2 a=XD1(111) b=[1231] O=[157]
+.gate nor2 a=[156] b=[157] O=S1(119)
+.gate nor1 a=S1(119) O=[1242]
+.gate nor2 a=ID7(7) b=[1177] O=[142]
+.gate nor2 a=ID3(3) b=[1171] O=[143]
+.gate nor2 a=[142] b=[143] O=XB3(75)
+.gate nor1 a=XB3(75) O=[1253]
+.gate nor2 a=ID15(15) b=[1199] O=[140]
+.gate nor2 a=ID11(11) b=[1193] O=[141]
+.gate nor2 a=[140] b=[141] O=XC3(67)
+.gate nor1 a=XC3(67) O=[1252]
+.gate nor2 a=XB3(75) b=[1252] O=[138]
+.gate nor2 a=XC3(67) b=[1253] O=[139]
+.gate nor2 a=[138] b=[139] O=XE3(90)
+.gate nor1 a=XE3(90) O=[1254]
+.gate nor1 a=IC3(35) O=[1636]
+.gate nor2 a=[1144] b=[1636] O=H3(45)
+.gate nor1 a=H3(45) O=[1256]
+.gate nor2 a=F5(87) b=[1236] O=[136]
+.gate nor2 a=F7(81) b=[1152] O=[137]
+.gate nor2 a=[136] b=[137] O=G7(98)
+.gate nor1 a=G7(98) O=[1257]
+.gate nor2 a=[1256] b=[1257] O=[134]
+.gate nor2 a=H3(45) b=G7(98) O=[135]
+.gate nor2 a=[134] b=[135] O=XD3(109)
+.gate nor1 a=XD3(109) O=[1258]
+.gate nor2 a=XE3(90) b=[1258] O=[132]
+.gate nor2 a=XD3(109) b=[1254] O=[133]
+.gate nor2 a=[132] b=[133] O=S3(117)
+.gate nor1 a=S3(117) O=[1259]
+.gate nor2 a=ID6(6) b=[1176] O=[154]
+.gate nor2 a=ID2(2) b=[1170] O=[155]
+.gate nor2 a=[154] b=[155] O=XB2(76)
+.gate nor1 a=XB2(76) O=[1245]
+.gate nor2 a=ID14(14) b=[1198] O=[152]
+.gate nor2 a=ID10(10) b=[1192] O=[153]
+.gate nor2 a=[152] b=[153] O=XC2(68)
+.gate nor1 a=XC2(68) O=[1244]
+.gate nor2 a=XB2(76) b=[1244] O=[150]
+.gate nor2 a=XC2(68) b=[1245] O=[151]
+.gate nor2 a=[150] b=[151] O=XE2(91)
+.gate nor1 a=XE2(91) O=[1246]
+.gate nor1 a=IC2(34) O=[1634]
+.gate nor2 a=[1144] b=[1634] O=H2(46)
+.gate nor1 a=H2(46) O=[1248]
+.gate nor2 a=F4(88) b=[1239] O=[148]
+.gate nor2 a=F6(84) b=[1159] O=[149]
+.gate nor2 a=[148] b=[149] O=G6(99)
+.gate nor1 a=G6(99) O=[1249]
+.gate nor2 a=[1248] b=[1249] O=[146]
+.gate nor2 a=H2(46) b=G6(99) O=[147]
+.gate nor2 a=[146] b=[147] O=XD2(110)
+.gate nor1 a=XD2(110) O=[1250]
+.gate nor2 a=XE2(91) b=[1250] O=[144]
+.gate nor2 a=XD2(110) b=[1246] O=[145]
+.gate nor2 a=[144] b=[145] O=S2(118)
+.gate nor1 a=S2(118) O=[1251]
+.gate nor4 a=[1162] b=[1242] c=S3(117) d=[1251] O=T0(165)
+.gate nor4 a=[1162] b=[1242] c=S2(118) d=[1259] O=T1(166)
+.gate nor4 a=S1(119) b=[1162] c=[1251] d=[1259] O=T2(167)
+.gate nor4 a=S0(120) b=[1242] c=[1251] d=[1259] O=T3(168)
+.gate nor4 a=T0(165) b=T1(166) c=T2(167) d=T3(168) O=U0(170)
+.gate nor2 a=ID23(23) b=[1154] O=[190]
+.gate nor2 a=ID19(19) b=[1147] O=[191]
+.gate nor2 a=[190] b=[191] O=XB7(59)
+.gate nor1 a=XB7(59) O=[1222]
+.gate nor2 a=ID31(31) b=[1219] O=[188]
+.gate nor2 a=ID27(27) b=[1220] O=[189]
+.gate nor2 a=[188] b=[189] O=XC7(51)
+.gate nor1 a=XC7(51) O=[1221]
+.gate nor2 a=XB7(59) b=[1221] O=[186]
+.gate nor2 a=XC7(51) b=[1222] O=[187]
+.gate nor2 a=[186] b=[187] O=XE7(82)
+.gate nor1 a=XE7(82) O=[1223]
+.gate nor1 a=IC7(39) O=[1644]
+.gate nor2 a=[1144] b=[1644] O=H7(41)
+.gate nor1 a=H7(41) O=[1225]
+.gate nor2 a=F1(95) b=[1197] O=[184]
+.gate nor2 a=F3(89) b=[1175] O=[185]
+.gate nor2 a=[184] b=[185] O=G3(102)
+.gate nor1 a=G3(102) O=[1226]
+.gate nor2 a=[1225] b=[1226] O=[182]
+.gate nor2 a=H7(41) b=G3(102) O=[183]
+.gate nor2 a=[182] b=[183] O=XD7(105)
+.gate nor1 a=XD7(105) O=[1227]
+.gate nor2 a=XE7(82) b=[1227] O=[180]
+.gate nor2 a=XD7(105) b=[1223] O=[181]
+.gate nor2 a=[180] b=[181] O=S7(113)
+.gate nor1 a=S7(113) O=[1228]
+.gate nor3 a=[2706] b=U0(170) c=[1228] O=WA(173)
+.gate nor1 a=WA(173) O=[1270]
+.gate nor2 a=S0(120) b=[1270] O=E0(207)
+.gate nor1 a=E0(207) O=[1271]
+.gate nor2 a=E0(207) b=[1136] O=[130]
+.gate nor2 a=ID0(0) b=[1271] O=[131]
+.gate nor2 a=[130] b=[131] O=[0]
+.gate nor1 a=[0] O=OD0(242)
+.gate nor2 a=S1(119) b=[1270] O=E1(203)
+.gate nor1 a=E1(203) O=[1272]
+.gate nor2 a=E1(203) b=[1179] O=[128]
+.gate nor2 a=ID1(1) b=[1272] O=[129]
+.gate nor2 a=[128] b=[129] O=[1]
+.gate nor1 a=[1] O=OD1(241)
+.gate nor2 a=S2(118) b=[1270] O=E2(199)
+.gate nor1 a=E2(199) O=[1273]
+.gate nor2 a=E2(199) b=[1176] O=[126]
+.gate nor2 a=ID2(2) b=[1273] O=[127]
+.gate nor2 a=[126] b=[127] O=[2]
+.gate nor1 a=[2] O=OD2(240)
+.gate nor2 a=S3(117) b=[1270] O=E3(195)
+.gate nor1 a=E3(195) O=[1274]
+.gate nor2 a=E3(195) b=[1177] O=[124]
+.gate nor2 a=ID3(3) b=[1274] O=[125]
+.gate nor2 a=[124] b=[125] O=[3]
+.gate nor1 a=[3] O=OD3(239)
+.gate nor3 a=[1217] b=S4(116) c=[1206] O=[617]
+.gate nor1 a=[617] O=[2700]
+.gate nor3 a=[2700] b=S7(113) c=U0(170) O=WB(171)
+.gate nor1 a=WB(171) O=[1278]
+.gate nor2 a=S0(120) b=[1278] O=E4(208)
+.gate nor1 a=E4(208) O=[1279]
+.gate nor2 a=E4(208) b=[1140] O=[122]
+.gate nor2 a=ID4(4) b=[1279] O=[123]
+.gate nor2 a=[122] b=[123] O=[4]
+.gate nor1 a=[4] O=OD4(238)
+.gate nor2 a=S1(119) b=[1278] O=E5(204)
+.gate nor1 a=E5(204) O=[1280]
+.gate nor2 a=E5(204) b=[1173] O=[120]
+.gate nor2 a=ID5(5) b=[1280] O=[121]
+.gate nor2 a=[120] b=[121] O=[5]
+.gate nor1 a=[5] O=OD5(237)
+.gate nor2 a=S2(118) b=[1278] O=E6(200)
+.gate nor1 a=E6(200) O=[1281]
+.gate nor2 a=E6(200) b=[1170] O=[118]
+.gate nor2 a=ID6(6) b=[1281] O=[119]
+.gate nor2 a=[118] b=[119] O=[6]
+.gate nor1 a=[6] O=OD6(236)
+.gate nor2 a=S3(117) b=[1278] O=E7(196)
+.gate nor1 a=E7(196) O=[1282]
+.gate nor2 a=E7(196) b=[1171] O=[116]
+.gate nor2 a=ID7(7) b=[1282] O=[117]
+.gate nor2 a=[116] b=[117] O=[7]
+.gate nor1 a=[7] O=OD7(235)
+.gate nor3 a=S6(114) b=S5(115) c=[1184] O=[577]
+.gate nor1 a=[577] O=[2694]
+.gate nor3 a=[2694] b=U0(170) c=[1228] O=WC(174)
+.gate nor1 a=WC(174) O=[1286]
+.gate nor2 a=S0(120) b=[1286] O=E8(209)
+.gate nor1 a=E8(209) O=[1287]
+.gate nor2 a=E8(209) b=[1137] O=[114]
+.gate nor2 a=ID8(8) b=[1287] O=[115]
+.gate nor2 a=[114] b=[115] O=[8]
+.gate nor1 a=[8] O=OD8(234)
+.gate nor2 a=S1(119) b=[1286] O=E9(205)
+.gate nor1 a=E9(205) O=[1288]
+.gate nor2 a=E9(205) b=[1201] O=[112]
+.gate nor2 a=ID9(9) b=[1288] O=[113]
+.gate nor2 a=[112] b=[113] O=[9]
+.gate nor1 a=[9] O=OD9(233)
+.gate nor2 a=S2(118) b=[1286] O=E10(201)
+.gate nor1 a=E10(201) O=[1289]
+.gate nor2 a=E10(201) b=[1198] O=[110]
+.gate nor2 a=ID10(10) b=[1289] O=[111]
+.gate nor2 a=[110] b=[111] O=[10]
+.gate nor1 a=[10] O=OD10(232)
+.gate nor2 a=S3(117) b=[1286] O=E11(197)
+.gate nor1 a=E11(197) O=[1290]
+.gate nor2 a=E11(197) b=[1199] O=[108]
+.gate nor2 a=ID11(11) b=[1290] O=[109]
+.gate nor2 a=[108] b=[109] O=[11]
+.gate nor1 a=[11] O=OD11(231)
+.gate nor3 a=[1217] b=S5(115) c=[1184] O=[537]
+.gate nor1 a=[537] O=[2688]
+.gate nor3 a=[2688] b=S7(113) c=U0(170) O=WD(172)
+.gate nor1 a=WD(172) O=[1294]
+.gate nor2 a=S0(120) b=[1294] O=E12(210)
+.gate nor1 a=E12(210) O=[1295]
+.gate nor2 a=E12(210) b=[1138] O=[106]
+.gate nor2 a=ID12(12) b=[1295] O=[107]
+.gate nor2 a=[106] b=[107] O=[12]
+.gate nor1 a=[12] O=OD12(230)
+.gate nor2 a=S1(119) b=[1294] O=E13(206)
+.gate nor1 a=E13(206) O=[1296]
+.gate nor2 a=E13(206) b=[1195] O=[104]
+.gate nor2 a=ID13(13) b=[1296] O=[105]
+.gate nor2 a=[104] b=[105] O=[13]
+.gate nor1 a=[13] O=OD13(229)
+.gate nor2 a=S2(118) b=[1294] O=E14(202)
+.gate nor1 a=E14(202) O=[1297]
+.gate nor2 a=E14(202) b=[1192] O=[102]
+.gate nor2 a=ID14(14) b=[1297] O=[103]
+.gate nor2 a=[102] b=[103] O=[14]
+.gate nor1 a=[14] O=OD14(228)
+.gate nor2 a=S3(117) b=[1294] O=E15(198)
+.gate nor1 a=E15(198) O=[1298]
+.gate nor2 a=E15(198) b=[1193] O=[100]
+.gate nor2 a=ID15(15) b=[1298] O=[101]
+.gate nor2 a=[100] b=[101] O=[15]
+.gate nor1 a=[15] O=OD15(227)
+.gate nor3 a=S2(118) b=S0(120) c=[1242] O=[467]
+.gate nor1 a=[467] O=[2662]
+.gate nor4 a=[1184] b=[1206] c=S7(113) d=[1217] O=T4(161)
+.gate nor4 a=[1184] b=[1206] c=S6(114) d=[1228] O=T5(162)
+.gate nor4 a=S5(115) b=[1184] c=[1217] d=[1228] O=T6(163)
+.gate nor4 a=S4(116) b=[1206] c=[1217] d=[1228] O=T7(164)
+.gate nor4 a=T4(161) b=T5(162) c=T6(163) d=T7(164) O=U1(169)
+.gate nor3 a=[2662] b=U1(169) c=[1259] O=WE(177)
+.gate nor1 a=WE(177) O=[1312]
+.gate nor2 a=S4(116) b=[1312] O=E16(191)
+.gate nor1 a=E16(191) O=[1313]
+.gate nor2 a=E16(191) b=[1156] O=[98]
+.gate nor2 a=ID16(16) b=[1313] O=[99]
+.gate nor2 a=[98] b=[99] O=[16]
+.gate nor1 a=[16] O=OD16(226)
+.gate nor2 a=S5(115) b=[1312] O=E17(187)
+.gate nor1 a=E17(187) O=[1314]
+.gate nor2 a=E17(187) b=[1157] O=[96]
+.gate nor2 a=ID17(17) b=[1314] O=[97]
+.gate nor2 a=[96] b=[97] O=[17]
+.gate nor1 a=[17] O=OD17(225)
+.gate nor2 a=S6(114) b=[1312] O=E18(183)
+.gate nor1 a=E18(183) O=[1315]
+.gate nor2 a=E18(183) b=[1153] O=[94]
+.gate nor2 a=ID18(18) b=[1315] O=[95]
+.gate nor2 a=[94] b=[95] O=[18]
+.gate nor1 a=[18] O=OD18(224)
+.gate nor2 a=S7(113) b=[1312] O=E19(179)
+.gate nor1 a=E19(179) O=[1316]
+.gate nor2 a=E19(179) b=[1154] O=[92]
+.gate nor2 a=ID19(19) b=[1316] O=[93]
+.gate nor2 a=[92] b=[93] O=[19]
+.gate nor1 a=[19] O=OD19(223)
+.gate nor3 a=[1251] b=S0(120) c=[1242] O=[427]
+.gate nor1 a=[427] O=[2656]
+.gate nor3 a=[2656] b=S3(117) c=U1(169) O=WF(175)
+.gate nor1 a=WF(175) O=[1320]
+.gate nor2 a=S4(116) b=[1320] O=E20(192)
+.gate nor1 a=E20(192) O=[1321]
+.gate nor2 a=E20(192) b=[1149] O=[90]
+.gate nor2 a=ID20(20) b=[1321] O=[91]
+.gate nor2 a=[90] b=[91] O=[20]
+.gate nor1 a=[20] O=OD20(222)
+.gate nor2 a=S5(115) b=[1320] O=E21(188)
+.gate nor1 a=E21(188) O=[1322]
+.gate nor2 a=E21(188) b=[1150] O=[88]
+.gate nor2 a=ID21(21) b=[1322] O=[89]
+.gate nor2 a=[88] b=[89] O=[21]
+.gate nor1 a=[21] O=OD21(221)
+.gate nor2 a=S6(114) b=[1320] O=E22(184)
+.gate nor1 a=E22(184) O=[1323]
+.gate nor2 a=E22(184) b=[1146] O=[86]
+.gate nor2 a=ID22(22) b=[1323] O=[87]
+.gate nor2 a=[86] b=[87] O=[22]
+.gate nor1 a=[22] O=OD22(220)
+.gate nor2 a=S7(113) b=[1320] O=E23(180)
+.gate nor1 a=E23(180) O=[1324]
+.gate nor2 a=E23(180) b=[1147] O=[84]
+.gate nor2 a=ID23(23) b=[1324] O=[85]
+.gate nor2 a=[84] b=[85] O=[23]
+.gate nor1 a=[23] O=OD23(219)
+.gate nor3 a=S2(118) b=S1(119) c=[1162] O=[387]
+.gate nor1 a=[387] O=[2650]
+.gate nor3 a=[2650] b=U1(169) c=[1259] O=WG(178)
+.gate nor1 a=WG(178) O=[1328]
+.gate nor2 a=S4(116) b=[1328] O=E24(193)
+.gate nor1 a=E24(193) O=[1329]
+.gate nor2 a=E24(193) b=[1163] O=[82]
+.gate nor2 a=ID24(24) b=[1329] O=[83]
+.gate nor2 a=[82] b=[83] O=[24]
+.gate nor1 a=[24] O=OD24(218)
+.gate nor2 a=S5(115) b=[1328] O=E25(189)
+.gate nor1 a=E25(189) O=[1330]
+.gate nor2 a=E25(189) b=[1185] O=[80]
+.gate nor2 a=ID25(25) b=[1330] O=[81]
+.gate nor2 a=[80] b=[81] O=[25]
+.gate nor1 a=[25] O=OD25(217)
+.gate nor2 a=S6(114) b=[1328] O=E26(185)
+.gate nor1 a=E26(185) O=[1331]
+.gate nor2 a=E26(185) b=[1208] O=[78]
+.gate nor2 a=ID26(26) b=[1331] O=[79]
+.gate nor2 a=[78] b=[79] O=[26]
+.gate nor1 a=[26] O=OD26(216)
+.gate nor2 a=S7(113) b=[1328] O=E27(181)
+.gate nor1 a=E27(181) O=[1332]
+.gate nor2 a=E27(181) b=[1219] O=[76]
+.gate nor2 a=ID27(27) b=[1332] O=[77]
+.gate nor2 a=[76] b=[77] O=[27]
+.gate nor1 a=[27] O=OD27(215)
+.gate nor3 a=[1251] b=S1(119) c=[1162] O=[347]
+.gate nor1 a=[347] O=[2644]
+.gate nor3 a=[2644] b=S3(117) c=U1(169) O=WH(176)
+.gate nor1 a=WH(176) O=[1336]
+.gate nor2 a=S4(116) b=[1336] O=E28(194)
+.gate nor1 a=E28(194) O=[1337]
+.gate nor2 a=E28(194) b=[1164] O=[74]
+.gate nor2 a=ID28(28) b=[1337] O=[75]
+.gate nor2 a=[74] b=[75] O=[28]
+.gate nor1 a=[28] O=OD28(214)
+.gate nor2 a=S5(115) b=[1336] O=E29(190)
+.gate nor1 a=E29(190) O=[1338]
+.gate nor2 a=E29(190) b=[1186] O=[72]
+.gate nor2 a=ID29(29) b=[1338] O=[73]
+.gate nor2 a=[72] b=[73] O=[29]
+.gate nor1 a=[29] O=OD29(213)
+.gate nor2 a=S6(114) b=[1336] O=E30(186)
+.gate nor1 a=E30(186) O=[1339]
+.gate nor2 a=E30(186) b=[1209] O=[70]
+.gate nor2 a=ID30(30) b=[1339] O=[71]
+.gate nor2 a=[70] b=[71] O=[30]
+.gate nor1 a=[30] O=OD30(212)
+.gate nor2 a=S7(113) b=[1336] O=E31(182)
+.gate nor1 a=E31(182) O=[1340]
+.gate nor2 a=E31(182) b=[1220] O=[68]
+.gate nor2 a=ID31(31) b=[1340] O=[69]
+.gate nor2 a=[68] b=[69] O=[31]
+.gate nor1 a=[31] O=OD31(211)
+.end

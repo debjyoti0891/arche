@@ -1,0 +1,19 @@
+.model b1
+.inputs a b c
+.outputs d e f g
+.gate nor1 a=c y=g
+.gate nor1 a=c O=inv__c
+.gate nor1 a=inv__c O=d
+.gate nor1 a=a y=[72]
+.gate nor1 a=b y=[73]
+.gate nor2 a=a b=b y=[46]
+.gate nor2 a=[72] b=[73] y=[47]
+.gate nor2 a=[46] b=[47] y=e
+.gate nor2 a=a b=b y=[40]
+.gate nor2 a=g b=[40] y=[42]
+.gate nor2 a=[72] b=[73] y=[41]
+.gate nor2 a=c b=[41] y=[43]
+.gate nor2 a=b b=[72] y=[44]
+.gate nor2 a=a b=[73] y=[45]
+.gate nor4 a=[42] b=[43] c=[44] d=[45] y=f
+.end

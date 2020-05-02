@@ -1,0 +1,203 @@
+
+( macro MISEX2 ( x0    x1    x2    x3    x4    x5    x6    x7    x8   
+ x9    x10   x11   x12   x13   x14   x15   x16   x17  
+ x18   x19   x20   x21   x22   x23   x24   z0    z1    z2    z3    z4    z5    z6    z7    z8   
+ z9    z10   z11   z12   z13   z14   z15   z16   z17  ) 
+
+( input '( 
+ m_m_in_1 m_m_in_3 m_m_in_5 m_m_in_7 m_m_in_9 m_m_in_11
+ m_m_in_13 m_m_in_15 m_m_in_17 m_m_in_19 m_m_in_21 m_m_in_23
+ m_m_in_25 m_m_in_27 m_m_in_29 m_m_in_31 m_m_in_33 m_m_in_35
+ m_m_in_37 m_m_in_39 m_m_in_41 m_m_in_43 m_m_in_45 m_m_in_47
+ m_m_in_49) ) 
+
+(output '( m_m_out_1 m_m_out_3 m_m_out_5 m_m_out_7 m_m_out_9 m_m_out_11
+ m_m_out_13 m_m_out_15 m_m_out_17 m_m_out_19 m_m_out_21
+ m_m_out_23 m_m_out_25 m_m_out_27 m_m_out_29 m_m_out_31
+ m_m_out_33 m_m_out_35 ) ) 
+
+(local  _x0    _x1    _x2    _x3    _x4    _x5    _x6    _x7    _x8   
+ _x9    _x10   _x11   _x12   _x13   _x14   _x15   _x16   _x17  
+ _x18   _x19   _x20   _x21   _x22   _x23   _x24   _z0    _z1   
+ _z2    _z3    _z4    _z5    _z6    _z7    _z8    _z9    _z10  
+ _z11   _z12   _z13   _z14   _z15   _z16   _z17   y0    _y0   
+ y1    _y1    y2    _y2    y3    _y3    y4    _y4    y5   
+ _y5    y6    _y6    y7    _y7    y8    _y8    y9    _y9   
+ y10   _y10   y11   _y11   y12   _y12   y13   _y13   y14  
+ _y14   y15   _y15   y16   _y16   y17   _y17   y18   _y18  
+ y19   _y19   y20   _y20   y21   _y21   y22   _y22   y23  
+ _y23   y24   _y24   r0    r1    r2    r3    r4    r5   
+ r6    r7    r8    r9    r10   r11   r12   r13   r14  
+ r15   r16   r17   r22   r23   r24   r25   r27   r28  
+ r29   r30   r31   r32   r33   r34   r35   r36   r37  
+ r38   r39   r40   r41   r42   r43   r44   r45   r46  
+ r47   r48   r49   r50   r51   r52   r53   r54   r55  
+ r56   ) 
+
+
+
+( o1  r0 z0)
+( a2  x10 y8 r0)
+
+( o1  r1 z1)
+( a2  x10 y9 r1)
+
+( o1  r2 z2)
+( a2  _x10 y9 r2)
+
+( o2  r3 r4 z3)
+( a3  _x17 x18 y12 r3)
+( a2  x12 y18 r4)
+
+( o1  r5 z4)
+( a4  _x9 _x11 _x12 y15 r5)
+
+( o1  r6 z5)
+( a2  x9 y15 r6)
+
+( o1  r7 z6)
+( a1  y18 r7)
+
+( o2  r8 r9 z7)
+( a2  x0 y17 r8)
+( a2  _x12 y2 r9)
+
+( o1  r10 z8)
+( a10  _x3 x4 _x5 _x6 _x7 _x8 x17 _x18 x19 y7 r10)
+
+( o2  r11 r12 z9)
+( a2  y11 y19 r11)
+( a3  _x15 _x16 y1 r12)
+
+( o2  r13 r14 z10)
+( a2  x22 y6 r13)
+( a2  x16 y0 r14)
+
+( o2  r15 r16 z11)
+( a2  _x22 y6 r15)
+( a2  _x16 y0 r16)
+
+( o1  r17 z12)
+( a2  y14 y24 r17)
+
+( o1  r22 z13)
+( a1  y10 r22)
+
+( o1  r23 z14)
+( a2  _x10 y8 r23)
+
+( o2  r24 r25 z15)
+( a2  _x2 y20 r24)
+( a2  _x10 y22 r25)
+
+( o1  r27 z16)
+( a1  y16 r27)
+
+( o1  r28 z17)
+( a1  y7 r28)
+
+( o1  r29 y0)
+( a2  x15 y1 r29)
+
+( o1  r30 y1)
+( a7  _x11 x12 _x13 _x14 x20 y7 y19 r30)
+
+( o1  r31 y2)
+( a4  x0 _x9 x11 y3 r31)
+
+( o1  r32 y3)
+( a2  x2 x10 r32)
+
+( o1  r33 y4)
+( a2  _x2 _x19 r33)
+
+( o1  r34 y5)
+( a3  _x17 _x18 _x19 r34)
+
+( o1  r35 y6)
+( a2  x21 y11 r35)
+
+( o1  r36 y7)
+( a2  _x0 y17 r36)
+
+( o1  r37 y8)
+( a2  _x9 y13 r37)
+
+( o1  r38 y9)
+( a2  x9 y13 r38)
+
+( o1  r39 y10)
+( a2  x17 y12 r39)
+
+( o1  r40 y11)
+( a4  x18 _x19 _x20 y16 r40)
+
+( o1  r41 y12)
+( a2  y4 y21 r41)
+
+( o1  r42 y13)
+( a3  _x2 y5 y21 r42)
+
+( o1  r43 y14)
+( a2  x9 _x24 r43)
+
+( o1  r44 y15)
+( a2  y3 y22 r44)
+
+( o1  r45 y16)
+( a2  _x0 x1 r45)
+
+( o1  r46 y17)
+( a2  _x1 x2 r46)
+
+( o1  r47 y18)
+( a2  x1 y2 r47)
+
+( o1  r48 y19)
+( a2  _x21 _x22 r48)
+
+( o2  r49 r50 y20)
+( a1  x0 r49)
+( a2  _x1 x19 r50)
+
+( o1  r51 y21)
+( a2  _x0 _x1 r51)
+
+( o1  r52 y22)
+( a2  x0 x1 r52)
+
+( o2  r53 r54 y23)
+( a1  y10 r53)
+( a2  _y3 y22 r54)
+
+( o2  r55 r56 y24)
+( a1  y23 r55)
+( a3  x23 _y4 y21 r56)
+
+
+( i x0 _x0) 
+( i x1 _x1) 
+( i x2 _x2) 
+( i x3 _x3) 
+( i x5 _x5) 
+( i x6 _x6) 
+( i x7 _x7) 
+( i x8 _x8) 
+( i x9 _x9) 
+( i x10 _x10) 
+( i x11 _x11) 
+( i x12 _x12) 
+( i x13 _x13) 
+( i x14 _x14) 
+( i x15 _x15) 
+( i x16 _x16) 
+( i x17 _x17) 
+( i x18 _x18) 
+( i x19 _x19) 
+( i x20 _x20) 
+( i x21 _x21) 
+( i x22 _x22) 
+( i x24 _x24) 
+( i y3 _y3) 
+( i y4 _y4) 
+)

@@ -1,0 +1,37 @@
+.model CM151
+.inputs a b c d e f g h i j k l
+.outputs m n
+.gate nor1 a=a y=[124]
+.gate nor2 a=i b=[124] y=[39]
+.gate nor2 a=b b=[39] y=[57]
+.gate nor2 a=a b=i y=[58]
+.gate nor2 a=[57] b=[58] y=t
+.gate nor1 a=t y=[125]
+.gate nor2 a=j b=t y=[43]
+.gate nor1 a=c y=[122]
+.gate nor2 a=i b=[122] y=[40]
+.gate nor2 a=d b=[40] y=[55]
+.gate nor2 a=c b=i y=[56]
+.gate nor3 a=[43] b=[55] c=[56] y=[53]
+.gate nor2 a=j b=[125] y=[54]
+.gate nor2 a=[53] b=[54] y=y
+.gate nor1 a=y y=[126]
+.gate nor2 a=k b=y y=[38]
+.gate nor1 a=e y=[119]
+.gate nor2 a=i b=[119] y=[41]
+.gate nor2 a=f b=[41] y=[51]
+.gate nor2 a=e b=i y=[52]
+.gate nor2 a=[51] b=[52] y=v
+.gate nor1 a=v y=[120]
+.gate nor2 a=j b=v y=[44]
+.gate nor1 a=g y=[117]
+.gate nor2 a=i b=[117] y=[42]
+.gate nor2 a=h b=[42] y=[49]
+.gate nor2 a=g b=i y=[50]
+.gate nor3 a=[44] b=[49] c=[50] y=[47]
+.gate nor2 a=j b=[120] y=[48]
+.gate nor3 a=[38] b=[47] c=[48] y=[45]
+.gate nor2 a=k b=[126] y=[46]
+.gate nor3 a=l b=[45] c=[46] y=m
+.gate nor1 a=m y=n
+.end

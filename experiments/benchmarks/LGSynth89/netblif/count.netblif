@@ -1,0 +1,149 @@
+.model count
+.inputs a b c d e f g h i j k l m n o p q r s u v w x y z a0 b0 c0 d0 e0 f0 g0 \
+h0 i0 j0
+.outputs k0 l0 m0 n0 o0 p0 q0 r0 s0 t0 u0 v0 w0 x0 y0 z0
+.gate nor1 a=q y=[402]
+.gate nor1 a=r y=[403]
+.gate nor1 a=u y=[404]
+.gate nor2 a=r b=[404] y=[130]
+.gate nor2 a=u b=[403] y=[131]
+.gate nor3 a=[402] b=[130] c=[131] y=[127]
+.gate nor2 a=p b=q y=[128]
+.gate nor3 a=s b=[127] c=[128] y=[0]
+.gate nor1 a=[0] y=k0
+.gate nor1 a=v y=[407]
+.gate nor2 a=r b=u y=t1
+.gate nor1 a=t1 y=[408]
+.gate nor2 a=v b=t1 y=[125]
+.gate nor2 a=[407] b=[408] y=[126]
+.gate nor3 a=[402] b=[125] c=[126] y=[122]
+.gate nor2 a=o b=q y=[123]
+.gate nor3 a=s b=[122] c=[123] y=[1]
+.gate nor1 a=[1] y=l0
+.gate nor1 a=w y=[411]
+.gate nor2 a=v b=[408] y=v1
+.gate nor1 a=v1 y=[412]
+.gate nor2 a=[411] b=[412] y=[120]
+.gate nor2 a=w b=v1 y=[121]
+.gate nor3 a=[402] b=[120] c=[121] y=[117]
+.gate nor2 a=n b=q y=[118]
+.gate nor3 a=s b=[117] c=[118] y=[2]
+.gate nor1 a=[2] y=m0
+.gate nor1 a=x y=[415]
+.gate nor2 a=w b=[412] y=x1
+.gate nor1 a=x1 y=[416]
+.gate nor2 a=x b=x1 y=[115]
+.gate nor2 a=[415] b=[416] y=[116]
+.gate nor3 a=[402] b=[115] c=[116] y=[112]
+.gate nor2 a=m b=q y=[113]
+.gate nor3 a=s b=[112] c=[113] y=[3]
+.gate nor1 a=[3] y=n0
+.gate nor1 a=y y=[419]
+.gate nor2 a=x b=[416] y=y1
+.gate nor1 a=y1 y=[420]
+.gate nor2 a=[419] b=[420] y=[110]
+.gate nor2 a=y b=y1 y=[111]
+.gate nor3 a=[402] b=[110] c=[111] y=[107]
+.gate nor2 a=l b=q y=[108]
+.gate nor3 a=s b=[107] c=[108] y=[4]
+.gate nor1 a=[4] y=o0
+.gate nor1 a=z y=[423]
+.gate nor2 a=y b=[420] y=k2
+.gate nor1 a=k2 y=[424]
+.gate nor2 a=z b=k2 y=[105]
+.gate nor2 a=[423] b=[424] y=[106]
+.gate nor3 a=[402] b=[105] c=[106] y=[102]
+.gate nor2 a=k b=q y=[103]
+.gate nor3 a=s b=[102] c=[103] y=[5]
+.gate nor1 a=[5] y=p0
+.gate nor1 a=a0 y=[427]
+.gate nor2 a=z b=[424] y=l2
+.gate nor1 a=l2 y=[428]
+.gate nor2 a=[427] b=[428] y=[100]
+.gate nor2 a=a0 b=l2 y=[101]
+.gate nor3 a=[402] b=[100] c=[101] y=[97]
+.gate nor2 a=j b=q y=[98]
+.gate nor3 a=s b=[97] c=[98] y=[6]
+.gate nor1 a=[6] y=q0
+.gate nor1 a=b0 y=[431]
+.gate nor2 a=a0 b=[428] y=n2
+.gate nor1 a=n2 y=[432]
+.gate nor2 a=b0 b=n2 y=[95]
+.gate nor2 a=[431] b=[432] y=[96]
+.gate nor3 a=[402] b=[95] c=[96] y=[92]
+.gate nor2 a=i b=q y=[93]
+.gate nor3 a=s b=[92] c=[93] y=[7]
+.gate nor1 a=[7] y=r0
+.gate nor1 a=c0 y=[435]
+.gate nor2 a=b0 b=[432] y=o2
+.gate nor1 a=o2 y=[436]
+.gate nor2 a=[435] b=[436] y=[90]
+.gate nor2 a=c0 b=o2 y=[91]
+.gate nor3 a=[402] b=[90] c=[91] y=[87]
+.gate nor2 a=h b=q y=[88]
+.gate nor3 a=s b=[87] c=[88] y=[8]
+.gate nor1 a=[8] y=s0
+.gate nor1 a=d0 y=[439]
+.gate nor2 a=c0 b=[436] y=a3
+.gate nor1 a=a3 y=[440]
+.gate nor2 a=d0 b=a3 y=[85]
+.gate nor2 a=[439] b=[440] y=[86]
+.gate nor3 a=[402] b=[85] c=[86] y=[82]
+.gate nor2 a=g b=q y=[83]
+.gate nor3 a=s b=[82] c=[83] y=[9]
+.gate nor1 a=[9] y=t0
+.gate nor1 a=e0 y=[443]
+.gate nor2 a=d0 b=[440] y=b3
+.gate nor1 a=b3 y=[444]
+.gate nor2 a=[443] b=[444] y=[80]
+.gate nor2 a=e0 b=b3 y=[81]
+.gate nor3 a=[402] b=[80] c=[81] y=[77]
+.gate nor2 a=f b=q y=[78]
+.gate nor3 a=s b=[77] c=[78] y=[10]
+.gate nor1 a=[10] y=u0
+.gate nor1 a=f0 y=[447]
+.gate nor2 a=e0 b=[444] y=d3
+.gate nor1 a=d3 y=[448]
+.gate nor2 a=f0 b=d3 y=[75]
+.gate nor2 a=[447] b=[448] y=[76]
+.gate nor3 a=[402] b=[75] c=[76] y=[72]
+.gate nor2 a=e b=q y=[73]
+.gate nor3 a=s b=[72] c=[73] y=[11]
+.gate nor1 a=[11] y=v0
+.gate nor1 a=g0 y=[451]
+.gate nor2 a=f0 b=[448] y=e3
+.gate nor1 a=e3 y=[452]
+.gate nor2 a=[451] b=[452] y=[70]
+.gate nor2 a=g0 b=e3 y=[71]
+.gate nor3 a=[402] b=[70] c=[71] y=[67]
+.gate nor2 a=d b=q y=[68]
+.gate nor3 a=s b=[67] c=[68] y=[12]
+.gate nor1 a=[12] y=w0
+.gate nor1 a=h0 y=[455]
+.gate nor2 a=g0 b=[452] y=q3
+.gate nor1 a=q3 y=[456]
+.gate nor2 a=h0 b=q3 y=[65]
+.gate nor2 a=[455] b=[456] y=[66]
+.gate nor3 a=[402] b=[65] c=[66] y=[62]
+.gate nor2 a=c b=q y=[63]
+.gate nor3 a=s b=[62] c=[63] y=[13]
+.gate nor1 a=[13] y=x0
+.gate nor1 a=i0 y=[459]
+.gate nor2 a=h0 b=[456] y=r3
+.gate nor1 a=r3 y=[460]
+.gate nor2 a=[459] b=[460] y=[60]
+.gate nor2 a=i0 b=r3 y=[61]
+.gate nor3 a=[402] b=[60] c=[61] y=[57]
+.gate nor2 a=b b=q y=[58]
+.gate nor3 a=s b=[57] c=[58] y=[14]
+.gate nor1 a=[14] y=y0
+.gate nor1 a=j0 y=[463]
+.gate nor2 a=i0 b=[460] y=s3
+.gate nor1 a=s3 y=[464]
+.gate nor2 a=j0 b=s3 y=[55]
+.gate nor2 a=[463] b=[464] y=[56]
+.gate nor3 a=[402] b=[55] c=[56] y=[52]
+.gate nor2 a=a b=q y=[53]
+.gate nor3 a=s b=[52] c=[53] y=[15]
+.gate nor1 a=[15] y=z0
+.end

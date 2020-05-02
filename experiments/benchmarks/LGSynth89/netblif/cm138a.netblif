@@ -1,0 +1,26 @@
+.model CM138
+.inputs a b c d e f
+.outputs g h i j k l m n
+.gate nor1 a=a y=[104]
+.gate nor1 a=b y=[105]
+.gate nor1 a=c y=[107]
+.gate nor1 a=d y=[163]
+.gate nor3 a=[163] b=f c=e y=j0
+.gate nor1 a=j0 y=[110]
+.gate nor4 a=a b=b c=c d=[110] y=[0]
+.gate nor1 a=[0] y=g
+.gate nor4 a=b b=[104] c=c d=[110] y=[1]
+.gate nor1 a=[1] y=h
+.gate nor4 a=a b=[105] c=c d=[110] y=[2]
+.gate nor1 a=[2] y=i
+.gate nor4 a=[104] b=[105] c=c d=[110] y=[3]
+.gate nor1 a=[3] y=j
+.gate nor4 a=a b=b c=[107] d=[110] y=[4]
+.gate nor1 a=[4] y=k
+.gate nor4 a=b b=[104] c=[107] d=[110] y=[5]
+.gate nor1 a=[5] y=l
+.gate nor4 a=a b=[105] c=[107] d=[110] y=[6]
+.gate nor1 a=[6] y=m
+.gate nor4 a=[104] b=[105] c=[107] d=[110] y=[7]
+.gate nor1 a=[7] y=n
+.end

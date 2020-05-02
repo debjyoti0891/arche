@@ -1,0 +1,17 @@
+.model C17.iscas
+.inputs 1GAT(0) 2GAT(1) 3GAT(2) 6GAT(3) 7GAT(4)
+.outputs 22GAT(10) 23GAT(9)
+.gate nor1 a=1GAT(0) O=[58]
+.gate nor1 a=3GAT(2) O=[53]
+.gate nor2 a=[58] b=[53] O=10GAT(6)
+.gate nor1 a=6GAT(3) O=[66]
+.gate nor2 a=[53] b=[66] O=11GAT(5)
+.gate nor1 a=2GAT(1) O=[60]
+.gate nor2 a=11GAT(5) b=[60] O=16GAT(8)
+.gate nor2 a=10GAT(6) b=16GAT(8) O=[0]
+.gate nor1 a=[0] O=22GAT(10)
+.gate nor1 a=7GAT(4) O=[68]
+.gate nor2 a=11GAT(5) b=[68] O=19GAT(7)
+.gate nor2 a=16GAT(8) b=19GAT(7) O=[1]
+.gate nor1 a=[1] O=23GAT(9)
+.end

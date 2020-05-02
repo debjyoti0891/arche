@@ -1,0 +1,200 @@
+This directory contains the following examples in ESPRESSO PLA format:
+
+
+Circuit                             Product
+ Name       Inputs        Outputs    Terms  
+
+5xp1           7            10         75   
+9sym           9             1         87  
+bw             5            28         87  
+duke2         22            29         87  
+rd53           5             3         32  
+rd73           7             3        141   
+rd84           8             4        256  
+sao2          10             4         58  
+vg2           25             8        110  
+con1           7             2          9  
+misex1         8             7         32  
+misex2        25            18         29  
+misex3        14            14       1848  
+misex3c       14            14        305  
+seq.pla       41            35       1459
+clip.pla       9             5        167
+o64.pla      130             1         65
+e64.pla       65            65         65
+xor5.pla       5             1         16
+apex1.pla     45            45        206
+apex2.pla     39             3       1035
+apex3.pla     54            50        280
+apex4.pla      9            19        438
+apex5.pla    117            88       1227
+
+----------------- ESPRESSO FILE FORMAT DESCRIPTION ---------------------
+
+
+     espresso -- input file format for espresso(1)  
+
+
+DESCRIPTION
+     ESPRESSO accepts as input a two-level description of a
+     Boolean switching function.  This is described as a charac-
+     ter matrix with keywords imbedded in the input to specify
+     the size of the matrix and the logical format of the input
+     function.  Comments are allowed within the input by placing
+     a pound sign (#) as the first character on a line.  Comments
+     and unrecognized keywords are passed directly from the input
+     file to standard output.  Any white-space (blanks, tabs,
+     etc.), except when used as a delimiter in an imbedded com-
+     mand, is ignored.  It is generally assumed that the PLA is
+     specified such that each row of the PLA fits on a single
+     line in the input file.
+
+KEYWORDS
+     The following keywords are recognized by ESPRESSO.  The list
+     shows the probable order of the keywords in a PLA descrip-
+     tion.  [d] denotes a decimal number and [s] denotes a text
+     string.
+
+     .i [d]      Specifies the number of input variables.
+
+     .o [d]      Specifies the number of output functions.
+
+     .type [s]   Sets the logical interpretation of the character
+                 matrix as described below under "Logical
+                 Description of a PLA".  This keyword must come
+                 before any product terms.  [s] is one of f, r,
+                 fd, fr, dr, or fdr.
+
+
+     .phase [s]  [s] is a string of as many 0's or 1's as there
+                 are output functions.  It specifies which polar-
+                 ity of each output function should be used for
+                 the minimization (a 1 specifies that the ON-set
+                 of the corresponding output function should be
+                 used, and a 0 specifies that the OFF-set of the
+                 corresponding output function should be minim-
+                 ized).
+
+     .pair [d]   Specifies the number of pairs of variables which
+                 will be paired together using two-bit decoders.
+                 The rest of the line contains pairs of numbers
+                 which specify the binary variables of the PLA
+                 which will be paired together.  The binary vari-
+                 ables are numbered starting with 1.  The PLA
+                 will be reshaped so that any unpaired binary
+                 variables occupy the leftmost part of the array,
+                 then the paired multiple-valued columns, and
+                 finally any multiple-valued variables.
+
+
+     .kiss       Sets up for a KISS-style minimization.
+
+     .p [d]      Specifies the number of product terms.  The pro-
+                 duct terms (one per line) follow immediately
+                 after this keyword.  Actually, this line is
+                 ignored, and the ".e", ".end", or the end of the
+                 file indicate the end of the input description.
+
+     .e (.end)   Marks the end of the PLA description.
+
+
+
+LOGICAL DESCRIPTION OF A PLA
+     When we speak of the ON-set of a Boolean function, we mean
+     those minterms which imply the function value is a 1.  Like-
+     wise, the OFF-set are those terms which imply the function
+     is a 0, and the DC-set (don't care set) are those terms for
+     which the function is unspecified.  A function is completely
+     described by providing its ON-set, OFF-set and DC-set.  Note
+     that all minterms lie in the union of the ON-set, OFF-set
+     and DC-set, and that the ON-set, OFF-set and DC-set share no
+     minterms.
+
+     The purpose of the ESPRESSO minimization program is to find
+     a logically equivalent set of product-terms to represent the
+     ON-set and optionally minterms which lie in the DC-set,
+     without containing any minterms of the OFF-set.
+
+     A Boolean function can be described in one of the following
+     ways:
+
+     1)   By providing the ON-set.  In this case, ESPRESSO com-
+          putes the OFF-set as the complement of the ON-set and
+          the DC-set is empty.  This is indicated with the key-
+          word .type f in the input file, or -f on the command
+          line.
+
+     2)   By providing the ON-set and DC-set.  In this case,
+          ESPRESSO computes the OFF-set as the complement of the
+          union of the ON-set and the DC-set.  If any minterm
+          belongs to both the ON-set and DC-set, then it is con-
+          sidered a don't care and may be removed from the ON-set
+          during the minimization process.  This is indicated
+          with the keyword .type fd in the input file, or -fd on
+          the command line.
+
+     3)   By providing the ON-set and OFF-set.  In this case,
+          ESPRESSO computes the DC-set as the complement of the
+          union of the ON-set and the OFF-set.  It is an error
+          for any minterm to belong to both the ON-set and OFF-
+          set.  This error may not be detected during the minimi-
+          zation, but it can be checked with the subprogram "-do
+          check" which will check the consistency of a function.
+          This is indicated with the keyword on the command line.
+
+     4)   By providing the ON-set, OFF-set and DC-set.  This is
+          indicated with the keyword .type fdr in the input file,
+          or -fdr on the command line.
+
+     If at all possible, ESPRESSO should be given the DC-set
+     (either implicitly or explicitly) in order to improve the
+     results of the minimization.
+
+     A term is represented by a "cube" which can be considered
+     either a compact representation of an algebraic product term
+     which implies the function value is a 1, or as a representa-
+     tion of a row in a PLA which implements the term.  A cube
+     has an input part which corresponds to the input plane of a
+     PLA, and an output part which corresponds to the output
+     plane of a PLA (for the multiple-valued case, see below).
+
+
+SYMBOLS IN THE PLA MATRIX AND THEIR INTERPRETATION
+     Each position in the input plane corresponds to an input
+     variable where a 0 implies the corresponding input literal
+     appears complemented in the product term, a 1 implies the
+     input literal appears uncomplemented in the product term,
+     and - implies the input literal does not appear in the pro-
+     duct term.
+
+     With logical type f, for each output, a 1 means this product
+     term belongs to the ON-set, and a 0 or - means this product
+     term has no meaning for the value of this function.  This
+     logical type corresponds to an actual PLA where only the
+     ON-set is actually implemented.
+
+     With logical type fd (the default), for each output, a 1
+     means this product term belongs to the ON-set, a 0 means
+     this product term has no meaning for the value of this func-
+     tion, and a - implies this product term belongs to the DC-
+     set.
+
+     With logical type fr, for each output, a 1 means this pro-
+     duct term belongs to the ON-set, a 0 means this product term
+     belongs to the OFF-set, and a - means this product term has
+     no meaning for the value of this function.
+
+     With logical type fdr, for each output, a 1 means this pro-
+     duct term belongs to the ON-set, a 0 means this product term
+     belongs to the OFF-set, a - means this product term belongs
+     to the DC-set, and a ~ implies this product term has no
+     meaning for the value of this function.
+
+
+     Note that regardless of the logical type of PLA, a ~ implies
+     the product term has no meaning for the value of this func-
+     tion.  2 is allowed as a synonym for -, 4 is allowed for 1,
+     and 3 is allowed for ~.  Also, the logical PLA type can also
+     be specified on the command line.
+
+

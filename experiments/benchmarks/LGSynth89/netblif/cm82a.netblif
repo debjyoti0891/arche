@@ -1,0 +1,35 @@
+.model CM82
+.inputs a b c d e
+.outputs f g h
+.gate nor1 a=a y=[96]
+.gate nor1 a=c y=[98]
+.gate nor1 a=b y=[97]
+.gate nor2 a=c b=[97] y=[51]
+.gate nor2 a=b b=[98] y=[52]
+.gate nor2 a=[51] b=[52] y=s
+.gate nor1 a=s y=[99]
+.gate nor2 a=[96] b=[99] y=[49]
+.gate nor2 a=a b=s y=[50]
+.gate nor2 a=[49] b=[50] y=[0]
+.gate nor1 a=[0] y=f
+.gate nor2 a=[96] b=[97] y=[40]
+.gate nor2 a=c b=[40] y=[47]
+.gate nor2 a=a b=b y=[48]
+.gate nor2 a=[47] b=[48] y=o
+.gate nor1 a=o y=[100]
+.gate nor1 a=e y=[102]
+.gate nor1 a=d y=[101]
+.gate nor2 a=e b=[101] y=[45]
+.gate nor2 a=d b=[102] y=[46]
+.gate nor2 a=[45] b=[46] y=r
+.gate nor1 a=r y=[103]
+.gate nor2 a=[100] b=[103] y=[43]
+.gate nor2 a=o b=r y=[44]
+.gate nor2 a=[43] b=[44] y=[1]
+.gate nor1 a=[1] y=g
+.gate nor2 a=o b=d y=[39]
+.gate nor2 a=[39] b=[102] y=[41]
+.gate nor2 a=[100] b=[101] y=[42]
+.gate nor2 a=[41] b=[42] y=[2]
+.gate nor1 a=[2] y=h
+.end

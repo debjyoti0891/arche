@@ -1,0 +1,76 @@
+.model tcon
+.inputs a b c d e f g h i k l m n o p q r
+.outputs s t u v w x y z a0 b0 c0 d0 e0 f0 g0 h0
+.gate nor1 a=k y=[148]
+.gate nor1 a=k O=inv__k
+.gate nor1 a=inv__k O=s
+.gate nor1 a=l y=[149]
+.gate nor1 a=l O=inv__l
+.gate nor1 a=inv__l O=t
+.gate nor1 a=m y=[150]
+.gate nor1 a=m O=inv__m
+.gate nor1 a=inv__m O=u
+.gate nor1 a=n y=[151]
+.gate nor1 a=n O=inv__n
+.gate nor1 a=inv__n O=v
+.gate nor1 a=o y=[152]
+.gate nor1 a=o O=inv__o
+.gate nor1 a=inv__o O=w
+.gate nor1 a=p y=[153]
+.gate nor1 a=p O=inv__p
+.gate nor1 a=inv__p O=x
+.gate nor1 a=q y=[154]
+.gate nor1 a=q O=inv__q
+.gate nor1 a=inv__q O=y
+.gate nor1 a=r y=[155]
+.gate nor1 a=r O=inv__r
+.gate nor1 a=inv__r O=z
+.gate nor2 a=i b=k y=[52]
+.gate nor1 a=a y=[165]
+.gate nor2 a=[52] b=[165] y=[74]
+.gate nor2 a=i b=[148] y=[75]
+.gate nor2 a=[74] b=[75] y=[8]
+.gate nor1 a=[8] y=a0
+.gate nor2 a=i b=l y=[53]
+.gate nor1 a=b y=[167]
+.gate nor2 a=[53] b=[167] y=[72]
+.gate nor2 a=i b=[149] y=[73]
+.gate nor2 a=[72] b=[73] y=[9]
+.gate nor1 a=[9] y=b0
+.gate nor2 a=i b=m y=[54]
+.gate nor1 a=c y=[169]
+.gate nor2 a=[54] b=[169] y=[70]
+.gate nor2 a=i b=[150] y=[71]
+.gate nor2 a=[70] b=[71] y=[10]
+.gate nor1 a=[10] y=c0
+.gate nor2 a=i b=n y=[55]
+.gate nor1 a=d y=[171]
+.gate nor2 a=[55] b=[171] y=[68]
+.gate nor2 a=i b=[151] y=[69]
+.gate nor2 a=[68] b=[69] y=[11]
+.gate nor1 a=[11] y=d0
+.gate nor2 a=i b=o y=[56]
+.gate nor1 a=e y=[173]
+.gate nor2 a=[56] b=[173] y=[66]
+.gate nor2 a=i b=[152] y=[67]
+.gate nor2 a=[66] b=[67] y=[12]
+.gate nor1 a=[12] y=e0
+.gate nor2 a=i b=p y=[57]
+.gate nor1 a=f y=[175]
+.gate nor2 a=[57] b=[175] y=[64]
+.gate nor2 a=i b=[153] y=[65]
+.gate nor2 a=[64] b=[65] y=[13]
+.gate nor1 a=[13] y=f0
+.gate nor2 a=i b=q y=[58]
+.gate nor1 a=g y=[177]
+.gate nor2 a=[58] b=[177] y=[62]
+.gate nor2 a=i b=[154] y=[63]
+.gate nor2 a=[62] b=[63] y=[14]
+.gate nor1 a=[14] y=g0
+.gate nor2 a=i b=r y=[59]
+.gate nor1 a=h y=[179]
+.gate nor2 a=[59] b=[179] y=[60]
+.gate nor2 a=i b=[155] y=[61]
+.gate nor2 a=[60] b=[61] y=[15]
+.gate nor1 a=[15] y=h0
+.end

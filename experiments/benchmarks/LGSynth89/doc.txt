@@ -1,0 +1,2420 @@
+
+                Logic Synthesis and Optimization 
+                          Benchmarks
+ 
+
+                      December 16, 1988
+
+
+
+
+---------------------------------------------------------------------------
+This report is issued to provide documentation for the benchmark examples
+used in conjunction with the 1989 MCNC International Workshop on Logic
+Synthesis.  Its distribution is limited to peer communication and to
+participants of the workshop.
+
+This report contains material previously published and distributed by the
+University of California (Copyright 1979, 1980, 1983, 1986 Regents of the
+University of California). 
+
+For information about the ideas expressed herein,
+contact the author(s) directly.  For information
+about the MCNC Technical Report Series, or
+Industrial Affiliates Program, contact
+Corporate Communications, MCNC, P.O.
+Box 12889, Research Triangle Park, NC 27709; (919)
+248-1842.
+----------------------------------------------------------------------------
+
+
+
+
+
+
+                    Table of Contents
+
+
+1  Acknowledgements .............................................  3
+2  Benchmark Distribution .......................................  4
+3  Benchmark Examples Included in v2.0 Release ..................  5
+   3.1  FSM Examples ............................................  6
+   3.2  Two-Level Examples ......................................  7
+   3.3  Multi-Level Examples ....................................  8
+4  Data Formats for Benchmark Examples ..........................  9
+   4.1  FSM Format ..............................................  9
+     4.1.1  Examples: dk27.kiss2, dk27.esp ...................... 10
+   4.2  Two-Level Format ........................................ 11
+     4.2.1  ESPRESSO INPUT FILE DESCRIPTION ..................... 11
+     4.2.2  KEYWORDS ............................................ 11
+     4.2.3  LOGICAL DESCRIPTION OF A PLA ........................ 12
+     4.2.4  SYMBOLS IN THE PLA MATRIX AND THEIR INTERPRETATION .. 13
+     4.2.5  Example con1.pla .................................... 13
+   4.3  Multi-Level Format ...................................... 14
+     4.3.1  BLIF Multi-Level Format Description ................. 14
+     4.3.2  Modules ............................................. 14
+     4.3.3  Logic Gates ......................................... 15
+     4.3.4  Example con1.blif ................................... 16
+     4.3.5  Example C17.netblif ................................. 17
+5  Cell Library Descriptions .................................... 18
+   5.1  Lib1: A Small Unit-Delay Model .......................... 18
+   5.2  Lib2: A MOSIS 2u standard cell library .................. 18
+6  Cell Library Formats ......................................... 19
+   6.1  MISII Library Format .................................... 19
+     6.1.1  MISII Library Format Example ........................ 19
+   6.1  MCNC  Library Format .................................... 20
+     6.1.1  MCNC  Library Format Example ........................ 20
+7  Guidelines for Reporting Results ............................. 21
+   7.1  Experiments ............................................. 21
+   7.2  Suggested Benchmark Subsets ............................. 21
+   7.3  Quality Criteria ........................................ 22
+     7.3.1  Area Results ........................................ 22
+     7.3.2  Delay Results ....................................... 23
+     7.3.3  CPU Results ......................................... 23
+     7.3.4  Other Criteria ...................................... 23
+   7.4  Features and Unique Solutions to Problems ............... 23
+8  Readings and References ...................................... 25
+9  Appendix ..................................................... 26
+   9.1  Cell Library 1 Databook ................................. 26
+   9.2  Cell Library 2 Databook ................................. 29
+
+
+
+
+                         1  Acknowledgements
+                         ----------------
+
+
+The logic synthesis and optimization
+benchmarks distributed by the Microelectronics Center of North Carolina have
+been provided by the following individuals and organizations:
+
+
+Gerard Beenker and Nico Benschop
+Phillips Research Laboratories
+Eindhoven, The Neitherlands
+
+Giovanni De Micheli
+Stanford University
+Department of Electrical Engineering
+Palo Alto, CA
+
+Keven Karplus
+UCSC
+Santa Cruz, CA
+
+Kurt Keutzer and Ajit Prabhu
+ATT Bell Laboratories
+Murray Hill, NJ
+
+OCT Tools Distribution
+Electronics Research Laboratory
+University of California, Berkeley
+Berkeley, CA
+
+Adam Postula and Mats Fredriksson
+National Microelectronics Program (NMP-CAD)
+SPANGA, Sweden
+
+Richard Rudell
+Electronics Research Laboratory
+University of California, Berkeley
+Berkeley, CA
+
+
+Funding for distribution of the benchmarks 
+for the 1989 MCNC International Workshop on Logic Synthesis
+has been provided by ACM SIGDA.
+
+
+
+
+
+
+
+
+                    2  Benchmark Distribution
+                    -------------------------
+
+The  benchmark examples for the 1989 International Workshop on Logic
+Synthesis can be obtained from MCNC in two ways.
+
+
+You may establish an  FTP  connection to host "mcnc.org" or "mcnc.mcnc.org" 
+and copy the files using the mget command.  The login name is "anonymous" 
+and the password is "guest". 
+The files are under the "/pub/benchmark/synth89/" directory.
+
+
+Check the FTP man page for details. The following command sequence 
+will obtain all the benchmark data contained in subdirectories
+fsmexamples (FSMs), twolexamples (two-level examples in ESPRESSO format),
+mlexamples (multi-level "blif" examples), wkslibrary (the workshop libraries
+to be used for synthesis), and DOCUMENTATION (this document in ASCII and
+LaTeX form).
+
+
+# FTP command sequence
+
+                   ftp mcnc.org
+                   (or ftp mcnc.mcnc.org)
+                   anonymous     (in response to the "Name" prompt)
+                   guest         (in response to the "password" prompt)
+                   cd pub/benchmark/synth89
+                   cd fsmexamples              
+                   mget *
+                   cd ../mlexamples
+                   mget *
+                   cd ../twolexamples
+                   mget *
+                   cd ../wkslibrary
+                   mget *
+                   cd ../DOCUMENTATION
+                   mget *
+                   bye
+
+
+We are also prepared to send you a 9-track tape in either  TAR  format
+or  VMS  format.  Contact us about your requirements.  We are requesting 
+ACM SIGDA to provide funds to cover the cost of tapes and shipping, 
+so there is no cost to you for this service.
+
+
+
+For more detailed information about  these  benchmarks,  you may contact  
+Bob Lisanke at (919) 248-1442; e-mail bob@mcnc.org or Tom Krakow,
+Benchmark Archival Secretary, (919) 248-1959; email krakow@mcnc.org.
+
+
+
+
+
+
+               3  Benchmark Examples Included in v2.0 Release
+               ----------------------------------------------
+
+
+The logic synthesis and optimization benchmark set consists of 
+examples from three broad categories.
+
+
+  1.  Two-level logic in PLA (ESPRESSO) format.
+ 
+  2.  Finite-state tables in KISS or ESPRESSO-MV format.
+
+  3.  Multi-level logic in BLIF or Netlist-BLIF format.
+
+
+The following sections present tables for each benchmark category. 
+The tables list the names of examples included in the v2.0 benchmark set
+along with some characteristics for each benchmark.
+
+
+
+
+FSM Examples 
+------------
+
+
+
+FSM Name         Inputs     Outputs    Products    States
+
+bbara               4          2          60         10
+bbsse               7          7          56         16
+bbtas               2          2          24          6
+beecount            3          4          28          7
+cse                 7          7          91         16
+dk14                3          5          56          7
+dk15                3          5          32          4
+dk16                2          3         108         27
+dk17                2          3          32          8
+dk27                1          2          14          7
+dk512               1          3          30         15
+donfile             2          1          96         24
+ex1                 9         19         138         20
+ex2                 2          2          72         19
+ex3                 2          2          36         10
+ex4                 6          9          21         14
+ex5                 2          2          32          9
+ex6                 5          8          34          8
+ex7                 2          2          36         10
+keyb                7          2         170         19
+kirkman            12          6         370         16
+lion                2          1          11          4
+lion9               2          1          25          9
+mark1               5         16          22         15
+mc                  3          5          10          4
+modulo12            1          1          24         12
+opus                5          6          22         10
+planet              7         19         115         48
+planet1             7         19         115         48
+s1                  8          6         107         20
+s1a                 8          6         107         20
+s8                  4          1          20          5
+sand               11          9         184         32
+scf                27         56         166        121
+shiftreg            1          1          16          8
+sse                 7          7          56         16
+styr                9         10         166         30
+tav                 4          4          49          4
+tbk                 6          3        1569         32
+train11             2          1          25         11
+train4              2          1          14          4
+
+
+Two-Level Examples
+------------------
+
+
+
+Circuit                              Product 
+ Name      Inputs        Outputs      Terms   
+
+5xp1           7            10         75    
+9sym           9             1         87   
+bw             5            28         87   
+duke2         22            29         87   
+rd53           5             3         32   
+rd73           7             3        141    
+rd84           8             4        256   
+sao2          10             4         58   
+vg2           25             8        110   
+con1           7             2          9   
+misex1         8             7         32   
+misex2        25            18         29   
+misex3        14            14       1848   
+misex3c       14            14        305   
+seq.pla       41            35       1459 
+clip.pla       9             5        167 
+o64.pla      130             1         65 
+e64.pla       65            65         65 
+xor5.pla       5             1         16 
+apex1.pla     45            45        206 
+apex2.pla     39             3       1035 
+apex3.pla     54            50        280 
+apex4.pla      9            19        438 
+apex5.pla    117            88       1227 
+
+
+
+
+Multi-Level Examples
+--------------------
+
+Circuit  Circuit                            Approx.      
+Name     Function          Inputs  Outputs  Gates  
+
+9symml	 Count Ones        9       1           43    
+f51ml	 Arithmetic        8       8           43    
+z4ml     2-bit Add         7       4           20    
+C432	 Priority Decoder  36      7          160    
+C499     Error Correcting  41      32         202    
+C880     ALU and Control   60      26         383    
+C1355    Error Correcting  41      32         546    
+C1908    Error Correcting  33       25        880   
+C2670    ALU and Control   233     140       1193  
+C3540    ALU and Control   50      22        1669  
+C5315    ALU and Selector  178     123       2307  
+C6288    16-bit Multiplier 32      32        2406  
+C7552    ALU and Control   207     108       3512  
+des      Data Encription   256     245       4000  
+rot      Logic             135     107        691 
+b9       Logic              41      21        125 
+apex6    Logic             135      99        452 
+apex7    Logic              49      37        176 
+
+
+
+               4  Data Formats for Benchmark Examples 
+               --------------------------------------
+
+Each benchmark category has its own data representation or format.
+FSM examples have two data formats: KISS and ESPRESSO.
+All two-level examples use the ESPRESSO format and the multi-level
+examples use two versions of blif, a logic form and a net-oriented form.
+
+
+FSM Format 
+----------
+
+FSM benchmarks are distributed in both the KISS and ESPRESSO-MV formats.
+To improve uniformity, FSM benchmarks received
+have been modified to adhere to the following conventions:
+
+
+
+  1.  KISS2 headers include the following information:
+
+
+     .i  n    # number of inputs
+     .o  m    # number of outputs
+     .p  p    # number of products
+     .s  s    # number of states used
+
+
+  2.  KISS2 format don't care states are '*' .   A current-state don't-care
+   condition indicates that no matter what state you are in, a specified
+   input produces a transition to a given next state and output condition.
+   For example,
+    
+
+        .     .    .      .
+        .     .    .      .
+       1---   *  RESET  0000 # go to state RESET if bit 0 is true,
+                             # regardless of the current state
+
+
+
+   Don't-care next states are usually indicated if an input and
+   current-state condition can not occur.  In this case, outputs
+   would also be don't care (indicated by - for each output).
+
+    Unused states are assumed by default in KISS2 to have don't-care 
+   next states and outputs.  If only k out of 2**n states are used, 
+   then the (2**n - k) unused states have the following interpretation:
+
+
+        ----  unused_1        *   ----   # don't care about next or out
+        ----  unused_2        *   ----   # will never occur
+          .      .            .    .
+          .      .            .    .
+          .      .            .    .
+        ----  unused_2**n-k   *   ----   
+
+
+
+  3.  ESPRESSO-MV format don't care states use the alias "ANY" .
+
+ All inputs are binary (no symbolic inputs permitted)
+
+   (eg. cond_A, cond_B, cond_C   -->  1000 0100 0010).
+
+
+
+
+   4.  Formats are otherwise identical to KISS and ESPRESSO-MV.
+
+
+
+
+
+
+Examples: dk27.kiss2, dk27.esp
+------------------------------
+
+
+
+dk27.kiss2
+----------
+
+.i 1 
+.o 2 
+.p 14 
+.s 7
+0 START state6 00
+0 state2 state5 00
+0 state3 state5 00
+0 state4 state6 00
+0 state5 START 10
+0 state6 START 01
+0 state7 state5 00
+1 state6 state2 01
+1 state5 state2 10
+1 state4 state6 10
+1 state7 state6 10
+1 START state4 00
+1 state2 state3 00
+1 state3 state7 00
+
+
+
+dk27.esp
+--------
+
+.type fr
+.mv 4 1 -7 -7 2
+.kiss
+.p 14
+0 START state6 00
+0 state2 state5 00
+0 state3 state5 00
+0 state4 state6 00
+0 state5 START 10
+0 state6 START 01
+0 state7 state5 00
+1 state6 state2 01
+1 state5 state2 10
+1 state4 state6 10
+1 state7 state6 10
+1 START state4 00
+1 state2 state3 00
+1 state3 state7 00
+.end
+
+
+
+
+Two-Level Format 
+----------------
+
+
+The two-level benchmarks are represented in the ESPRESSO-MV format
+described by man(5) page in the ESPRESSO distribution from
+the University of California at Berkeley.
+The ESPRESSO-MV format description is repeated here.
+
+
+
+ESPRESSO INPUT FILE DESCRIPTION
+
+     ESPRESSO accepts as input a two-level description of a
+     Boolean switching function.  This is described as a character 
+     matrix with keywords imbeded in the input to specify
+     the size of the matrix and the logical format of the input
+     function.  Comments are allowed within the input by placing
+     a pound sign (\#) as the first character on a line.  Comments
+     and unrecognized keywords are passed directly from the input
+     file to standard output.  Any white-space (blanks, tabs,
+     etc.), except when used as a delimiter in an imbedded command, 
+     is ignored.  It is generally assumed that the PLA is
+     specified such that each row of the PLA fits on a single
+     line in the input file.
+
+
+KEYWORDS
+     The following keywords are recognized by ESPRESSO.  The list
+     shows the probable order of the keywords in a PLA description.  
+     [d] denotes a decimal number and [s] denotes a text
+     string.
+
+     .i [d]      Specifies the number of input variables.
+
+     .o [d]      Specifies the number of output functions.
+
+     .type [s]   Sets the logical interpretation of the character
+                 matrix as described below under "Logical
+                 Description of a PLA".  This keyword must come
+                 before any product terms.  [s] is one of f, r,
+                 fd, fr, dr, or fdr.
+
+
+     .phase [s]  [s] is a string of as many 0's or 1's as there
+                 are output functions.  It specifies which polarity 
+                 of each output function should be used for
+                 the minimization (a 1 specifies that the ON-set
+                 of the corresponding output function should be
+                 used, and a 0 specifies that the OFF-set of the
+                 corresponding output function should be minimized).
+
+     .pair [d]   Specifies the number of pairs of variables which
+                 will be paired together using two-bit decoders.
+                 The rest of the line contains pairs of numbers
+                 which specify the binary variables of the PLA
+                 which will be paired together.  The binary variables 
+                 are numbered starting with 1.  The PLA
+                 will be reshaped so that any unpaired binary
+                 variables occupy the leftmost part of the array,
+                 then the paired multiple-valued columns, and
+                 finally any multiple-valued variables.
+
+
+     .kiss       Sets up for a KISS-style minimization.
+
+     .p [d]      Specifies the number of product terms.  The product 
+                 terms (one per line) follow immediately
+                 after this keyword.  Actually, this line is
+                 ignored, and the ".e", ".end", or the end of the
+                 file indicate the end of the input description.
+
+     .e (.end)   Marks the end of the PLA description.
+
+
+
+LOGICAL DESCRIPTION OF A PLA
+
+     When we speak of the ON-set of a Boolean function, we mean
+     those minterms which imply the function value is a 1.  Likewise, 
+     the OFF-set are those terms which imply the function
+     is a 0, and the DC-set (don't care set) are those terms for
+     which the function is unspecified.  A function is completely
+     described by providing its ON-set, OFF-set and DC-set.  Note
+     that all minterms lie in the union of the ON-set, OFF-set
+     and DC-set, and that the ON-set, OFF-set and DC-set share no
+     minterms.
+
+     The purpose of the ESPRESSO minimization program is to find
+     a logically equivalent set of product-terms to represent the
+     ON-set and optionally minterms which lie in the DC-set,
+     without containing any minterms of the OFF-set.
+
+     A Boolean function can be described in one of the following
+     ways:
+
+     1)   By providing the ON-set.  In this case, ESPRESSO computes 
+           the OFF-set as the complement of the ON-set and
+          the DC-set is empty.  This is indicated with the keyword 
+          .type f in the input file, or -f on the command line.
+
+     2)   By providing the ON-set and DC-set.  In this case,
+          ESPRESSO computes the OFF-set as the complement of the
+          union of the ON-set and the DC-set.  If any minterm
+          belongs to both the ON-set and DC-set, then it is considered 
+          a don't care and may be removed from the ON-set
+          during the minimization process.  This is indicated
+          with the keyword .type fd in the input file, or -fd on
+          the command line.
+
+     3)   By providing the ON-set and OFF-set.  In this case,
+          ESPRESSO computes the DC-set as the complement of the
+          union of the ON-set and the OFF-set.  It is an error
+          for any minterm to belong to both the ON-set and OFF-set.  
+          This error may not be detected during the minimization, 
+          but it can be checked with the subprogram "-do check" 
+          which will check the consistency of a function.
+          This is indicated with the keyword on the command line.
+
+     4)   By providing the ON-set, OFF-set and DC-set.  This is
+          indicated with the keyword .type fdr in the input file,
+          or -fdr on the command line.
+
+     If at all possible, ESPRESSO should be given the DC-set
+     (either implicitly or explicitly) in order to improve the
+     results of the minimization.
+
+     A term is represented by a "cube" which can be considered
+     either a compact representation of an algebraic product term
+     which implies the function value is a 1, or as a representation
+     of a row in a PLA which implements the term.  A cube
+     has an input part which corresponds to the input plane of a
+     PLA, and an output part which corresponds to the output
+     plane of a PLA (for the multiple-valued case, see below).
+
+
+SYMBOLS IN THE PLA MATRIX AND THEIR INTERPRETATION
+
+     Each position in the input plane corresponds to an input
+     variable where a  0 implies the corresponding input literal
+     appears complemented in the product term, a  1 implies the
+     input literal appears uncomplemented in the product term,
+     and  - implies the input literal does not appear in the 
+     product term.
+
+     With logical type  f, for each output, a  1 means this product
+     term belongs to the ON-set, and a  0 or  - means this product
+     term has no meaning for the value of this function.  This
+     logical type corresponds to an actual PLA where only the
+     ON-set is actually implemented.
+
+     With logical type  fd (the default), for each output, a  1
+     means this product term belongs to the ON-set, a  0 means
+     this product term has no meaning for the value of this function, 
+     and a  - implies this product term belongs to the DC-set.
+
+     With logical type  fr, for each output, a  1 means this product 
+     term belongs to the ON-set, a  0 means this product term
+     belongs to the OFF-set, and a  - means this product term has
+     no meaning for the value of this function.
+
+     With logical type  fdr, for each output, a  1 means this 
+     product term belongs to the ON-set, a  0 means this product term
+     belongs to the OFF-set, a  - means this product term belongs
+     to the DC-set, and a ~ implies this product term has no
+     meaning for the value of this function.
+
+
+     Note that regardless of the logical type of PLA, a ~ implies
+     the product term has no meaning for the value of this function.  
+      2 is allowed as a synonym for  -,   4 is allowed for  1,
+     and  3 is allowed for  ~ .  Also, the logical PLA type can also
+     be specified on the command line.
+ 
+
+
+Example con1.pla
+
+The following two-level logic description is an example of the
+ESPRESSO format.
+
+
+
+.i 7
+.o 2
+.p 9
+-1--1-- 10
+1-11--- 10
+-001--- 10
+01---1- 10
+-0--0-- 01
+1---0-- 01
+0-----0 01
+01--1-- 01
+10-0--- 01
+.e
+
+
+
+
+
+
+Multi-Level Format 
+------------------
+
+The multi-level logic is represented in two different flavors of BLIF which
+may be read by the Berkeley MISII program.  The "examples.blif" essentially
+use the  .names feature of the format to express the logic functions.
+The "examples.netblif" use a netlist variant which is restricted to gates
+in a library.  For the synthesis workshop we chose to associate the 
+"examples.netblif" with the "lib1.mis2lib" library (see Sec. 5 and 
+Appendix, Library 1). Each gate in the netlist version is referenced
+by the  .gate keyword. A brief description of the BLIF format is 
+repeated here.  
+
+BLIF Multi-Level Format Description
+
+
+
+
+                  Berkeley Logic Interchange Format (blif)
+
+                          University of California
+                                  Berkeley 
+
+                                May 28, 1987
+
+
+           The goal  of blif  is to  describe a  Boolean network  in
+         textual form.     A Boolean  network  is  a  representation
+         of an  arbitrary combinational  logic  network, and  is  an
+         acyclic directed graph  with a logic  function attached  to
+         each node.  Each  node in this representation has a  single
+         output.  Therefore, each net (or signal) has only a  single
+         driver, and we can therefore name either the signal or  the
+         gate which drives the signal without ambiguity.
+           In this  section, angle-brackets  surround  nonterminals,
+         and vertical bar separates  choices in a pseudo-BNF  style.
+         Bdsyn uses only  the logic-gate construct of  blif.   Bdsyn
+         uses the  the keywords  .module, .inputs,  .outputs,  .end,
+         .gate and .names.  The module-reference construct of blif is  not
+         implemented.
+
+
+
+Modules
+
+         A module is declared by:
+
+
+             .module <decl-module-name>
+             .inputs <decl-input-list>
+             .outputs <decl-output-list>
+             <logic-gate> | <pla-reference> | <module-reference>
+                      .
+                      .
+                      .
+             <logic-gate> | <pla-reference> | <module-reference>
+             .end
+
+
+
+         <decl-module-name>  is a  string  giving the  name  of  the
+         module.
+
+         <decl-input-list>  is  a   white-space-separated  list   of
+         strings (terminated  by the  end of  the line)  giving  the
+         formal parameters for the module  being declared.  If  this
+         is the  last or  only  module, then  these signals  can  be
+         identified as the primary inputs of the circuit.   Multiple
+         .inputs lines  are allowed,  and the  lists of  inputs  are
+         merely concatenated.
+
+         <decl-output-list>  is  a  white-space-separated  list   of
+         strings (terminated  by the  end of  the line)  giving  the
+         formal parameters  for  the  module being  declared.     If
+         this  is the  last  or  only  module,  then  these  signals
+         can be identified  as the primary  outputs of the  circuit.
+         Multiple .outputs  lines  are  allowed, and  the  lists  of
+         inputs are merely concatenated.
+
+           It is expected that a  blif parser may allow the  .inputs
+         and .outputs  statements  to be  optional.    If  they  are
+         not specified,  the  primary inputs  can be  inferred  from
+         the  signals  which  are  not  the  outputs  of  any  other
+         logic  block,  and the  primary  outputs  can  be  inferred
+         from the  signals which  are not  the inputs  to any  other
+         blocks.     This  makes  the  serious  assumption  that  no
+         primary output is  used as an intermediate  signal.   Also,
+         these assumptions are  only useful for  the "root"  module.
+         Subcircuits  are  invoked  with  positional  arguments  and
+         hence the specified order for the inputs is significant  in
+         a subcircuit.
+
+           The keyword .end is optional,  and is implied at the  end
+         of the file.
+
+           Anywhere in  the  file, a  `\'  (backslash) as  the  last
+         character  on  a  line   indicates  concatenation  of   the
+         subsequent line to the current line.
+
+
+Logic Gates
+
+
+
+  A logic-gate is:
+
+.names <in-1> <in-2> ... <in-n> <output>
+        <single-output-cover>
+
+OR
+
+.gate <gate-name> <formal-1>=<in-1> <formal-2>=<in-2> ... <formal-out>=<out>
+
+
+
+
+
+         single-output-cover   is   an  n-input,    1-output   PLA
+         description of  the  logic function  corresponding  to  the
+         logic gate.   f0, 1, --g is used  in the "input plane"  and
+         f0, 1, --,   ~ is used in  the "output plane".   The  logic
+         gate can have  only its  ON-set specified with  1's in  the
+         "output plane", or  can also have a  DC-set and an  OFF-set
+         specified with -'s or 0's in  the "output plane". ~  means
+         no connection.  For a more complete description of the  PLA
+         input format, see espresso(5) documentation.
+
+gate-name is the name of a gate that is associated with and defined
+by a library (see Sec. 5 on libraries). The library also defines the 
+formal parameters (pin names) of the gate to allow for an order-independent
+list. Gates may have only one output.
+
+The following examples list show the two varieties of netlist
+description. The ".netblif" example uses the gates of "lib1.mis2lib"
+(See Appendix, Library1).
+
+
+
+Example con1.blif
+-----------------
+
+.model new_con1.pla
+.inputs v0 v1 v2 v3 v4 v5 v6
+.outputs v7.0 v7.1
+.names [13] [226] [14] [227] v7.0
+00-- 1
+--00 1
+.names v1 v4 [195] v7.1
+--0 1
+00- 1
+.names v1 [227]
+0 1
+.names v2 [228]
+0 1
+.names v0 [229]
+0 1
+.names [227] [228] v2 v0 [13]
+0-0- 1
+-00- 1
+0--0 1
+-0-0 1
+.names v3 [226]
+0 1
+.names v4 [231]
+0 1
+.names [229] v5 v4 [14]
+0-0 1
+-00 1
+.names [227] [231] v6 [267]
+--0 1
+00- 1
+.names v1 v3 v4 [269]
+--0 1
+00- 1
+.names [229] [267] [269] v0 [195]
+0-0- 1
+-00- 1
+0--0 1
+-0-0 1
+.end
+
+
+
+
+Example C17.netblif
+-------------------
+
+
+.model C17.iscas
+.inputs 1GAT(0) 2GAT(1) 3GAT(2) 6GAT(3) 7GAT(4)
+.outputs 22GAT(10) 23GAT(9)
+.gate nor1 a=1GAT(0) O=[58]
+.gate nor1 a=3GAT(2) O=[53]
+.gate nor2 a=[58] b=[53] O=10GAT(6)
+.gate nor1 a=6GAT(3) O=[66]
+.gate nor2 a=[53] b=[66] O=11GAT(5)
+.gate nor1 a=2GAT(1) O=[60]
+.gate nor2 a=11GAT(5) b=[60] O=16GAT(8)
+.gate nor2 a=10GAT(6) b=16GAT(8) O=[0]
+.gate nor1 a=[0] O=22GAT(10)
+.gate nor1 a=7GAT(4) O=[68]
+.gate nor2 a=11GAT(5) b=[68] O=19GAT(7)
+.gate nor2 a=16GAT(8) b=19GAT(7) O=[1]
+.gate nor1 a=[1] O=23GAT(9)
+.end
+
+
+
+
+
+                         5  Cell Library Descriptions
+                         ----------------------------
+
+
+When comparing results of synthesis programs, the 
+target library must be standardized.  For maximum flexibility,
+and to encourage more participation, we have selected two gate libraries.
+The benchmarks may be realized using either library.  When reporting 
+results, it is important to specify which library was used for implementing
+a logic example.
+
+
+
+Lib1: A Small Unit-Delay Model
+------------------------------
+
+The first library consists of a subset of gates that are commonly used in 
+ASIC libraries.  The gates have a simple timing model.
+The delay through the logic is one unit per gate plus 0.2 units for
+each fanout of a gate.
+
+The complete library is available in electronic form  (MISII and textual)
+with the benchmark distribution. A hard copy of the library is 
+available in the Appendix of this document.
+
+
+
+Lib2: A MOSIS 2u standard cell library
+--------------------------------------
+
+The second library is somewhat more realistic.
+It contains 29 gates including four different size inverters
+for buffering purposes.  The timing model is separate rise/fall with
+a separate delay equation and capacitive load associated with each
+input pin.
+
+The complete library is available in electronic form (MISII and textual)
+with the benchmark distribution. A hard copy of the library is 
+available in the Appendix of this document.
+
+
+
+                    6  Cell Library Formats
+                    -----------------------
+
+
+The cell libraries are made available in both the MISII and MCNC
+formats. The MISII format can be read by the MISII program. The MCNC format
+is made available as an easily human-readable format, and an optional 
+parser/reader is available for this format upon request. 
+Both formats contain the same information.
+
+
+
+MISII Library Format:
+
+
+A cell is specified in the following format:
+
+
+	GATE <cell-name> <cell-area> <cell-logic-function>
+	<pin-info>
+	    .
+	    .
+	<pin-info>
+
+
+
+ <cell-name>
+ is the name of the cell in the cell library.  The resulting
+net-list will be in terms of these names.
+
+ <cell-area>
+ defines the relative area cost of the cell.  It is a floating
+point number, and may be in any unit system convenient for the user.
+
+ <cell-logic-function> 
+is an equation written in conventional algebraic
+notation using the operators '+' for OR, '*' for AND, '!' for NOT, and
+parentheses for grouping.  The names of the literals in the equation
+define the input pin names for the cell; the name on the left hand side
+of the equation defines the output of the cell.  The equation terminates 
+with a semicolon.
+
+Only single-output cells may be specified.  The '!' operator may only
+be used on the input literals, or on the final output; it is not
+allowed internal to an expression.  (This constraint may disappear in
+the future).
+
+Also, the actual factored form is significant when a logic function has
+multiple factored forms.  In principle, all factored forms could be
+derived for a given logic function automatically; this is not yet
+implemented, so each must be specified separately.  Note that factored
+forms which differ by a permutation of the input variables (or by De
+Morgan's law) are not considered unique.
+
+Each  <pin-info> has the format:
+
+
+	PIN <pin-name> <phase> <input-load> <max-load>
+	    <rise-block-delay> <rise-fanout-delay>
+	    <fall-block-delay> <fall-fanout-delay>
+
+
+ <pin-name>
+ must be the name of a pin in the <cell-logic-function>,
+or it can be * to specify identical timing information for all pins. 
+
+ <phase> is INV, NONINV, or UNKNOWN corresponding to whether the
+logic function is negative-unate, positive-unate, or binate in
+this input variable respectively.  This is required for the separate
+rise-fall delay model.  (In principle, this information is easily
+derived from the logic function; this field may disappear in the future).
+
+ <input-load> 
+gives the input load of this pin.  It is a floating point
+value, in arbitrary units convenient for the user.
+
+ <max-load> specifies a loading constraint for the cell.  It is a
+floating point value specifying the maximum load allowed on the output.
+
+ <rise-block-delay> 
+and <rise-fanout-delay> are the rise-time parameters
+for the timing model.  They are floating point values, typically in 
+the units nanoseconds, and nanoseconds/unit-load respectively.
+
+ <fall-block-delay>  and  <fall-fanout-delay>
+ are the fall-time parameters
+for the timing model.  They are floating point values, typically in 
+the units nanoseconds, and nanoseconds/unit-load repsectively.
+
+All of the delay information is specified on a pin-by-pin basis.  The
+meaning is the delay information for the most critical pin is used
+to determine the delay for the gate.
+
+
+
+
+   MISII Library Format Example
+
+
+
+
+GATE xor	5.5	O=a*!b+!a*b;	PIN * UNKNOWN 2 999 1.9 0.5 1.9 0.5
+GATE xor	5.5	O=!(a*b+!a*!b);	PIN * UNKNOWN 2 999 1.9 0.5 1.9 0.5
+
+GATE xnor	5.5	O=a*b+!a*!b;	PIN * UNKNOWN 2 999 2.1 0.5 2.1 0.5
+GATE xnor	5.5	O=!(!a*b+a*!b);	PIN * UNKNOWN 2 999 2.1 0.5 2.1 0.5
+
+GATE mux21	4.5	O=a*s+b*!s;
+    PIN a NONINV 1 999 1.6 0.4 1.6 0.4
+    PIN b NONINV 1 999 1.6 0.4 1.6 0.4
+    PIN s UNKNOWN 2 999 2.0 0.4 1.6 0.4
+GATE mux21	4.5	O=!(!a*s+!b*!s);
+    PIN a NONINV 1 999 1.6 0.4 1.6 0.4
+    PIN b NONINV 1 999 1.6 0.4 1.6 0.4
+    PIN s UNKNOWN 2 999 2.0 0.4 1.6 0.4
+
+
+
+
+MCNC Library Format:
+
+
+The MCNC library file has the form 
+
+
+---------------------------
+<cell_description>
+<cell_description>
+<cell_description>
+  "     "
+  "     "
+  "     "
+--------------------------
+
+
+Where <cell_description> is 
+
+cell begin <name>
+  area=<float>
+  equation="<logic equation>" 
+  max_loads=<float>
+  primitive=<string>
+
+  termlist
+    <terminal_name>
+    unateness=<string: INV, NONINV, UNKNOWN>
+    loads=<float> 
+ /* requires at least one set of best, worst or nominal */
+    nominal_rise_delay=<float>
+    nominal_rise_fan=<float>
+    nominal_fall_delay=<float>
+    nominal_fall_fan=<float> 
+
+    worst_rise_delay=<float>
+    worst_rise_fan=<float>          
+    worst_fall_delay=<float>
+    worst_fall_fan=<float> 
+
+    best_rise_delay=<float>
+    best_rise_fan=<float>
+    best_fall_delay=<float>
+    best_fall_fan=<float> ;
+cell end <name>
+
+
+
+1.  All above text lines are optional except "cell begin" and "cell end."
+
+
+
+
+MCNC Library Format Example:
+
+
+cell begin xnor
+  area=5.0
+  equation="y = ! ( (a + b) * (!a + !b) )"  
+  max_loads=10
+  primitive=XNOR 
+
+  termlist
+    a
+    unateness=UNKNOWN
+    loads=2.0 
+    nominal_rise_delay=1.4
+    nominal_rise_fan=2.9
+    nominal_fall_delay=2.3
+    nominal_fall_fan=3.6 ; /* terminal "b" with attributes */
+    b
+    unateness=UNKNOWN
+    loads=2.0 
+    nominal_rise_delay=1.4
+    nominal_rise_fan=2.9
+    nominal_fall_delay=2.3
+    nominal_fall_fan=3.6 ; /* terminal "b" with attributes */
+    y ;  /* output terminal, no attributes */
+
+cell end xnor
+
+
+
+                    7  Guidelines for Reporting Results
+                    -----------------------------------
+
+A survey of researchers indicated that the following procedures
+and quality criteria would be useful for a meaningful
+comparison of various synthesis and optimization methods.
+
+
+
+Experiments
+-----------
+
+o  Synthesize each benchmark example as a multi-level logic circuit
+   using gates (cells) from the supplied libraries.  Report the area and
+   critical path delay based on the cell area and delay values given in the
+   libraries.
+
+o  Optimize the logic for minimum area as determined by sum of
+   library cell areas.  Optionally, optimize timing and area,
+   power consumption, testability, etc. (State your objective).
+
+o  Perform state assignment on the FSM examples. 
+   Determine the codes for each state 
+   that will aid in optimizing the final implementation. 
+   This step is necessary to implement the state tables as logic circuits.
+
+o  Perform other synthesis-related operations such as flattening, 
+   verification, test generation, automatic drafting of schematics, etc.
+
+
+
+Suggested Benchmark Subsets
+---------------------------
+
+Because of the large number of examples in each benchmark set, it will
+be difficult to run and report on all examples.  
+To insure some overlap of examples between researchers reporting results,
+please attempt to include the following listed examples from each category in
+your subset of examples. 
+If you can report on all examples, so much the better.  
+
+
+Suggested for the FSM set:
+
+ cse
+ ex2
+ s1
+ planet
+
+
+Suggested for the two-level set:
+
+ duke2
+ rd84
+ misex2
+ misex3c
+
+
+Suggested for the multi-level set:
+
+ C432
+ C1355
+ rot
+ b9
+
+
+
+Quality Criteria
+
+Researchers may report their results in terms of multiple objectives
+such as transistor counts, gate counts, propagation delay, and CPU results.  
+It is also important to address such issues as follows:
+
+
+o  Was your circuit synthesized by totally automatic means ?
+
+o  How many trials or different scripts (multiple runs) were used ?
+
+o  What were the best results ever seen for an example, regardless of
+   whether the method was automatic or if multiple trials were used ?
+
+
+Area Results
+------------
+
+
+Please report the following information:
+
+o  Total Area - The sum of the cell areas as defined for each cell in the 
+   library (specify lib1 or lib2).
+
+o   Transistor Pairs - Optionally, report the number of transistor pairs in a 
+    multi-level implementation using the libraries (specify lib1 or lib2).
+
+o  Gates - The total number of gates or cells used 
+    (again, specify library used).
+
+o  Grids - The sum of gates and transistor pairs. 
+
+
+
+Delay Results
+-------------
+
+When using library 1 (LIB1) gate delay computation reduces to 
+a simple stradegy. Compute each gate delay as 1.0 plus 0.2 times 
+the number of fanouts at the gate's output.  Then compute the 
+longest delays to all points from inputs to outputs.
+
+
+
+For library 2 results, the following delay results would be more useful:
+
+
+o  Critical path delay time through the netlist using the
+   intrinsic-plus-fanout delay model given in the library (Lib2).
+
+o  The preferred critical-path-delay analysis method is to use
+   LATCH-TO-LATCH delays for computing the longest path through the logic.
+   This assumes that all primary inputs and outputs are latched. 
+   To accomplish this assume standard load on all outputs (DFF latch)
+   and assume the standard drive on all inputs (DFF latch).
+   The load and drive of the standard latch is the same as for the inv2x
+   inverter.
+
+Note that latch-to-latch delays must be used to account for the
+difference in loads that appear on the inputs of different
+circuit realizations. Otherwise, circuits with arbitrarily large 
+input loads could be realized without adding delay.
+
+
+
+CPU Results
+-----------
+
+Indicate total CPU requirements for your procedure (Time and machine).
+Indicate how many trials were needed to obtain your presented results. 
+
+
+
+Other Criteria
+--------------
+
+Some of the following criteria may be a useful measure of the quality
+of synthesized circuits:
+
+o  Area * Delay product.
+
+o  Routability / optimize routing area estimate (your formula).
+
+o  Percent fault coverage attained/attainable in testing.
+
+o  Average Number of fanouts (relates to timimg, testing routing)
+
+o  Your own criteria.  In what way is your realization superior ?
+
+
+
+Features and Unique Solutions to Problems
+-----------------------------------------
+
+You may want to list some program features or special problems
+that you can handle.
+
+
+
+o  Minimization for multiple criteria or objectives.
+
+o  Delay:  Skewed arrival times to circuit inputs.
+
+o  Delay:  Separate rise/fall delays.
+
+o  Delay:  Separate delays for each input pin.
+
+o  IO:  Interfacing or integration solutions.
+
+o  Ability to run ALL of the benchmark examples.
+
+o  Your own features, bells, and whistles.
+
+
+
+
+                       8  Readings and References
+                       --------------------------
+
+
+The following references cover background, algorithms, and further
+insights on two-level logic minimization [BrHa84,Rudell86]
+multi-level logic synthesis [Bostick87,Lisanke87] decomposition
+and factoring [Brayton82,Brayton84], 
+technology mapping [gregory86,keutzer87,lisanke88b],
+and previous logic synthesis
+benchmarking [Degeus86].
+Basic principles of logic are treated in [Hill81].
+
+
+
+                         Appendix
+                         --------
+
+
+Cell Library 1 Databook
+-----------------------
+
+
+This section is a hardcopy of the file "lib1.mcnclib".
+It lists the characteristics of the "lib1" cells in MCNC format (see Sec. 6).
+
+
+
+
+cell begin nor1
+  area=1.0
+  transistor_pairs=1
+  equation="y = !a"  
+  max_loads=999.00
+  primitive=INV
+
+  termlist
+    a 
+    unateness=NEGATIVE
+    loads=1.0
+    nominal_rise=1.0
+    nominal_rise_fan=0.2
+    nominal_fall=1.0
+    nominal_fall_fan=0.2 ;
+    y ;
+
+cell end nor1
+
+
+
+cell begin nor2
+  area=2.0
+  transistor_pairs=2
+  equation="y = !(a + b)"  
+  max_loads=999.00
+  primitive=NOR2
+
+  termlist
+    a
+    unateness=NEGATIVE
+    loads=1.0
+    nominal_rise=1.0
+    nominal_rise_fan=0.2
+    nominal_fall=1.0
+    nominal_fall_fan=0.2 ;
+    b
+    unateness=NEGATIVE
+    loads=1.0
+    nominal_rise=1.0
+    nominal_rise_fan=0.2
+    nominal_fall=1.0
+    nominal_fall_fan=0.2 ;
+    y;
+
+cell end nor2
+
+cell begin nor3
+  area=3.0
+  transistor_pairs=3
+  equation="y = !(a + b + c)"  
+  max_loads=999.00
+  primitive=NOR3
+
+  termlist
+    a
+    unateness=NEGATIVE
+    loads=1.0
+    nominal_rise=1.0
+    nominal_rise_fan=0.2
+    nominal_fall=1.0
+    nominal_fall_fan=0.2 ;
+    b
+    unateness=NEGATIVE
+    loads=1.0
+    nominal_rise=1.0
+    nominal_rise_fan=0.2
+    nominal_fall=1.0
+    nominal_fall_fan=0.2 ;
+    c
+    unateness=NEGATIVE
+    loads=1.0
+    nominal_rise=1.0
+    nominal_rise_fan=0.2
+    nominal_fall=1.0
+    nominal_fall_fan=0.2 ;
+    y;
+cell end nor3
+
+
+
+
+cell begin nor4
+  area=4.0
+  transistor_pairs=4
+  equation="y = !(a + b + c + d)"  
+  max_loads=999.00
+  primitive=NOR4
+
+  termlist
+    a
+    unateness=NEGATIVE
+    loads=1.0
+    nominal_rise=1.0
+    nominal_rise_fan=0.2
+    nominal_fall=1.0
+    nominal_fall_fan=0.2 ;
+    b
+    unateness=NEGATIVE
+    loads=1.0
+    nominal_rise=1.0
+    nominal_rise_fan=0.2
+    nominal_fall=1.0
+    nominal_fall_fan=0.2 ;
+    c
+    unateness=NEGATIVE
+    loads=1.0
+    nominal_rise=1.0
+    nominal_rise_fan=0.2
+    nominal_fall=1.0
+    nominal_fall_fan=0.2 ;
+    d
+    unateness=NEGATIVE
+    loads=1.0
+    nominal_rise=1.0
+    nominal_rise_fan=0.2
+    nominal_fall=1.0
+    nominal_fall_fan=0.2 ;
+    y;
+
+cell end nor4
+
+
+
+
+
+Cell Library 2 Databook
+-----------------------
+
+
+This section is a hardcopy of the file "lib2.mcnclib".
+It lists the characteristics of the "lib2" cells in MCNC format (see Sec. 6).
+
+
+ 
+cell begin nand2
+area=   1392.00	
+equation="O = ! (a * b)"
+max_loads=999.00
+transistor_pairs=2
+primitive=NAND2
+termlist
+     a
+     loads=0.0776583
+     unateness=NEGATIVE
+     nominal_rise=0.64
+     nominal_fall=0.4
+     nominal_rise_fan=4.09
+     nominal_fall_fan=2.57;
+     b
+     loads=0.0716062
+     unateness=NEGATIVE
+     nominal_rise=0.46
+     nominal_fall=0.37
+     nominal_rise_fan=4.1
+     nominal_fall_fan=2.57;
+     y;
+cell end nand2
+ 
+cell begin nand3
+area=   1856.00	
+equation="O = ! (a * b * c)"
+max_loads=999.00
+transistor_pairs=3
+primitive=NAND3
+termlist
+     a
+     loads=0.0999512
+     unateness=NEGATIVE
+     nominal_rise=0.89
+     nominal_fall=0.51
+     nominal_rise_fan=3.6
+     nominal_fall_fan=2.49;
+     b
+     loads=0.0827626
+     unateness=NEGATIVE
+     nominal_rise=0.71
+     nominal_fall=0.42
+     nominal_rise_fan=4.11
+     nominal_fall_fan=2.5;
+     c
+     loads=0.0777205
+     unateness=NEGATIVE
+     nominal_rise=0.56
+     nominal_fall=0.35
+     nominal_rise_fan=4.39
+     nominal_fall_fan=2.49;
+     y;
+cell end nand3
+ 
+cell begin nand4
+area=   2320.00	
+equation="O = ! (a * b * c * d)"
+max_loads=999.00
+transistor_pairs=4
+primitive=NAND4
+termlist
+     a
+     loads=0.103003
+     unateness=NEGATIVE
+     nominal_rise=1.27
+     nominal_fall=0.67
+     nominal_rise_fan=3.62
+     nominal_fall_fan=2.39;
+     b
+     loads=0.0979773
+     unateness=NEGATIVE
+     nominal_rise=1.09
+     nominal_fall=0.61
+     nominal_rise_fan=3.61
+     nominal_fall_fan=2.39;
+     c
+     loads=0.0979773
+     unateness=NEGATIVE
+     nominal_rise=0.82
+     nominal_fall=0.55
+     nominal_rise_fan=3.62
+     nominal_fall_fan=2.4;
+     d
+     loads=0.105029
+     unateness=NEGATIVE
+     nominal_rise=0.58
+     nominal_fall=0.38
+     nominal_rise_fan=3.62
+     nominal_fall_fan=2.39;
+     y;
+cell end nand4
+ 
+cell begin aoi211
+area=   2320.00	
+equation="O = ! ((a1 * a2) + b + c)"
+max_loads=999.00
+transistor_pairs=4
+primitive=AOI211
+termlist
+     a1
+     loads=0.103863
+     unateness=NEGATIVE
+     nominal_rise=1.12
+     nominal_fall=1.03
+     nominal_rise_fan=4.81
+     nominal_fall_fan=2.38;
+     a2
+     loads=0.108968
+     unateness=NEGATIVE
+     nominal_rise=1.29
+     nominal_fall=1.03
+     nominal_rise_fan=4.81
+     nominal_fall_fan=2.38;
+     b
+     loads=0.107968
+     unateness=NEGATIVE
+     nominal_rise=1.04
+     nominal_fall=0.52
+     nominal_rise_fan=4.83
+     nominal_fall_fan=1.4;
+     c
+     loads=0.100831
+     unateness=NEGATIVE
+     nominal_rise=0.68
+     nominal_fall=0.51
+     nominal_rise_fan=4.83
+     nominal_fall_fan=1.79;
+     y;
+cell end aoi211
+ 
+cell begin aoi21
+area=   1856.00	
+equation="O = ! ((a1 * a2) + b)"
+max_loads=999.00
+transistor_pairs=3
+primitive=AOI21
+termlist
+     a1
+     loads=0.102893
+     unateness=NEGATIVE
+     nominal_rise=0.75
+     nominal_fall=0.67
+     nominal_rise_fan=3.52
+     nominal_fall_fan=2.53;
+     a2
+     loads=0.090783
+     unateness=NEGATIVE
+     nominal_rise=0.67
+     nominal_fall=0.62
+     nominal_rise_fan=3.64
+     nominal_fall_fan=2.52;
+     b
+     loads=0.111004
+     unateness=NEGATIVE
+     nominal_rise=0.58
+     nominal_fall=0.21
+     nominal_rise_fan=3.64
+     nominal_fall_fan=1.28;
+     y;
+cell end aoi21
+ 
+cell begin aoi221
+area=   2784.00	
+equation="O = ! ((a1 * a2) + (b1 * b2) + c)"
+max_loads=999.00
+transistor_pairs=5
+primitive=AOI221
+termlist
+     a1
+     loads=0.108922
+     unateness=NEGATIVE
+     nominal_rise=1.48
+     nominal_fall=1.33
+     nominal_rise_fan=4.43
+     nominal_fall_fan=2.78;
+     a2
+     loads=0.0948212
+     unateness=NEGATIVE
+     nominal_rise=1.42
+     nominal_fall=1.4
+     nominal_rise_fan=4.56
+     nominal_fall_fan=2.75;
+     b1
+     loads=0.102885
+     unateness=NEGATIVE
+     nominal_rise=0.76
+     nominal_fall=0.79
+     nominal_rise_fan=4.47
+     nominal_fall_fan=2.89;
+     b2
+     loads=0.104853
+     unateness=NEGATIVE
+     nominal_rise=0.73
+     nominal_fall=0.78
+     nominal_rise_fan=4.58
+     nominal_fall_fan=2.91;
+     c
+     loads=0.11099
+     unateness=NEGATIVE
+     nominal_rise=1.39
+     nominal_fall=0.7
+     nominal_rise_fan=4.56
+     nominal_fall_fan=1.51;
+     y;
+cell end aoi221
+ 
+cell begin aoi222
+area=   3712.00	
+equation="O = ! ((a1 * a2) + (b1 * b2) + (c1 * c2) )"
+max_loads=999.00
+transistor_pairs=6
+primitive=AOI222
+termlist
+     a1
+     loads=0.101853
+     unateness=NEGATIVE
+     nominal_rise=1.77
+     nominal_fall=1.56
+     nominal_rise_fan=4.58
+     nominal_fall_fan=2.95;
+     a2
+     loads=0.0958212
+     unateness=NEGATIVE
+     nominal_rise=1.73
+     nominal_fall=1.6
+     nominal_rise_fan=4.69
+     nominal_fall_fan=2.93;
+     b1
+     loads=0.103886
+     unateness=NEGATIVE
+     nominal_rise=1.34
+     nominal_fall=1.21
+     nominal_rise_fan=4.68
+     nominal_fall_fan=2.92;
+     b2
+     loads=0.103886
+     unateness=NEGATIVE
+     nominal_rise=1.5
+     nominal_fall=1.22
+     nominal_rise_fan=4.69
+     nominal_fall_fan=2.92;
+     c1
+     loads=0.0958212
+     unateness=NEGATIVE
+     nominal_rise=0.92
+     nominal_fall=0.81
+     nominal_rise_fan=4.67
+     nominal_fall_fan=2.92;
+     c2
+     loads=0.103886
+     unateness=NEGATIVE
+     nominal_rise=0.77
+     nominal_fall=0.76
+     nominal_rise_fan=4.47
+     nominal_fall_fan=2.92;
+     y;
+cell end aoi222
+ 
+cell begin aoi22
+area=   2320.00	
+equation="O =  ! ((a1 * a2) + (b1 * b2))"
+max_loads=999.00
+transistor_pairs=4
+primitive=AOI22
+termlist
+     a1
+     loads=0.101857
+     unateness=NEGATIVE
+     nominal_rise=0.92
+     nominal_fall=0.94
+     nominal_rise_fan=3.46
+     nominal_fall_fan=2.79;
+     a2
+     loads=0.0907569
+     unateness=NEGATIVE
+     nominal_rise=0.84
+     nominal_fall=0.85
+     nominal_rise_fan=3.64
+     nominal_fall_fan=2.79;
+     b1
+     loads=0.0958212
+     unateness=NEGATIVE
+     nominal_rise=0.61
+     nominal_fall=0.49
+     nominal_rise_fan=3.64
+     nominal_fall_fan=2.93;
+     b2
+     loads=0.0988212
+     unateness=NEGATIVE
+     nominal_rise=0.7
+     nominal_fall=0.54
+     nominal_rise_fan=3.64
+     nominal_fall_fan=2.93;
+     y;
+cell end aoi22
+ 
+cell begin aoi31
+area=   2320.00	
+equation="O =  ! ((a1 * a2 * a3) + b)"
+max_loads=999.00
+transistor_pairs=4
+primitive=AOI31
+termlist
+     a1
+     loads=0.100903
+     unateness=NEGATIVE
+     nominal_rise=0.91
+     nominal_fall=0.81
+     nominal_rise_fan=4.04
+     nominal_fall_fan=2.86;
+     a2
+     loads=0.104935
+     unateness=NEGATIVE
+     nominal_rise=1.05
+     nominal_fall=0.87
+     nominal_rise_fan=3.93
+     nominal_fall_fan=2.87;
+     a3
+     loads=0.105936
+     unateness=NEGATIVE
+     nominal_rise=1.15
+     nominal_fall=0.94
+     nominal_rise_fan=3.94
+     nominal_fall_fan=2.86;
+     b
+     loads=0.0979073
+     unateness=NEGATIVE
+     nominal_rise=0.89
+     nominal_fall=0.25
+     nominal_rise_fan=4.06
+     nominal_fall_fan=1.28;
+     y;
+cell end aoi31
+ 
+cell begin aoi32
+area=   2784.00	
+equation="O =  ! ((a1 * a2 * a3) + (b1 * b2))"
+max_loads=999.00
+transistor_pairs=5
+primitive=AOI32
+termlist
+     a1
+     loads=0.102919
+     unateness=NEGATIVE
+     nominal_rise=1.06
+     nominal_fall=0.96
+     nominal_rise_fan=3.81
+     nominal_fall_fan=2.91;
+     a2
+     loads=0.100919
+     unateness=NEGATIVE
+     nominal_rise=1.2
+     nominal_fall=1.03
+     nominal_rise_fan=3.81
+     nominal_fall_fan=2.9;
+     a3
+     loads=0.105952
+     unateness=NEGATIVE
+     nominal_rise=1.29
+     nominal_fall=1.06
+     nominal_rise_fan=3.69
+     nominal_fall_fan=2.91;
+     b1
+     loads=0.0978873
+     unateness=NEGATIVE
+     nominal_rise=0.91
+     nominal_fall=0.43
+     nominal_rise_fan=3.81
+     nominal_fall_fan=2.12;
+     b2
+     loads=0.104935
+     unateness=NEGATIVE
+     nominal_rise=0.78
+     nominal_fall=0.43
+     nominal_rise_fan=3.59
+     nominal_fall_fan=2.12;
+     y;
+cell end aoi32
+ 
+cell begin aoi33
+area=   3248.00	
+equation="O =  ! ((a1 * a2 * a3) + (b1 * b2 * b3))"
+max_loads=999.00
+transistor_pairs=6
+primitive=AOI33
+termlist
+     a1
+     loads=0.102919
+     unateness=NEGATIVE
+     nominal_rise=1.33
+     nominal_fall=1.3
+     nominal_rise_fan=3.91
+     nominal_fall_fan=2.91;
+     a2
+     loads=0.102936
+     unateness=NEGATIVE
+     nominal_rise=1.46
+     nominal_fall=1.41
+     nominal_rise_fan=3.84
+     nominal_fall_fan=2.91;
+     a3
+     loads=0.112
+     unateness=NEGATIVE
+     nominal_rise=1.47
+     nominal_fall=1.41
+     nominal_rise_fan=3.65
+     nominal_fall_fan=2.91;
+     b1
+     loads=0.102936
+     unateness=NEGATIVE
+     nominal_rise=1.11
+     nominal_fall=0.76
+     nominal_rise_fan=3.59
+     nominal_fall_fan=2.9;
+     b2
+     loads=0.0948712
+     unateness=NEGATIVE
+     nominal_rise=1.04
+     nominal_fall=0.68
+     nominal_rise_fan=3.91
+     nominal_fall_fan=2.91;
+     b3
+     loads=0.103936
+     unateness=NEGATIVE
+     nominal_rise=0.84
+     nominal_fall=0.64
+     nominal_rise_fan=3.58
+     nominal_fall_fan=2.9;
+     y;
+cell end aoi33
+ 
+cell begin inv1x
+area=    928.00	
+equation="O = ! a"
+max_loads=999.00
+transistor_pairs=1
+primitive=INV
+termlist
+     a
+     loads=0.0513915
+     unateness=NEGATIVE
+     nominal_rise=0.42
+     nominal_fall=0.42
+     nominal_rise_fan=4.71
+     nominal_fall_fan=3.6;
+     y;
+cell end inv1x
+ 
+cell begin inv2x
+area=    928.00	
+equation="O = ! a"
+max_loads=999.00
+transistor_pairs=1
+primitive=INV
+termlist
+     a
+     loads=0.100863
+     unateness=NEGATIVE
+     nominal_rise=0.3
+     nominal_fall=0.29
+     nominal_rise_fan=1.98
+     nominal_fall_fan=1.82;
+     y;
+cell end inv2x
+ 
+cell begin inv4x
+area=   1392.00	
+equation="O = ! a"
+max_loads=999.00
+transistor_pairs=1
+primitive=INV
+termlist
+     a
+     loads=0.189698
+     unateness=NEGATIVE
+     nominal_rise=0.23
+     nominal_fall=0.27
+     nominal_rise_fan=1.08
+     nominal_fall_fan=0.85;
+     y;
+cell end inv4x
+ 
+cell begin oai211
+area=   2320.00	
+equation="O = ! ( (a1 + a2) * b * c)"
+max_loads=999.00
+transistor_pairs=4
+primitive=OAI211
+termlist
+     a1
+     loads=0.107005
+     unateness=NEGATIVE
+     nominal_rise=1.12
+     nominal_fall=0.59
+     nominal_rise_fan=4.17
+     nominal_fall_fan=2.31;
+     a2
+     loads=0.113066
+     unateness=NEGATIVE
+     nominal_rise=1.3
+     nominal_fall=0.79
+     nominal_rise_fan=4.16
+     nominal_fall_fan=2.36;
+     b
+     loads=0.104962
+     unateness=NEGATIVE
+     nominal_rise=0.51
+     nominal_fall=0.69
+     nominal_rise_fan=2.13
+     nominal_fall_fan=2.4;
+     c
+     loads=0.105002
+     unateness=NEGATIVE
+     nominal_rise=0.5
+     nominal_fall=0.52
+     nominal_rise_fan=2.46
+     nominal_fall_fan=2.41;
+     y;
+cell end oai211
+ 
+cell begin oai21
+area=   1856.00	
+equation="O = ! ( (a1 + a2) * b)"
+max_loads=999.00
+transistor_pairs=3
+primitive=OAI21
+termlist
+     a1
+     loads=0.101887
+     unateness=NEGATIVE
+     nominal_rise=0.69
+     nominal_fall=0.53
+     nominal_rise_fan=3.94
+     nominal_fall_fan=2.47;
+     a2
+     loads=0.0978873
+     unateness=NEGATIVE
+     nominal_rise=0.87
+     nominal_fall=0.63
+     nominal_rise_fan=3.93
+     nominal_fall_fan=2.47;
+     b
+     loads=0.0998473
+     unateness=NEGATIVE
+     nominal_rise=0.37
+     nominal_fall=0.57
+     nominal_rise_fan=2.05
+     nominal_fall_fan=2.51;
+     y;
+cell end oai21
+ 
+cell begin oai221
+area=   2784.00	
+equation="O = ! ( (a1 + a2) * (b1 + b2) * c)"
+max_loads=999.00
+transistor_pairs=5
+primitive=OAI221
+termlist
+     a1
+     loads=0.103929
+     unateness=NEGATIVE
+     nominal_rise=1.58
+     nominal_fall=1.11
+     nominal_rise_fan=4.17
+     nominal_fall_fan=2.47;
+     a2
+     loads=0.104969
+     unateness=NEGATIVE
+     nominal_rise=1.48
+     nominal_fall=0.86
+     nominal_rise_fan=4.17
+     nominal_fall_fan=2.36;
+     b1
+     loads=0.108018
+     unateness=NEGATIVE
+     nominal_rise=0.94
+     nominal_fall=0.81
+     nominal_rise_fan=4.03
+     nominal_fall_fan=2.5;
+     b2
+     loads=0.106002
+     unateness=NEGATIVE
+     nominal_rise=0.76
+     nominal_fall=0.64
+     nominal_rise_fan=4.03
+     nominal_fall_fan=2.5;
+     c
+     loads=0.101929
+     unateness=NEGATIVE
+     nominal_rise=0.78
+     nominal_fall=0.9
+     nominal_rise_fan=2.28
+     nominal_fall_fan=2.54;
+     y;
+cell end oai221
+ 
+cell begin oai222
+area=   3248.00	
+equation="O = ! ( (a1 + a2) * (b1 + b2) * (c1 + c2))"
+max_loads=999.00
+transistor_pairs=6
+primitive=OAI222
+termlist
+     a1
+     loads=0.116076
+     unateness=NEGATIVE
+     nominal_rise=1.77
+     nominal_fall=1.21
+     nominal_rise_fan=3.75
+     nominal_fall_fan=2.47;
+     a2
+     loads=0.111034
+     unateness=NEGATIVE
+     nominal_rise=1.62
+     nominal_fall=1.13
+     nominal_rise_fan=3.75
+     nominal_fall_fan=2.48;
+     b1
+     loads=0.100929
+     unateness=NEGATIVE
+     nominal_rise=1.17
+     nominal_fall=1.07
+     nominal_rise_fan=3.58
+     nominal_fall_fan=2.48;
+     b2
+     loads=0.119098
+     unateness=NEGATIVE
+     nominal_rise=1.35
+     nominal_fall=1.1
+     nominal_rise_fan=3.58
+     nominal_fall_fan=2.35;
+     c1
+     loads=0.105982
+     unateness=NEGATIVE
+     nominal_rise=0.99
+     nominal_fall=0.93
+     nominal_rise_fan=3.59
+     nominal_fall_fan=2.49;
+     c2
+     loads=0.11403
+     unateness=NEGATIVE
+     nominal_rise=0.82
+     nominal_fall=0.79
+     nominal_rise_fan=3.58
+     nominal_fall_fan=2.48;
+     y;
+cell end oai222
+ 
+cell begin oai22
+area=   2320.00	
+equation="O = ! ( (a1 + a2) * (b1 + b2))"
+max_loads=999.00
+transistor_pairs=4
+primitive=OAI22
+termlist
+     a1
+     loads=0.100877
+     unateness=NEGATIVE
+     nominal_rise=1.1
+     nominal_fall=0.9
+     nominal_rise_fan=4.06
+     nominal_fall_fan=2.5;
+     a2
+     loads=0.102933
+     unateness=NEGATIVE
+     nominal_rise=0.99
+     nominal_fall=0.68
+     nominal_rise_fan=4.06
+     nominal_fall_fan=2.36;
+     b1
+     loads=0.0958151
+     unateness=NEGATIVE
+     nominal_rise=0.69
+     nominal_fall=0.74
+     nominal_rise_fan=3.66
+     nominal_fall_fan=2.53;
+     b2
+     loads=0.103946
+     unateness=NEGATIVE
+     nominal_rise=0.61
+     nominal_fall=0.56
+     nominal_rise_fan=3.66
+     nominal_fall_fan=2.06;
+     y;
+cell end oai22
+ 
+cell begin oai31
+area=   2320.00	
+equation="O = ! ( (a1 + a2 + a3) * b)"
+max_loads=999.00
+transistor_pairs=4
+primitive=OAI31
+termlist
+     a1
+     loads=0.108925
+     unateness=NEGATIVE
+     nominal_rise=1.27
+     nominal_fall=1.03
+     nominal_rise_fan=4.71
+     nominal_fall_fan=2.43;
+     a2
+     loads=0.104879
+     unateness=NEGATIVE
+     nominal_rise=1.11
+     nominal_fall=1.04
+     nominal_rise_fan=4.71
+     nominal_fall_fan=2.57;
+     a3
+     loads=0.108968
+     unateness=NEGATIVE
+     nominal_rise=0.85
+     nominal_fall=0.69
+     nominal_rise_fan=4.71
+     nominal_fall_fan=2.38;
+     b
+     loads=0.105896
+     unateness=NEGATIVE
+     nominal_rise=0.38
+     nominal_fall=0.81
+     nominal_rise_fan=1.86
+     nominal_fall_fan=2.73;
+     y;
+cell end oai31
+ 
+cell begin oai32
+area=   2784.00	
+equation="O = ! ( (a1 + a2 + a3) * (b1 + b2))"
+max_loads=999.00
+transistor_pairs=5
+primitive=OAI32
+termlist
+     a1
+     loads=0.112958
+     unateness=NEGATIVE
+     nominal_rise=1.39
+     nominal_fall=1.04
+     nominal_rise_fan=4.46
+     nominal_fall_fan=2.46;
+     a2
+     loads=0.106895
+     unateness=NEGATIVE
+     nominal_rise=1.25
+     nominal_fall=1.09
+     nominal_rise_fan=4.46
+     nominal_fall_fan=2.63;
+     a3
+     loads=0.114
+     unateness=NEGATIVE
+     nominal_rise=0.99
+     nominal_fall=0.74
+     nominal_rise_fan=4.46
+     nominal_fall_fan=2.42;
+     b1
+     loads=0.105879
+     unateness=NEGATIVE
+     nominal_rise=0.58
+     nominal_fall=0.79
+     nominal_rise_fan=3.2
+     nominal_fall_fan=2.71;
+     b2
+     loads=0.112984
+     unateness=NEGATIVE
+     nominal_rise=0.68
+     nominal_fall=0.83
+     nominal_rise_fan=3.21
+     nominal_fall_fan=2.34;
+     y;
+cell end oai32
+ 
+cell begin oai33
+area=   3248.00	
+equation="O = ! ( (a1 + a2 + a3) * (b1 + b2 + b3))"
+max_loads=999.00
+transistor_pairs=6
+primitive=OAI33
+termlist
+     a1
+     loads=0.11699
+     unateness=NEGATIVE
+     nominal_rise=1.58
+     nominal_fall=1.48
+     nominal_rise_fan=4.3
+     nominal_fall_fan=2.47;
+     a2
+     loads=0.108912
+     unateness=NEGATIVE
+     nominal_rise=1.5
+     nominal_fall=1.42
+     nominal_rise_fan=4.31
+     nominal_fall_fan=2.63;
+     a3
+     loads=0.107912
+     unateness=NEGATIVE
+     nominal_rise=1.24
+     nominal_fall=1.17
+     nominal_rise_fan=4.31
+     nominal_fall_fan=2.65;
+     b1
+     loads=0.117016
+     unateness=NEGATIVE
+     nominal_rise=0.8
+     nominal_fall=0.82
+     nominal_rise_fan=4.3
+     nominal_fall_fan=2.27;
+     b2
+     loads=0.108912
+     unateness=NEGATIVE
+     nominal_rise=1
+     nominal_fall=1.17
+     nominal_rise_fan=4.3
+     nominal_fall_fan=2.64;
+     b3
+     loads=0.110912
+     unateness=NEGATIVE
+     nominal_rise=1.13
+     nominal_fall=1.35
+     nominal_rise_fan=4.31
+     nominal_fall_fan=2.65;
+     y;
+cell end oai33
+ 
+cell begin nor2
+area=   1392.00	
+equation="O = ! (a + b)"
+max_loads=999.00
+transistor_pairs=2
+primitive=NOR2
+termlist
+     a
+     loads=0.0735683
+     unateness=NEGATIVE
+     nominal_rise=0.33
+     nominal_fall=0.45
+     nominal_rise_fan=3.64
+     nominal_fall_fan=3.64;
+     b
+     loads=0.0967612
+     unateness=NEGATIVE
+     nominal_rise=0.5
+     nominal_fall=0.7
+     nominal_rise_fan=3.64
+     nominal_fall_fan=3.66;
+     y;
+cell end nor2
+ 
+cell begin nor3
+area=   1856.00	
+equation="O = ! (a + b + c)"
+max_loads=999.00
+transistor_pairs=3
+primitive=NOR3
+termlist
+     a
+     loads=0.0856487
+     unateness=NEGATIVE
+     nominal_rise=0.84
+     nominal_fall=1.3
+     nominal_rise_fan=5.04
+     nominal_fall_fan=3.45;
+     b
+     loads=0.0806487
+     unateness=NEGATIVE
+     nominal_rise=0.78
+     nominal_fall=1.14
+     nominal_rise_fan=5.03
+     nominal_fall_fan=3.43;
+     c
+     loads=0.0826487
+     unateness=NEGATIVE
+     nominal_rise=0.52
+     nominal_fall=0.84
+     nominal_rise_fan=5.03
+     nominal_fall_fan=3.44;
+     y;
+cell end nor3
+ 
+cell begin nor4
+area=   2320.00	
+equation="O = ! (a + b + c + d)"
+max_loads=999.00
+transistor_pairs=4
+primitive=NOR4
+termlist
+     a
+     loads=0.0886969
+     unateness=NEGATIVE
+     nominal_rise=0.41
+     nominal_fall=1.16
+     nominal_rise_fan=5.91
+     nominal_fall_fan=3.2;
+     b
+     loads=0.0866969
+     unateness=NEGATIVE
+     nominal_rise=0.85
+     nominal_fall=1.53
+     nominal_rise_fan=5.91
+     nominal_fall_fan=3.18;
+     c
+     loads=0.0866969
+     unateness=NEGATIVE
+     nominal_rise=1.11
+     nominal_fall=1.75
+     nominal_rise_fan=5.92
+     nominal_fall_fan=3.19;
+     d
+     loads=0.0886969
+     unateness=NEGATIVE
+     nominal_rise=1.27
+     nominal_fall=1.94
+     nominal_rise_fan=5.91
+     nominal_fall_fan=3.2;
+     y;
+cell end nor4
+ 
+cell begin xnor
+area=   2320.00	
+equation="O = ((!a * !b) + (a * b))"
+max_loads=999.00
+transistor_pairs=5
+primitive=XNOR
+termlist
+     a
+     loads=0.15024
+     unateness=UNKNOWN
+     nominal_rise=1.11
+     nominal_fall=1.07
+     nominal_rise_fan=4.86
+     nominal_fall_fan=3.39;
+     b
+     loads=0.135176
+     unateness=UNKNOWN
+     nominal_rise=1.55
+     nominal_fall=1.07
+     nominal_rise_fan=4.87
+     nominal_fall_fan=3.39;
+     y;
+cell end xnor
+ 
+cell begin xor
+area=   2320.00	
+equation="O = ((!a * b) + (a * !b))"
+max_loads=999.00
+transistor_pairs=5
+primitive=XOR
+termlist
+     a
+     loads=0.144166
+     unateness=UNKNOWN
+     nominal_rise=1.77
+     nominal_fall=0.96
+     nominal_rise_fan=5.23
+     nominal_fall_fan=4.64;
+     b
+     loads=0.138126
+     unateness=UNKNOWN
+     nominal_rise=1.94
+     nominal_fall=1.14
+     nominal_rise_fan=4.65
+     nominal_fall_fan=5.22;
+     y;
+cell end xor

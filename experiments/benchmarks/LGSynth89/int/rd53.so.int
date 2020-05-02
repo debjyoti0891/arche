@@ -1,0 +1,82 @@
+
+( macro Main ( x0    x1    x2    x3    x4    z0    z1    z2   ) 
+
+( input '(  in_1 in_3 in_5 in_7 in_9) ) 
+
+(output '( out_1 out_3 out_5 ) ) 
+
+(local  _x0    _x1    _x2    _x3    _x4    _z0    _z1    _z2    y0   
+ _y0    y1    _y1    y2    _y2    y3    _y3    y4    _y4   
+ y5    _y5    y6    _y6    y7    _y7    y8    _y8    y9   
+ _y9    y10   _y10   r0    r1    r5    r6    r21   r22  
+ r23   r24   r31   r32   r33   r34   r35   r36   r37  
+ r38   r39   r40   r41   r42   r43   r44   r45   r46   ) 
+
+
+
+( o2  r0 r1 z0)
+( a1  y8 r0)
+( a1  y9 r1)
+
+( o2  r5 r6 z1)
+( a2  y1 _y6 r5)
+( a2  _y1 y6 r6)
+
+( o4  r21 r22 r23 r24 z2)
+( a2  y4 y10 r21)
+( a1  y8 r22)
+( a3  _x4 y2 _y5 r23)
+( a1  y9 r24)
+
+( o2  r31 r32 y0)
+( a1  y2 r31)
+( a1  y3 r32)
+
+( o2  r33 r34 y1)
+( a1  y4 r33)
+( a1  y5 r34)
+
+( o1  r35 y2)
+( a2  _x0 _x1 r35)
+
+( o1  r36 y3)
+( a2  x0 x1 r36)
+
+( o1  r37 y4)
+( a2  _x2 _x3 r37)
+
+( o1  r38 y5)
+( a2  x2 x3 r38)
+
+( o2  r39 r40 y6)
+( a2  _x4 _y0 r39)
+( a2  x4 y0 r40)
+
+( o2  r41 r42 y7)
+( a2  _y2 y5 r41)
+( a2  y3 _y4 r42)
+
+( o1  r43 y8)
+( a2  x4 y7 r43)
+
+( o1  r44 y9)
+( a2  y3 y5 r44)
+
+( o2  r45 r46 y10)
+( a1  y2 r45)
+( a2  _x4 _y3 r46)
+
+
+( i x0 _x0) 
+( i x1 _x1) 
+( i x2 _x2) 
+( i x3 _x3) 
+( i x4 _x4) 
+( i y0 _y0) 
+( i y1 _y1) 
+( i y2 _y2) 
+( i y3 _y3) 
+( i y4 _y4) 
+( i y5 _y5) 
+( i y6 _y6) 
+)

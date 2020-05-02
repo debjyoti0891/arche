@@ -1,0 +1,61 @@
+
+( macro highway_comb ( x0    x1    x2    x3    x4    z0    z1    z2    z3    z4    z5    z6   ) 
+
+( input '(  st[1]_i
+ st[0]_i Cars LongTimeout ShortTimeout) ) 
+
+(output '( st[1]_o st[0]_o StartTimer_cl HYLight[1]_cl HYLight[0]_cl
+ FarmLight[1]_cl FarmLight[0]_cl ) ) 
+
+(local  _x0    _x1    _x2    _x3    _x4    _z0    _z1    _z2    _z3   
+ _z4    _z5    _z6    y0    _y0    y1    _y1    y2    _y2   
+ y3    _y3    r0    r1    r2    r3    r4    r5    r6   
+ r7    r9    r10   r11   r12   r13   r14   r15   r16   ) 
+
+
+
+( o2  r0 r1 z0)
+( a2  x0 _x4 r0)
+( a2  x1 x4 r1)
+
+( o3  r2 r3 r4 z1)
+( a2  x1 y0 r2)
+( a1  y3 r3)
+( a1  y1 r4)
+
+( o3  r5 r6 r7 z2)
+( a2  _x1 y3 r5)
+( a2  x4 y1 r6)
+( a3  x0 x1 _y0 r7)
+
+( o1  r9 z3)
+( a1  y1 r9)
+
+( o1  r10 z4)
+( a1  x0 r10)
+
+( o1  r11 z5)
+( a2  x0 _x1 r11)
+
+( o1  r12 z6)
+( a1  _x0 r12)
+
+( o1  r13 y0)
+( a2  x2 _x3 r13)
+
+( o1  r14 y1)
+( a2  _x0 x1 r14)
+
+( o1  r15 y2)
+( a2  _x0 x2 r15)
+
+( o1  r16 y3)
+( a2  x3 y2 r16)
+
+
+( i x0 _x0) 
+( i x1 _x1) 
+( i x3 _x3) 
+( i x4 _x4) 
+( i y0 _y0) 
+)

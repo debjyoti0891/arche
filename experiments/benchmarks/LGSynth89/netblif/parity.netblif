@@ -1,0 +1,80 @@
+.model PARITYFDS
+.inputs a b c d e f g h i j k l m n o p
+.outputs q
+.gate nor1 a=o y=[158]
+.gate nor1 a=p y=[159]
+.gate nor2 a=o b=[159] y=[65]
+.gate nor2 a=p b=[158] y=[66]
+.gate nor2 a=[65] b=[66] y=s
+.gate nor1 a=s y=[160]
+.gate nor1 a=m y=[161]
+.gate nor1 a=n y=[162]
+.gate nor2 a=m b=[162] y=[63]
+.gate nor2 a=n b=[161] y=[64]
+.gate nor2 a=[63] b=[64] y=t
+.gate nor1 a=t y=[163]
+.gate nor2 a=s b=[163] y=[61]
+.gate nor2 a=t b=[160] y=[62]
+.gate nor2 a=[61] b=[62] y=a0
+.gate nor1 a=a0 y=[164]
+.gate nor1 a=k y=[165]
+.gate nor1 a=l y=[166]
+.gate nor2 a=k b=[166] y=[59]
+.gate nor2 a=l b=[165] y=[60]
+.gate nor2 a=[59] b=[60] y=u
+.gate nor1 a=u y=[167]
+.gate nor1 a=i y=[168]
+.gate nor1 a=j y=[169]
+.gate nor2 a=i b=[169] y=[57]
+.gate nor2 a=j b=[168] y=[58]
+.gate nor2 a=[57] b=[58] y=v
+.gate nor1 a=v y=[170]
+.gate nor2 a=u b=[170] y=[55]
+.gate nor2 a=v b=[167] y=[56]
+.gate nor2 a=[55] b=[56] y=b0
+.gate nor1 a=b0 y=[171]
+.gate nor2 a=a0 b=[171] y=[53]
+.gate nor2 a=b0 b=[164] y=[54]
+.gate nor2 a=[53] b=[54] y=e0
+.gate nor1 a=e0 y=[172]
+.gate nor1 a=g y=[173]
+.gate nor1 a=h y=[174]
+.gate nor2 a=g b=[174] y=[51]
+.gate nor2 a=h b=[173] y=[52]
+.gate nor2 a=[51] b=[52] y=w
+.gate nor1 a=w y=[175]
+.gate nor1 a=e y=[176]
+.gate nor1 a=f y=[177]
+.gate nor2 a=e b=[177] y=[49]
+.gate nor2 a=f b=[176] y=[50]
+.gate nor2 a=[49] b=[50] y=x
+.gate nor1 a=x y=[178]
+.gate nor2 a=w b=[178] y=[47]
+.gate nor2 a=x b=[175] y=[48]
+.gate nor2 a=[47] b=[48] y=c0
+.gate nor1 a=c0 y=[179]
+.gate nor1 a=c y=[180]
+.gate nor1 a=d y=[181]
+.gate nor2 a=c b=[181] y=[45]
+.gate nor2 a=d b=[180] y=[46]
+.gate nor2 a=[45] b=[46] y=y
+.gate nor1 a=y y=[182]
+.gate nor1 a=a y=[183]
+.gate nor1 a=b y=[184]
+.gate nor2 a=a b=[184] y=[43]
+.gate nor2 a=b b=[183] y=[44]
+.gate nor2 a=[43] b=[44] y=z
+.gate nor1 a=z y=[185]
+.gate nor2 a=y b=[185] y=[41]
+.gate nor2 a=z b=[182] y=[42]
+.gate nor2 a=[41] b=[42] y=d0
+.gate nor1 a=d0 y=[186]
+.gate nor2 a=c0 b=[186] y=[39]
+.gate nor2 a=d0 b=[179] y=[40]
+.gate nor2 a=[39] b=[40] y=f0
+.gate nor1 a=f0 y=[187]
+.gate nor2 a=e0 b=[187] y=[37]
+.gate nor2 a=f0 b=[172] y=[38]
+.gate nor2 a=[37] b=[38] y=[0]
+.gate nor1 a=[0] y=q
+.end

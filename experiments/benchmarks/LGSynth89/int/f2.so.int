@@ -1,0 +1,63 @@
+
+( macro f2 ( x0    x1    x2    x3    z0    z1    z2    z3   ) 
+
+( input '(  in_1 in_3 in_5 in_7) ) 
+
+(output '( out_1 out_3 out_5 out_7 ) ) 
+
+(local  _x0    _x1    _x2    _x3    _z0    _z1    _z2    _z3    y0   
+ _y0    y1    _y1    y2    _y2    y3    _y3    y4    _y4   
+ y5    _y5    y6    _y6    y7    _y7    r0    r3    r6   
+ r9    r12   r13   r14   r15   r16   r17   r18   r19  
+ r20   r21   r22   r23   ) 
+
+
+
+( o1  r0 z0)
+( a2  x2 y5 r0)
+
+( o1  r3 z1)
+( a2  x1 y6 r3)
+
+( o1  r6 z2)
+( a2  x0 y7 r6)
+
+( o1  r9 z3)
+( a2  x3 y4 r9)
+
+( o1  r12 y0)
+( a2  x0 x1 r12)
+
+( o1  r13 y1)
+( a2  x2 x3 r13)
+
+( o1  r14 y2)
+( a2  _x0 _x1 r14)
+
+( o1  r15 y3)
+( a2  _x2 _x3 r15)
+
+( o2  r16 r17 y4)
+( a1  y2 r16)
+( a2  _x2 _y0 r17)
+
+( o2  r18 r19 y5)
+( a1  y2 r18)
+( a2  _x3 _y0 r19)
+
+( o2  r20 r21 y6)
+( a1  y3 r20)
+( a2  _x0 _y1 r21)
+
+( o2  r22 r23 y7)
+( a1  y3 r22)
+( a2  _x1 _y1 r23)
+
+
+( i x0 _x0) 
+( i x1 _x1) 
+( i x2 _x2) 
+( i x3 _x3) 
+( i y0 _y0) 
+( i y1 _y1) 
+)

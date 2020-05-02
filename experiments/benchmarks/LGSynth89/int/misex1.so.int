@@ -1,0 +1,133 @@
+
+( macro Main ( x0    x1    x2    x3    x4    x5    x6    x7    z0    z1    z2    z3    z4    z5    z6   ) 
+
+( input '(  in_1 in_3 in_5
+ in_7 in_9 in_11 in_13 in_15) ) 
+
+(output '( out_1 out_3 out_5 out_7 out_9 out_11 out_13 ) ) 
+
+(local  _x0    _x1    _x2    _x3    _x4    _x5    _x6    _x7    _z0   
+ _z1    _z2    _z3    _z4    _z5    _z6    y0    _y0    y1   
+ _y1    y2    _y2    y3    _y3    y4    _y4    y5    _y5   
+ y6    _y6    y7    _y7    y8    _y8    y9    _y9    y10  
+ _y10   y11   _y11   y12   _y12   y13   _y13   y14   _y14  
+ y15   _y15   y16   _y16   y17   _y17   y18   _y18   r0   
+ r1    r2    r3    r7    r8    r9    r10   r12   r13  
+ r14   r16   r17   r18   r21   r22   r23   r24   r27  
+ r28   r29   r32   r33   r34   r35   r36   r37   r38  
+ r39   r40   r41   r42   r43   r44   r45   r46   r47  
+ r48   r49   r50   r51   r52   r53   ) 
+
+
+
+( o2  r0 r1 z0)
+( a3  x2 x3 y0 r0)
+( a1  y13 r1)
+
+( o2  r2 r3 z1)
+( a1  y14 r2)
+( a2  y1 _y10 r3)
+
+( o4  r7 r8 r9 r10 z2)
+( a1  y16 r7)
+( a4  _x1 _x2 _x6 y4 r8)
+( a2  x4 y9 r9)
+( a3  _x5 y1 y4 r10)
+
+( o3  r12 r13 r14 z3)
+( a1  y18 r12)
+( a2  _x3 y17 r13)
+( a2  _x7 y9 r14)
+
+( o3  r16 r17 r18 z4)
+( a2  _x2 _y11 r16)
+( a1  y15 r17)
+( a1  y6 r18)
+
+( o4  r21 r22 r23 r24 z5)
+( a1  y14 r21)
+( a1  y15 r22)
+( a2  y1 y2 r23)
+( a1  y13 r24)
+
+( o3  r27 r28 r29 z6)
+( a1  y16 r27)
+( a1  y17 r28)
+( a1  y18 r29)
+
+( o1  r32 y0)
+( a2  _x0 x1 r32)
+
+( o1  r33 y1)
+( a2  _x1 x2 r33)
+
+( o1  r34 y2)
+( a2  _x0 x5 r34)
+
+( o2  r35 r36 y3)
+( a1  y0 r35)
+( a2  x3 y12 r36)
+
+( o1  r37 y4)
+( a2  _x0 _x3 r37)
+
+( o2  r38 r39 y5)
+( a1  y0 r38)
+( a2  _x2 y12 r39)
+
+( o1  r40 y6)
+( a2  _x3 y1 r40)
+
+( o2  r41 r42 y7)
+( a1  y3 r41)
+( a2  x6 y4 r42)
+
+( o1  r43 y8)
+( a2  _x0 x3 r43)
+
+( o1  r44 y9)
+( a2  _x2 y0 r44)
+
+( o1  r45 y10)
+( a2  _y2 _y8 r45)
+
+( o1  r46 y11)
+( a2  _y3 _y4 r46)
+
+( o1  r47 y12)
+( a2  x0 _x1 r47)
+
+( o1  r48 y13)
+( a2  x0 y6 r48)
+
+( o1  r49 y14)
+( a2  _x2 y7 r49)
+
+( o1  r50 y15)
+( a2  x2 y8 r50)
+
+( o1  r51 y16)
+( a2  x3 y5 r51)
+
+( o1  r52 y17)
+( a2  _x4 y9 r52)
+
+( o1  r53 y18)
+( a2  _y2 y6 r53)
+
+
+( i x0 _x0) 
+( i x1 _x1) 
+( i x2 _x2) 
+( i x3 _x3) 
+( i x4 _x4) 
+( i x5 _x5) 
+( i x6 _x6) 
+( i x7 _x7) 
+( i y2 _y2) 
+( i y3 _y3) 
+( i y4 _y4) 
+( i y8 _y8) 
+( i y10 _y10) 
+( i y11 _y11) 
+)

@@ -1,0 +1,23 @@
+This directory contains the gate-library information for multi-level
+synthesis.  
+
+
+This directory contains the following files:
+
+------------------------------------------------------------------------------
+lib2.databook - a text description of the gate characteristics for the
+large standard cell library (lib2).
+
+lib2.mis2lib - This is the misII representation of the library. It may be read
+by misII for use in synthesis, verification, and timing analysis.
+
+lib2.mcnclib - The MCNC library format
+------------------------------------------------------------------------------
+lib1.databook - a text description of the gate characteristics for the
+simple unit-delay library (lib1).
+
+lib1.mis2lib - This is the misII representation of the library. It may be read
+by misII for use in synthesis, verification, and timing analysis.
+
+lib1.mcnclib - The MCNC library format
+------------------------------------------------------------------------------

@@ -1,0 +1,46 @@
+.model CM85
+.inputs a b c d e f g h i j k
+.outputs l m n
+.gate nor1 a=h y=[149]
+.gate nor1 a=i y=[150]
+.gate nor2 a=h b=i y=[53]
+.gate nor2 a=[149] b=[150] y=[54]
+.gate nor2 a=[53] b=[54] y=q0
+.gate nor1 a=d y=[142]
+.gate nor1 a=e y=[143]
+.gate nor2 a=d b=e y=[57]
+.gate nor2 a=[142] b=[143] y=[58]
+.gate nor2 a=[57] b=[58] y=a0
+.gate nor1 a=b y=[141]
+.gate nor2 a=a0 b=[141] y=f0
+.gate nor1 a=f0 y=[144]
+.gate nor1 a=g y=[146]
+.gate nor1 a=f y=[145]
+.gate nor2 a=g b=[145] y=[55]
+.gate nor2 a=f b=[146] y=[56]
+.gate nor3 a=[144] b=[55] c=[56] y=h0
+.gate nor1 a=h0 y=[148]
+.gate nor2 a=q0 b=[148] y=v0
+.gate nor1 a=v0 y=[151]
+.gate nor1 a=j y=[153]
+.gate nor1 a=k y=[152]
+.gate nor3 a=[151] b=j c=[152] y=[49]
+.gate nor3 a=[148] b=h c=[150] y=[39]
+.gate nor3 a=[144] b=f c=[146] y=[51]
+.gate nor3 a=[141] b=d c=[143] y=[42]
+.gate nor4 a=[39] b=[51] c=a d=[42] y=n0
+.gate nor1 a=n0 y=[238]
+.gate nor2 a=[49] b=[238] y=[0]
+.gate nor1 a=[0] y=l
+.gate nor2 a=k b=[153] y=[47]
+.gate nor2 a=j b=[152] y=[48]
+.gate nor3 a=[151] b=[47] c=[48] y=m
+.gate nor3 a=[151] b=k c=[153] y=[43]
+.gate nor3 a=[148] b=i c=[149] y=[40]
+.gate nor3 a=[144] b=g c=[145] y=[45]
+.gate nor3 a=[141] b=e c=[142] y=[41]
+.gate nor4 a=[40] b=[45] c=c d=[41] y=l0
+.gate nor1 a=l0 y=[244]
+.gate nor2 a=[43] b=[244] y=[2]
+.gate nor1 a=[2] y=n
+.end

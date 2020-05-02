@@ -1,0 +1,129 @@
+.model b9
+.inputs a b c d e f g h i j k l m n o p q r s t u v w x y z a0 b0 c0 d0 e0 f0 \
+g0 h0 i0 j0 k0 l0 m0 n0 o0
+.outputs p0 q0 r0 s0 t0 u0 v0 w0 x0 y0 z0 a1 b1 c1 d1 e1 f1 g1 h1 i1 j1
+.gate nor1 a=l0 O=[326]
+.gate nor1 a=c0 O=[327]
+.gate nor1 a=j0 O=[328]
+.gate nor2 a=[327] b=[328] O=q2
+.gate nor2 a=l0 b=q2 O=r2
+.gate nor1 a=b0 O=[329]
+.gate nor2 a=r2 b=[329] O=u5
+.gate nor1 a=n0 O=[336]
+.gate nor1 a=e O=[331]
+.gate nor1 a=k O=[450]
+.gate nor2 a=e b=[450] O=x4
+.gate nor1 a=k0 O=[332]
+.gate nor2 a=c0 b=[328] O=[69]
+.gate nor2 a=k0 b=[69] O=u4
+.gate nor3 a=[329] b=u4 c=e O=[68]
+.gate nor2 a=x4 b=[68] O=s4
+.gate nor1 a=o0 O=[334]
+.gate nor3 a=[336] b=s4 c=[334] O=[59]
+.gate nor2 a=u5 b=[59] O=b1
+.gate nor2 a=p b=b1 O=[83]
+.gate nor1 a=q O=[464]
+.gate nor2 a=[83] b=[464] O=[0]
+.gate nor1 a=[0] O=p0
+.gate nor2 a=e0 b=g0 O=[81]
+.gate nor2 a=[81] b=[331] O=y3
+.gate nor3 a=[332] b=[329] c=[331] O=w3
+.gate nor4 a=[328] b=[329] c=c0 d=[331] O=x3
+.gate nor3 a=y3 b=w3 c=x3 O=q0
+.gate nor1 a=i O=[343]
+.gate nor2 a=i b=b0 O=[66]
+.gate nor3 a=[66] b=c0 c=[328] O=v5
+.gate nor2 a=v5 b=[331] O=[79]
+.gate nor1 a=d0 O=[344]
+.gate nor2 a=[343] b=[344] O=o3
+.gate nor2 a=o3 b=c O=q3
+.gate nor4 a=[334] b=[336] c=[79] d=q3 O=[2]
+.gate nor1 a=[2] O=r0
+.gate nor2 a=b0 b=[326] O=[65]
+.gate nor3 a=[329] b=[327] c=[328] O=[64]
+.gate nor2 a=[65] b=[64] O=k3
+.gate nor1 a=v O=[348]
+.gate nor2 a=k3 b=[348] O=f3
+.gate nor1 a=f3 O=s0
+.gate nor2 a=v b=k3 O=g3
+.gate nor1 a=g3 O=t0
+.gate nor2 a=[327] b=[329] O=[77]
+.gate nor2 a=[77] b=l0 O=v0
+.gate nor1 a=v0 O=u0
+.gate nor1 a=m0 O=[600]
+.gate nor1 a=o O=[349]
+.gate nor1 a=z O=[354]
+.gate nor2 a=o b=[354] O=[62]
+.gate nor1 a=a O=[406]
+.gate nor2 a=z b=[406] O=[61]
+.gate nor3 a=[600] b=[62] c=[61] O=[57]
+.gate nor1 a=r O=[466]
+.gate nor2 a=p b=[466] O=l4
+.gate nor3 a=h0 b=l4 c=f0 O=m4
+.gate nor2 a=m4 b=[349] O=[75]
+.gate nor1 a=d O=[414]
+.gate nor3 a=[57] b=[75] c=[414] O=w0
+.gate nor2 a=[334] b=[336] O=x0
+.gate nor1 a=i0 O=[561]
+.gate nor1 a=a0 O=[489]
+.gate nor2 a=[561] b=[489] O=w5
+.gate nor1 a=w5 O=[362]
+.gate nor1 a=l O=[452]
+.gate nor3 a=[362] b=[329] c=[452] O=y0
+.gate nor2 a=[334] b=[336] O=[71]
+.gate nor1 a=h O=[434]
+.gate nor2 a=e b=[434] O=[193]
+.gate nor1 a=[193] O=[845]
+.gate nor2 a=c0 b=[328] O=[67]
+.gate nor2 a=k0 b=[67] O=f4
+.gate nor4 a=[71] b=[845] c=f4 d=[329] O=n5
+.gate nor1 a=g O=[432]
+.gate nor3 a=[326] b=[329] c=[432] O=i5
+.gate nor3 a=[329] b=f4 c=[334] O=o5
+.gate nor2 a=e0 b=g0 O=q5
+.gate nor2 a=q5 b=[334] O=p5
+.gate nor2 a=o5 b=p5 O=m5
+.gate nor1 a=f O=[430]
+.gate nor4 a=e b=[336] c=m5 d=[430] O=j5
+.gate nor3 a=n5 b=i5 c=j5 O=[10]
+.gate nor1 a=[10] O=z0
+.gate nor4 a=[336] b=[334] c=[343] d=[344] O=[58]
+.gate nor4 a=b0 b=c0 c=[328] d=[343] O=m2
+.gate nor4 a=c0 b=[328] c=e d=[329] O=l2
+.gate nor2 a=j b=e0 O=k2
+.gate nor1 a=k2 O=[679]
+.gate nor4 a=[58] b=m2 c=l2 d=[679] O=[11]
+.gate nor1 a=[11] O=h1
+.gate nor1 a=[11] O=inv__[11]
+.gate nor1 a=inv__[11] O=a1
+.gate nor1 a=u O=[472]
+.gate nor3 a=s b=t c=[472] O=r4
+.gate nor1 a=r4 O=[731]
+.gate nor2 a=[327] b=[328] O=[72]
+.gate nor2 a=l0 b=[72] O=r5
+.gate nor3 a=[731] b=r5 c=[329] O=s5
+.gate nor2 a=[328] b=[332] O=[73]
+.gate nor2 a=[73] b=[327] O=t5
+.gate nor2 a=t5 b=[329] O=[70]
+.gate nor3 a=[70] b=e0 c=g0 O=d5
+.gate nor3 a=n b=e c=[334] O=[129]
+.gate nor1 a=[129] O=[827]
+.gate nor3 a=[336] b=d5 c=[827] O=[63]
+.gate nor2 a=s5 b=[63] O=d1
+.gate nor1 a=d1 O=c1
+.gate nor1 a=m O=[454]
+.gate nor3 a=[362] b=[329] c=[454] O=e1
+.gate nor1 a=b O=[396]
+.gate nor1 a=x O=[393]
+.gate nor1 a=w O=[394]
+.gate nor3 a=[396] b=x c=[394] O=f1
+.gate nor4 a=y b=[393] c=[394] d=[396] O=g1
+.gate nor1 a=[11] O=inv__[11]
+.gate nor1 a=inv__[11] O=i1
+.gate nor4 a=[336] b=[344] c=[334] d=[343] O=[60]
+.gate nor2 a=e0 b=j O=[98]
+.gate nor1 a=[98] O=[813]
+.gate nor2 a=[328] b=[329] O=t3
+.gate nor3 a=[328] b=c0 c=[343] O=s3
+.gate nor4 a=[60] b=[813] c=t3 d=s3 O=j1
+.end

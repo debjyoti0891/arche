@@ -1,0 +1,122 @@
+
+( macro MISEX1 ( x0    x1    x2    x3    x4    x5    x6    x7    z0    z1    z2    z3    z4    z5    z6   ) 
+
+( input '(  m_m_in_1
+ m_m_in_3 m_m_in_5 m_m_in_7 m_m_in_9 m_m_in_11 m_m_in_13
+ m_m_in_15) ) 
+
+(output '( m_m_out_1 m_m_out_3 m_m_out_5 m_m_out_7 m_m_out_9 m_m_out_11
+ m_m_out_13 ) ) 
+
+(local  _x0    _x1    _x2    _x3    _x4    _x5    _x6    _x7    _z0   
+ _z1    _z2    _z3    _z4    _z5    _z6    y0    _y0    y1   
+ _y1    y2    _y2    y3    _y3    y4    _y4    y5    _y5   
+ y6    _y6    y7    _y7    y8    _y8    y9    _y9    y10  
+ _y10   y11   _y11   y12   _y12   y13   _y13   y14   _y14  
+ r0    r1    r2    r3    r4    r7    r8    r9    r10  
+ r11   r12   r13   r14   r15   r16   r17   r18   r19  
+ r20   r21   r22   r23   r24   r27   r28   r29   r30  
+ r31   r32   r33   r34   r35   r36   r37   r38   r39  
+ r40   r41   r42   r43   r44   r45   r46   r47   r48   ) 
+
+
+
+( o2  r0 r1 z0)
+( a2  x1 y2 r0)
+( a1  y1 r1)
+
+( o3  r2 r3 r4 z1)
+( a1  y12 r2)
+( a2  _x1 y2 r3)
+( a1  y0 r4)
+
+( o5  r7 r8 r9 r10 r11 z2)
+( a1  y10 r7)
+( a1  y0 r8)
+( a2  x4 y6 r9)
+( a2  _x0 y4 r10)
+( a3  _x1 _x6 y11 r11)
+
+( o4  r12 r13 r14 r15 z3)
+( a1  y1 r12)
+( a1  y4 r13)
+( a2  _x7 y6 r14)
+( a2  _x3 y3 r15)
+
+( o5  r16 r17 r18 r19 r20 z4)
+( a1  y6 r16)
+( a1  y2 r17)
+( a1  y8 r18)
+( a1  y11 r19)
+( a1  y0 r20)
+
+( o4  r21 r22 r23 r24 z5)
+( a1  y12 r21)
+( a1  y2 r22)
+( a1  y0 r23)
+( a1  y1 r24)
+
+( o5  r27 r28 r29 r30 r31 z6)
+( a1  y10 r27)
+( a1  y0 r28)
+( a1  y1 r29)
+( a1  y3 r30)
+( a1  y4 r31)
+
+( o1  r32 y0)
+( a4  x0 _x1 _x2 x3 r32)
+
+( o1  r33 y1)
+( a2  x0 y8 r33)
+
+( o1  r34 y2)
+( a3  _x0 x2 x3 r34)
+
+( o1  r35 y3)
+( a2  _x4 y6 r35)
+
+( o1  r36 y4)
+( a2  _x5 y8 r36)
+
+( o2  r37 r38 y5)
+( a1  x1 r37)
+( a2  _x3 x6 r38)
+
+( o1  r39 y6)
+( a2  _x2 y14 r39)
+
+( o1  r40 y7)
+( a2  x5 y13 r40)
+
+( o1  r41 y8)
+( a2  _x3 y13 r41)
+
+( o2  r42 r43 y9)
+( a1  y7 r42)
+( a2  _x2 y5 r43)
+
+( o1  r44 y10)
+( a2  x3 y14 r44)
+
+( o1  r45 y11)
+( a3  _x0 _x2 _x3 r45)
+
+( o1  r46 y12)
+( a2  _x0 y9 r46)
+
+( o1  r47 y13)
+( a2  _x1 x2 r47)
+
+( o1  r48 y14)
+( a2  _x0 x1 r48)
+
+
+( i x0 _x0) 
+( i x1 _x1) 
+( i x2 _x2) 
+( i x3 _x3) 
+( i x4 _x4) 
+( i x5 _x5) 
+( i x6 _x6) 
+( i x7 _x7) 
+)

@@ -1,0 +1,15 @@
+.model traffic_cl
+.inputs a b c d e
+.outputs f
+.gate nor1 a=a y=[62]
+.gate nor1 a=b y=[63]
+.gate nor2 a=a b=b y=[42]
+.gate nor1 a=c y=[61]
+.gate nor2 a=[62] b=[63] y=[38]
+.gate nor2 a=c b=[38] y=[40]
+.gate nor3 a=[61] b=[62] c=[63] y=[39]
+.gate nor2 a=e b=[39] y=[41]
+.gate nor3 a=[42] b=[40] c=[41] y=[37]
+.gate nor2 a=d b=[37] y=h
+.gate nor1 a=h y=f
+.end

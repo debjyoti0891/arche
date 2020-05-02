@@ -1,0 +1,57 @@
+.model pm1
+.inputs a b c d e g h i j k l m n o p q
+.outputs r s t u v w x y z a0 b0 c0 d0
+.gate nor1 a=b y=[177]
+.gate nor1 a=n y=[174]
+.gate nor1 a=m y=[175]
+.gate nor3 a=b b=n c=m y=k1
+.gate nor1 a=k1 y=r
+.gate nor2 a=m b=[174] y=l1
+.gate nor1 a=l1 y=s
+.gate nor1 a=h y=[179]
+.gate nor1 a=g y=[180]
+.gate nor2 a=[179] b=[180] y=[163]
+.gate nor1 a=[163] y=[427]
+.gate nor1 a=i y=[185]
+.gate nor1 a=k y=[182]
+.gate nor1 a=j y=[183]
+.gate nor3 a=[185] b=[182] c=[183] y=o1
+.gate nor1 a=o1 y=[369]
+.gate nor4 a=[174] b=[175] c=[427] d=[369] y=n1
+.gate nor1 a=n1 y=t
+.gate nor4 a=[179] b=[180] c=[183] d=[185] y=[52]
+.gate nor4 a=[175] b=[182] c=[52] d=[174] y=[3]
+.gate nor1 a=[3] y=u
+.gate nor1 a=p y=v
+.gate nor1 a=o y=w
+.gate nor2 a=m b=[174] y=u1
+.gate nor1 a=c y=[193]
+.gate nor1 a=e y=[194]
+.gate nor1 a=d y=[195]
+.gate nor4 a=u1 b=[193] c=[194] d=[195] y=[49]
+.gate nor3 a=[49] b=[177] c=[182] y=x
+.gate nor1 a=q y=y
+.gate nor1 a=a y=[198]
+.gate nor2 a=[193] b=[195] y=[127]
+.gate nor1 a=[127] y=[415]
+.gate nor4 a=[415] b=[194] c=[174] d=[182] y=[53]
+.gate nor4 a=l b=[198] c=[53] d=[175] y=[8]
+.gate nor1 a=[8] y=z
+.gate nor2 a=n b=[175] y=[50]
+.gate nor2 a=m b=[174] y=[61]
+.gate nor4 a=[50] b=l c=[61] d=[198] y=a0
+.gate nor3 a=[194] b=[193] c=[195] y=[54]
+.gate nor4 a=l b=[54] c=[182] d=[198] y=z0
+.gate nor1 a=z0 y=[357]
+.gate nor3 a=[357] b=[174] c=[175] y=b0
+.gate nor3 a=[194] b=[193] c=[195] y=[55]
+.gate nor3 a=[182] b=[55] c=[174] y=d1
+.gate nor2 a=d1 b=[177] y=[51]
+.gate nor2 a=b b=[174] y=[58]
+.gate nor4 a=[175] b=l c=[58] d=[198] y=[77]
+.gate nor1 a=[77] y=[397]
+.gate nor2 a=[51] b=[397] y=c0
+.gate nor3 a=[198] b=l c=k y=i1
+.gate nor1 a=i1 y=[363]
+.gate nor3 a=[363] b=[174] c=[175] y=d0
+.end

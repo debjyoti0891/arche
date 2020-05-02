@@ -1,0 +1,29 @@
+.model decod
+.inputs a b c d e
+.outputs f g h i j k l m n o p q r s t u
+.gate nor1 a=d y=[152]
+.gate nor1 a=c y=[153]
+.gate nor1 a=b y=[155]
+.gate nor1 a=a y=[156]
+.gate nor1 a=e y=[157]
+.gate nor2 a=[156] b=[157] y=o0
+.gate nor1 a=o0 y=[158]
+.gate nor4 a=[152] b=[153] c=[155] d=[158] y=f
+.gate nor4 a=d b=[153] c=[155] d=[158] y=g
+.gate nor4 a=c b=[152] c=[155] d=[158] y=h
+.gate nor4 a=d b=c c=[155] d=[158] y=i
+.gate nor4 a=[152] b=[153] c=b d=[158] y=j
+.gate nor4 a=d b=[153] c=b d=[158] y=k
+.gate nor4 a=c b=[152] c=b d=[158] y=l
+.gate nor4 a=d b=c c=b d=[158] y=m
+.gate nor2 a=a b=[157] y=n0
+.gate nor1 a=n0 y=[175]
+.gate nor4 a=[152] b=[153] c=[155] d=[175] y=n
+.gate nor4 a=d b=[153] c=[155] d=[175] y=o
+.gate nor4 a=c b=[152] c=[155] d=[175] y=p
+.gate nor4 a=d b=c c=[155] d=[175] y=q
+.gate nor4 a=[152] b=[153] c=b d=[175] y=r
+.gate nor4 a=d b=[153] c=b d=[175] y=s
+.gate nor4 a=c b=[152] c=b d=[175] y=t
+.gate nor4 a=d b=c c=b d=[175] y=u
+.end
