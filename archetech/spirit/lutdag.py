@@ -410,10 +410,10 @@ class LutGraph:
             lutObj.setConstant(isConstant)
 
         # clean temporary files
-        # for tempf in tempfiles:
+        for tempf in tempfiles:
 
-        #     if os.path.exists(tempf):
-        #         os.remove(tempf)
+            if os.path.exists(tempf):
+                os.remove(tempf)
         
         
         return output, lutObj

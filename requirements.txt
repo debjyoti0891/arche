@@ -1,5 +1,5 @@
-cmd2==0.9.12
-z3_solver==4.8.0.0.post1
 sortedcontainers==2.1.0
-python_igraph==0.7.1.post6
+z3_solver==4.8.7.0
+cmd2==0.9.23
+python_igraph==0.8.2
 z3==0.2.0

@@ -64,7 +64,6 @@ class DetailedMapper:
         self.__log.addParam('detailedMapTime', "{:.3f}".format(end-start))
          
         if not self.__fastMode:self.__printCrossbar(crossbar, 'Finished placement')
-        if not self.__fastMode:self.__showSteps(status,crossbar,steps)
         
         return steps, posOutAlloc
 

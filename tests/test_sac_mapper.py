@@ -12,8 +12,14 @@ class BasicSacTest(unittest.TestCase):
         print("Creating test directory: {}".format(self.benchdir))
         if not os.path.exists(self.benchdir):
             os.makedirs(self.benchdir)
+    
+    # def tearDown(self):
+    #     # remove generated files
+    #     print("Removing test directory: {}".format(self.benchdir))
+    #     shutil.rmtree(self.benchdir)
 
-class SacAdderTest(BasicSacTest):
+
+class SacSmallTest(BasicSacTest):
     def test_sac_adder_v(self):
         benchfile = "./tests/fixtures/full_adder_1bit.v"
         newObj = SACMapper(benchfile,self.benchdir,'logs.txt', True, True)
@@ -24,16 +30,28 @@ class SacAdderTest(BasicSacTest):
             print(out)
         self.assertEqual(res, True, "Generated file is not functionally same")
     
-class SacSmallTest(BasicSacTest):
-    def test_sac_cm151a_blif(self):
-        benchfile = "./tests/fixtures/cm151a.blif"
+    def test_sac_cm82a(self):
+        benchfile = "./tests/fixtures/cm82a.blif"
         newObj = SACMapper(benchfile,self.benchdir,'logs.txt', True, True)
-        newObj.mapBenchmark(16, 16, 4)
+        newObj.mapBenchmark(8, 8, 2)
+        res,out = verifyOutput(benchfile, \
+            'tests/genfiles/Cr_8_8_k2_cm82a.blif.v', self.benchdir)
+        if not res:
+            print(out)
+        self.assertEqual(res, True, "Generated file is not functionally same")
 
-    # def tearDown(self):
-    #     # remove generated files
-    #     print("Removing test directory: {}".format(self.benchdir))
-    #     shutil.rmtree(self.benchdir)
+
+class SacTestBig(BasicSacTest):
+    def test_sac_c6288(self):
+        benchfile = "./tests/fixtures/C6288.blif"
+        newObj = SACMapper(benchfile,self.benchdir,'logs.txt', False, True)
+        newObj.mapBenchmark(64, 64, 5)
+        res,out = verifyOutput(benchfile, \
+            'tests/genfiles/Cr_64_64_k5_C6288.blif.v', self.benchdir)
+        if not res:
+            print(out)
+        self.assertEqual(res, True, "Generated file is not functionally same")
+
 
 if __name__ == "__main__":
     unittest.main()
