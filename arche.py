@@ -26,6 +26,8 @@ import archesim.bench.gen_SHA2
 import archetech.smr
 import archetech.techmagic  
 import archetech.mimd
+from archetech.spirit.sac_mapper import SACMapper
+from archetech.spirit.mapping_solution import verifyOutput
 import logging
 
 history_file = os.path.expanduser('~/.arche_history')
@@ -143,6 +145,7 @@ class ArcheTech(Cmd):
                 print('Min Devices : %d Steps : %d'% (minReg,steps))    
             logging.info('Min sat allocation command execution complete')
             logging.info('Devices: %d, Cycles: %s, Optitype : %s' % (minReg,steps,optiType)) 
+
     psParser = argparse.ArgumentParser()
     psParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')
     @cmd2.with_argparser(psParser)
@@ -157,12 +160,58 @@ class ArcheTech(Cmd):
                     f.write(self.graphFile[-1]+','+self.techMapper.getStats()+'\n')
             print('benchmark,#pi,#po,#gates,#level,delay,speedup,r,c,#devices, utilization')
             print(self.graphFile[-1],self.techMapper.getStats())
+
+
+    # scalable area contrained mapping for magic 
+    sacParse = argparse.ArgumentParser()
+    sacParse.add_argument('-d', '--dir', type=str, required=True, help='write output files to directory')
+    sacParse.add_argument( '-f', '--file', type=str, help='specify the benchmark file', required=True)
+    sacParse.add_argument( '-k', type=int, action='store', help='specify the LUT size for partition (default k=2)', required=True)
+    sacParse.add_argument( '-R', type=int, action='store', help='specify the number of rows in crossbar', required=True)
+    sacParse.add_argument( '-C', type=int, action='store', help='specify the number of columns in crossbar', required=True)
+    @cmd2.with_argparser(sacParse)
+    def do_sacmap(self, args):
+        ''' Maps a netlist to a crossbar using MAGIC instructions ''' 
+        if args.file == None:
+            print('Error: Benchmark must be specified using --file option')
+            return
+        if args.R is None or args.C is None:
+            print('Error: crossbar dimensions must be specified')
+            return 
+        if args.k is None:
+            args.k = 2
+
+        print('Mapping with crossbar dimension {}x{}'.format(args.R, args.C))
+        newObj = SACMapper(args.file, args.dir, self.__logFile, self.debug )
+        cycles = newObj.mapBenchmark(args.R, args.C, args.k)
+        if cycles is None:
+            print('Mapping failed')
+            return 
+
+        i = args.file.rfind('/')
+        if i>=0:
+            benchfile = args.file[i+1:]
+        else:
+            benchfile = args.file 
+        outfile = 'Cr_{}_{}_k{}_{}.v'.format(args.R, args.C, args.k, benchfile)
+        res,out = verifyOutput(
+            args.file, \
+            args.dir+outfile,
+            args.dir
+        )
+
+        if res is not True:
+            print('Output file is not identical to input netlist')
+            logging.debug(' verification failed for {} and {}'.\
+                format(args.file, args.dir+outfile))
+
+            
     
     crossbarParse = argparse.ArgumentParser()
     crossbarParse.add_argument('-d', '--dir', type=str, help='write output files to directory')
     crossbarParse.add_argument( '--delay', action='store_true', help='minimize delay of technology mapping with word length constraint')
     crossbarParse.add_argument( '--area', action='store_true', help='minimize delay of technology mapping with crossbar dimension constraint')
-    crossbarParse.add_argument( '-f', '--file', type=str, help='write the instructions to the specified directory')
+    crossbarParse.add_argument( '-f', '--file', type=str, help='write the instructions to the specified file')
     @cmd2.with_argparser(crossbarParse)
     def do_mapcrossbar(self, args):
         ''' Maps a netlist to a crossbar using ReVAMP instructions ''' 
@@ -173,6 +222,7 @@ class ArcheTech(Cmd):
             print('Mapping with word length %d' % (self.col))
         else :
             print('Mapping with crossbar dimension %dX%d' %(self.row, self.col))
+        # TODO ????
    
    
     revParser = argparse.ArgumentParser()
@@ -231,18 +281,17 @@ class ArcheTech(Cmd):
           
         
             
-    logParser = argparse.ArgumentParser()
-    logParser.add_argument('-f', '--filename', type=str, help='write mapping stats to file')
-    @cmd2.with_argparser(logParser)
+
     def do_setlog(self, args):
         ''' set the log file name ''' 
-        print('set log file :', args.filename)
+        print('set log file :', args)
         
-        if args.filename != None:
-            logging.basicConfig(filename=args.filename,  level=logging.DEBUG)  
+        if args is None:
+             print('Filename must be specified')
         else:
-            print('Filename must be specified')
-        self.__logFile = args.filename
+            
+            logging.basicConfig(filename=args,  level=logging.DEBUG) 
+        self.__logFile = args
 
     def do_read(self,arg ):
         ''' Read a mapped verilog netlist file '''

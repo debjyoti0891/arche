@@ -72,7 +72,7 @@ class SACMapper:
                 if result == None:
                     self.__log.addParam('finished',False)
                     self.__log.writeJsonSolution(self.__logfile)
-                    return 
+                    return None 
             print('LUT placement for {} completed.'.format(self.__basename))
 
             # Phase II
@@ -88,7 +88,7 @@ class SACMapper:
                     format(self.__basename))
                 self.__log.addParam('finished',False)
                 self.__log.writeJsonSolution(self.__logfile)
-                return 
+                return None
             print('Detailed placement completed.')
 
 
@@ -114,6 +114,7 @@ class SACMapper:
             self.__log.addParam('opcycles', opCycles )
             
             self.__log.writeJsonSolution(self.__logfile)
+            return opCycles
 
 if __name__ == '__main__':
     
