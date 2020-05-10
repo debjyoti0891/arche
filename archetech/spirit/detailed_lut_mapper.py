@@ -637,8 +637,9 @@ class DetailedMapper:
                     continue
                 elif lutGraph.vs[v]['lut'].isConstant():
                     print('Encountered constant LUT as input {}'.format(var))
-                    constSteps = self.__placeConstLUT(vertex, lvar, lutGraph.vs[v]['lut'].getConstant(), posLoc, negLoc, col, fiCrossbar, newCrossbar)
-                    newSteps = newSteps + constSteps 
+                    constSteps = self.__placeConstLUT(v, var, lutGraph.vs[v]['lut'].getConstant(), posLoc, negLoc, c, filledCrossbar, newCrossbar)
+                    newSteps = newSteps + constSteps
+                    continue  
                     
                 startSearch = (alloc[v][0], alloc[v][1]) # this location has the negated value
                 # 0 Location

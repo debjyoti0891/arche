@@ -357,6 +357,9 @@ class CoarseMapper:
                         if p in alloc.keys() or lutGraph.vs[p]['name'] in lutGraph['inputs']:
                             continue
                         else:
+                            is_const = lutGraph.vs[p]['lut'].isConstant()
+                            if is_const:
+                                continue 
                             sReady = False
                             break 
                     
