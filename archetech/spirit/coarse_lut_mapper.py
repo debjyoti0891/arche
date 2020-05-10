@@ -45,6 +45,16 @@ class CoarseMapper:
             
             pred = set(lutGraph.predecessors(s))
             if self.__debug: print('pred %s | placed: %s | succ: %s ' % (pred, placed,s))
+            for p in pred:
+                if p in placed:
+                    continue 
+                snode =  lutGraph.vs[p]
+                if snode['lut'].isConstant() != False:
+                    print('Added a constant lut:{}'.format(s))
+                    placed.add(s)
+                    continue 
+
+
             if pred.issubset(placed) and not s in active:
                 #add the lut to the ready queue
                 vsucc = lutGraph.vs[s]
@@ -52,7 +62,10 @@ class CoarseMapper:
                 
                 ready.append((s,terms+1,inputs+1,1))
                 active.add(s)
-        if self.__debug: print('ready:', ready)
+        if self.__debug: print('ready:',ready)
+            
+            
+            
     
     def __resetCross(self,lutGraph,alloc,R,C, move=False):
         ''' Resets a crossbar while preserving temporary results and outputs 

@@ -39,22 +39,29 @@ class SACMapper:
         if debug: 
             self.__log.addParam('debug', debug)
         self.__logfile = logfile 
-        
     
-    def mapBenchmark(self,R,C, k=None):
+    def __setupSolution(self):
+        self.__log.initSolution()
+        self.__log.addParam('benchmark',self.__basename)
+        
+        self.__log.addParam('k',self.__k)
+        self.__log.addParam('R',self.__R)
+        self.__log.addParam('C',self.__C)
+
+    
+    def mapBenchmark(self,R,C, k=None, partitioned=False):
         if k == None:  
             kList = [i for i in range(6,8,2)]
         else:
             kList = [k]
         for k in kList:
-            self.__log.initSolution()
-            self.__log.addParam('benchmark',self.__basename)
+            self.__R = R
+            self.__C = C
             self.__k = k
-            self.__log.addParam('k',k)
-            self.__log.addParam('R',R)
-            self.__log.addParam('C',C)
+            self.__setupSolution()
+            
             lg = LutGraph(self.__benchdir, self.__benchname, self.__debug, self.__logfile)
-            lutGraph = lg.genLutGraph(k)
+            lutGraph = lg.genLutGraph(k, partitioned)
             if lutGraph == None:
                 print('{} LUT Graph generation failed for k = {}'.format(self.__benchname,k))
                 self.__log.addParam('finished',False)

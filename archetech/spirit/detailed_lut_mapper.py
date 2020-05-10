@@ -35,7 +35,6 @@ class DetailedMapper:
 
     def computeBenchmark(self, lutGraph, R, C, alloc, schedule, placed):
         ''' Maps the benchmark using RxC size crossbar '''
-        
                    
         if self.__debug: print('Allocation: {}'.format(alloc))
         # print the schedule 
@@ -251,8 +250,32 @@ class DetailedMapper:
             newSteps.append(['INPUT', (rowIndex,col), lvar])
             fiCrossbar[rowIndex][col] = str(vertex)
         return newSteps
+    
 
-    def __placeCrossbar(self, lutGraph, inputs, crossbar, schedule, alloc): #timeslots, alloc, blocked=None):
+    def __placeConstLUT(self, vertex, lvar, constType, posLoc, negLoc, col, fiCrossbar, newCrossbar):
+        # constType = 'zero' or 'one' 
+        newSteps = []
+               
+        # Update the crossbar --- ignores the actual cost of placing
+        for rowIndex in posLoc:
+            #rowIndex = self.__getLoc(start,end,blocked,j,'r')
+            if self.__debug: print('newConstpos: var {}[Type:{}]  placed at ({},{})'.format(lvar,constType,rowIndex,col))
+            newCrossbar[rowIndex][col] = '~'+lvar
+            if constType == 'one': # location needs to be set to zero!
+                newSteps.append(['SETZERO', (rowIndex,col), '~'+lvar])
+            fiCrossbar[rowIndex][col] = '~'+str(vertex)                   # update crossbar 
+                
+        for rowIndex in negLoc:
+            #rowIndex = self.__getLoc(start,end,blocked,j,'r')
+            if self.__debug: print('newConstneg: var {}[Type {}]  placed at ({},{})'.format(lvar,constType,rowIndex,col))
+            newCrossbar[rowIndex][col] = lvar
+            if constType == 'zero': # location needs to be set to zero!
+                newSteps.append(['SETZERO', (rowIndex,col), lvar])
+            
+            fiCrossbar[rowIndex][col] = str(vertex)
+        return newSteps
+
+    def __placeCrossbar(self, lutGraph, inputs, crossbar, schedule, alloc):
         ''' Maps a given schedule to the actual crossbar 
             Returns:
                 status : `True` if successful, otherwise `False` 
@@ -267,7 +290,8 @@ class DetailedMapper:
         # generating a filled crossbar to be used during mapping.
         # nothing is blocked at the start of evaluation
         fiCrossbar = copy.deepcopy(crossbar)
-        for t in timeslots:
+        for i,t in enumerate(timeslots):
+            
             sc = schedule[t]
             if sc[0] == 'luts':
                 for lut, startr, startc, resr, resc in sc[1]:
@@ -295,7 +319,8 @@ class DetailedMapper:
         inputMap = dict()
         #generate the steps now using the filled crossbar 
         self.__blocked = ['',[]]
-        for t in timeslots:
+        for i,t in enumerate(timeslots):
+            print('placing {}/{} timeslots'.format(i+1,len(timeslots)))
             sc = schedule[t]
             if self.__debug: print('schedule [{}/{}] : {}'.format(t,timeslots,sc))
             if sc[0] == 'luts':
@@ -405,7 +430,7 @@ class DetailedMapper:
             if c != j and (crossbar[r][j] == 1 or \
                 (r in goalr and j in goalc)): # empty cell or goal state
                 neighbours.append((r,j))
-        if self.__debug: print('Vertex: {} Neighbours: {}'.format(vertex,neighbours))
+        #if self.__debug: print('Vertex: {} Neighbours: {}'.format(vertex,neighbours))
         return neighbours 
     
     
@@ -417,7 +442,7 @@ class DetailedMapper:
             pathtype: specifies whether the path needs to be odd or even
         '''
         if self.__debug: print('Searching for {} -> {} with {} path'.format(start,dest,pathtype))
-        if self.__debug: self.__printCrossbar(crossbar,'A* search')
+        #if self.__debug: self.__printCrossbar(crossbar,'A* search')
         searchQ = []
         heappush(searchQ, (0,start))
         
@@ -430,7 +455,7 @@ class DetailedMapper:
         while searchQ != list():
             
             cost, current = heappop(searchQ)
-            if self.__debug: print('current: {} \nsearchQ:{} cost:{}'.format(current, searchQ, cost))
+            #if self.__debug: print('current: {} \nsearchQ:{} cost:{}'.format(current, searchQ, cost))
             if self.__heuristic(dest,current) == 0: # goal state reached
                 goal = True 
                 break
@@ -611,9 +636,10 @@ class DetailedMapper:
                     if self.__debug: self.__printCrossbar(newCrossbar, 'After placing inputs, newCrossbar')
                     continue
                 elif lutGraph.vs[v]['lut'].isConstant():
-                    print('Encounted constant LUT as input {}'.format(var))
-                    continue 
-                
+                    print('Encountered constant LUT as input {}'.format(var))
+                    constSteps = self.__placeConstLUT(vertex, lvar, lutGraph.vs[v]['lut'].getConstant(), posLoc, negLoc, col, fiCrossbar, newCrossbar)
+                    newSteps = newSteps + constSteps 
+                    
                 startSearch = (alloc[v][0], alloc[v][1]) # this location has the negated value
                 # 0 Location
                 dest = {'r': list(negLoc), 'c': [c]}

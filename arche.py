@@ -52,10 +52,11 @@ class ArcheTech(Cmd):
     techMapper = None 
 
     def __init__(self,persistent_history_file=history_file):
+        
+        # self.settable.update({'row': 'Number of crossbar rows'})
+        # self.settable.update({'col': 'Number of crossbar columns'})
+        # self.settable.update({'dev': '1S1R or VTEAM'})
         super().__init__()
-        self.settable.update({'row': 'Number of crossbar rows'})
-        self.settable.update({'col': 'Number of crossbar columns'})
-        self.settable.update({'dev': '1S1R or VTEAM'})
         Cmd.__init__(self)
 
     mapParser = argparse.ArgumentParser()

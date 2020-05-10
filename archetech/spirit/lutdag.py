@@ -27,6 +27,9 @@ class LUT:
 
     def isConstant(self):
         return self.__isConstant
+    
+    def getConstant(self):
+        return self.__isConstant
 
     def setConstant(self, cons):
         self.__isConstant = cons
@@ -50,52 +53,54 @@ class LutGraph:
         else:
             self.__logfile = benchdir + self.__basename + "_log.json"
 
-    def genLutGraph(self, k):
+    def genLutGraph(self, k, partitioned = False):
         """ Partitions the benchmark into k-input LUTs using ABC """
+        if not partitioned:
+            # generate the paritioned verilog file
+            outf = self.__benchdir + "k" + str(k) + self.__basename
+            if ".v" in self.__basename:
+                readType = "read_verilog"
+            elif ".blif" in self.__basename:
+                readType = "read_blif"
+            else:
+                print("Invalid file type {}".format(self.__basename))
+                return None
 
-        # generate the paritioned verilog file
-        outf = self.__benchdir + "k" + str(k) + self.__basename
-        if ".v" in self.__basename:
-            readType = "read_verilog"
-        elif ".blif" in self.__basename:
-            readType = "read_blif"
-        else:
-            print("Invalid file type {}".format(self.__basename))
-            return None
-
-        abcinp = (
-            readType
-            + " "
-            + self.__benchname
-            + "\nstrash\n"
-            + "if -K "
-            + str(k)
-            + "\n"
-            + "write_verilog "
-            + outf
-            + "\nquit\n"
-        )
-        with open(self.__benchdir + "abcin", "w") as f:
-            f.write(abcinp)
-        command = ["abc", "-f", self.__benchdir + "abcin"]
-        result = run(
-            command, stdout=PIPE, stderr=PIPE, universal_newlines=True
-        )
-
-        logging.debug(result.returncode, result.stdout, result.stderr)
-        if result.stderr != "":
-            print(
-                "Error: "
-                + self.__basename
-                + " could not be processed by ABC\n"
+            abcinp = (
+                readType
+                + " "
+                + self.__benchname
+                + "\nstrash\n"
+                + "if -K "
+                + str(k)
+                + "\n"
+                + "write_verilog "
+                + outf
+                + "\nquit\n"
             )
-            print("ABC output\n--------------------")
-            print(result.stderr)
-            return None
-        else:
-            print("Completed partitioning benchmark " + self.__benchname)
-            # print(result.stdout)
+            with open(self.__benchdir + "abcin", "w") as f:
+                f.write(abcinp)
+            command = ["abc", "-f", self.__benchdir + "abcin"]
+            result = run(
+                command, stdout=PIPE, stderr=PIPE, universal_newlines=True
+            )
 
+            #logging.debug(result.returncode, result.stdout, result.stderr)
+            if result.stderr != "":
+                print(
+                    "Error: "
+                    + self.__basename
+                    + " could not be processed by ABC\n"
+                )
+                print("ABC output\n--------------------")
+                print(result.stderr)
+                return None
+            else:
+                print("Completed partitioning benchmark " + self.__benchname)
+                # print(result.stdout)
+        else:
+            outf = self.__benchname
+            
         # get the LUT graph
         inputs, outputs, wires, assigns = self.readLUTVerilog(outf)
 
