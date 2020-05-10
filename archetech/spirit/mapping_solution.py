@@ -186,7 +186,15 @@ class MappingSolExplorer:
                 # print('{} -> {}: {}'.format(outName,vout,s))
 
             f.write(footer)
+            
+        # replace all " 1 " and " 0 " with " 1'b1 " and "1'b0"
+        with open(outfile, "r") as f:
+            data = f.read()
 
+        data = data.replace(" 1 ", " 1'b1 ")
+        data = data.replace(" 0 ", " 1'b0 ")
+        with open(outfile, "w") as f:
+            f.write(data)
         # print('alloc: {} outputs: {}'.format(alloc, lutGraph['outputs']))
 
     def __getOpString(self, w, operation, state, usage, R, C):

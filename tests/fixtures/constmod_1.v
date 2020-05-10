@@ -10,7 +10,7 @@ module CM82 (
   assign f = old_n11_ ^ ~a;
   assign old_n11_ = ~b ^ c;
   assign g = old_n13_ ^ ~old_n17_;
-  assign old_n13_ = ~old_n14_ & old_n14_;
+  assign old_n13_ = ~old_n14_ | old_n14_;
   assign old_n14_ = ~old_n15_ & ~a;
   assign old_n15_ = b & c;
   assign old_n16_ = ~b & ~c;

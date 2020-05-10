@@ -24,7 +24,7 @@ class SacTestPartOne(BasicSacTest):
         newObj = SACMapper(benchfile,self.benchdir,'logs.txt', True, True)
         newObj.mapBenchmark(8, 8, 0, True)
         res,out = verifyOutput(benchfile, \
-            'tests/genfiles/Cr_8_8_k0_constmod_1.v', self.benchdir)
+            'tests/genfiles/Cr_8_8_k0_constmod_1.v.v', self.benchdir)
         if not res:
             print(out)
         self.assertEqual(res, True, "Generated file is not functionally same")
