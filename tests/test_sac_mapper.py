@@ -51,6 +51,30 @@ class SacTestBig(BasicSacTest):
         if not res:
             print(out)
         self.assertEqual(res, True, "Generated file is not functionally same")
+    
+class SacTestSpacing(BasicSacTest):
+    def test_sac_cm82a(self):
+        benchfile = "./tests/fixtures/cm82a.blif"
+        for spacing in [2,4]:
+            newObj = SACMapper(benchfile,self.benchdir,'logs.txt', True, True)
+            newObj.mapBenchmark(8, 8, 2, False, spacing)
+            res,out = verifyOutput(benchfile, \
+                'tests/genfiles/Cr_8_8_k2_cm82a.blif.v', self.benchdir)
+            if not res:
+                print(out)
+            self.assertEqual(res, True, "Generated file is not functionally same")
+
+    def test_sac_c6288(self):
+        benchfile = "./tests/fixtures/C6288.blif"
+        for spacing in [2,4]:
+            newObj = SACMapper(benchfile,self.benchdir,'logs.txt', False, True)
+            newObj.mapBenchmark(64, 64, 5, False, spacing)
+            res,out = verifyOutput(benchfile, \
+                'tests/genfiles/Cr_64_64_k5_C6288.blif.v', self.benchdir)
+            if not res:
+                print(out)
+            self.assertEqual(res, True, "Generated file is not functionally same")
+
 
 
 if __name__ == "__main__":

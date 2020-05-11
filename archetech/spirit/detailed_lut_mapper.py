@@ -2,6 +2,7 @@ import copy
 from heapq import *
 import sys
 import time
+from .maxalign import maxAlign, maxAlignHeuristic
 from .solution import Solution
 
 class DetailedMapper:
@@ -542,8 +543,8 @@ class DetailedMapper:
         if len(slot) > 1:    
             # multiple LUTs are scheduled in this slot 
             #TODO: Enable for SAT
-            #succ,alignedInputs = maxalign.maxAlign(slotLutInputs)
-            succ, alignedInputs = True, slotLutInputs
+            succ,alignedInputs = maxAlignHeuristic(slotLutInputs, '-')
+            
             if not succ:
                 print('Alignment failed')
                 self.__log.addParam('error', 'alignment of inputs failed')

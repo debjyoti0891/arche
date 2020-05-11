@@ -49,7 +49,7 @@ class SACMapper:
         self.__log.addParam('C',self.__C)
 
     
-    def mapBenchmark(self,R,C, k=None, partitioned=False):
+    def mapBenchmark(self,R,C, k=None, partitioned=False, spacing=0):
         if k == None:  
             kList = [i for i in range(6,8,2)]
         else:
@@ -71,7 +71,7 @@ class SACMapper:
             # Phase I
             print('LUT placement for {} begins.'.format(self.__basename))
             cmap = CoarseMapper(self.__benchname, self.__benchdir, self.__logfile, self.__debug, self.__fastMode)
-            result = cmap.placeBenchmark(lutGraph, R, C)
+            result = cmap.placeBenchmark(lutGraph, R, C, spacing)
             if result is None:
                 print('Retrying placement with more separation')
                 result = cmap.placeBenchmark(lutGraph, R, C, True) # Try again

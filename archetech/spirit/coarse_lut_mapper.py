@@ -178,7 +178,7 @@ class CoarseMapper:
         if self.__debug: print('Initial ready list:',ready)   
         return placed, active, ready 
 
-    def placeBenchmark(self, lutGraph, R, C, secondAttempt=False):
+    def placeBenchmark(self, lutGraph, R, C, spacing=0, secondAttempt=False):
         ''' Schedules the LUTs in the benchmark using RxC size crossbar '''
         self.__log.addParam('error', '')
         crossbar = [[1 for j in range(C)] for i in range(R)]
@@ -189,8 +189,8 @@ class CoarseMapper:
                  
         if secondAttempt:
             spacing = 2
-        else:
-            spacing = 0
+        
+        self.__log.addParam('spacing',spacing)
         # schedule the LUTs as blocks 
         alloc, schedule, placed = self.__simpleSchedule(lutGraph, R,C, ready, placed, active, spacing)
         if alloc == None:
