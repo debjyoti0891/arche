@@ -56,8 +56,8 @@ else
     k="6"
 fi
 
-mkdir -p $workDir
-
+mkdir -p {$workDir}_1
+mkdir -p {$workDir}_2
 # get list of .v files in target directory
 i=0
 benchfiles="`ls -Sr ${targetDir}c*.blif`"
@@ -74,13 +74,15 @@ do
             
             for s in "${spacing[@]}"
             do
-                python3 sac_experiment.py $file1 $workDir 64 32 $k $logfile $s &
-                python3 sac_experiment.py $file1 $workDir 64 64 $k $logfile $s &
-                wait 
+                python3 sac_experiment.py $file1 {$workDir}_1 64 32 $k $logfile $s &
+                python3 sac_experiment.py $file1 {$workDir}_2 64 64 $k $logfile $s &
+                wait
+                 
 
-                python3 sac_experiment.py $file1 $workDir 128 64 $k $logfile $s &
-                python3 sac_experiment.py $file1 $workDir 128 128 $k $logfile $s &
+                python3 sac_experiment.py $file1 {$workDir}_1 128 64 $k $logfile $s &
+                python3 sac_experiment.py $file1 {$workDir}_2 128 128 $k $logfile $s &
                 wait 
+                 
                   
                 echo "Processing Finish time : `date`" >> $benchLog  
                 echo "$dashSmall" >> $benchLog
