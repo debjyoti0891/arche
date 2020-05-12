@@ -62,7 +62,7 @@ mkdir -p $workDir
 i=0
 benchfiles="`ls -Sr ${targetDir}*.v`"
 echo $benchfiles
-spacing=( 0 1 2 3 4 5 )
+spacing=( 2 4 6 )
 for file1 in $benchfiles
 do
             echo "Processing $file1 Start time : `date`" >> $benchLog  
