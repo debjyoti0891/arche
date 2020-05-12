@@ -42,14 +42,14 @@ fi
 echo "Benchmark directory : $targetDir " >>$benchLog
 echo "Log file  : $logfile " >>$benchLog
 
-# get log file
+# get work directory
 if [ "$3" != "" ]; then
     workDir="$3"
 else
     workDir="gen_files/"
 fi
 
-# get k file
+# get k 
 if [ "$4" != "" ]; then
     k="$4"
 else
@@ -61,6 +61,7 @@ mkdir -p $workDir
 # get list of .v files in target directory
 i=0
 benchfiles="`ls -Sr ${targetDir}c*.blif`"
+spacing=( 0 1 2 3 4 5 )
 echo $benchfiles
 
 for file1 in $benchfiles
@@ -79,10 +80,12 @@ do
 
             # python3 ../arche.py < ${archeInput}
             #python sac_experiment.py benchmark benchdir R C k logfile
-            python sac_experiment.py $file1 $workDir 256 256 $k $logfile 
-            echo "Processing Finish time : `date`" >> $benchLog  
-            echo "$dashSmall" >> $benchLog
-            
+            for s in "${spacing[@]}"
+            do
+                python3 sac_experiment.py $file1 $workDir 8 8 $k $logfile $s 
+                echo "Processing Finish time : `date`" >> $benchLog  
+                echo "$dashSmall" >> $benchLog
+            done
             
             
         

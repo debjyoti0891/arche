@@ -7,7 +7,7 @@ from archetech.spirit.mapping_solution import verifyOutput
 
 if __name__ == '__main__':
     if len(sys.argv) < 6:
-        print('usage: python3 sac_experiment.py benchmark benchdir R C k logfile')
+        print('usage: python3 sac_experiment.py benchmark benchdir R C k logfile [spacing]')
         sys.exit(0)
     # for i,val in enumerate(sys.argv):
     #     print(i,val)
@@ -18,9 +18,14 @@ if __name__ == '__main__':
     k = int(sys.argv[5])
     logfile = sys.argv[6]
 
+    if len(sys.argv) == 8:
+        spacing = int(sys.argv[7])
+    else:
+        spacing = 0
+
     logging.basicConfig(filename=logfile,  level=logging.DEBUG)
     newObj = SACMapper(benchmark,bench_dir,logfile, False, True)
-    newObj.mapBenchmark(R,C,k)
+    newObj.mapBenchmark(R, C, k, False, spacing)
     i = benchmark.rfind('/')
     if i>=0:
         benchfile = benchmark[i+1:]

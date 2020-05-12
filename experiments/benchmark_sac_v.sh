@@ -62,24 +62,21 @@ mkdir -p $workDir
 i=0
 benchfiles="`ls -Sr ${targetDir}*.v`"
 echo $benchfiles
-
+spacing=( 0 1 2 3 4 5 )
 for file1 in $benchfiles
 do
             echo "Processing $file1 Start time : `date`" >> $benchLog  
             b1=$(basename $file1 )
             echo "base : $b1"
             echo "$b1" >> $archeLog 
-            
-            
-            
-            
-            # echo "setlog $logfile" > $archeInput
-            # echo "sacmap -f $file1 -d $workDir -k $k -R 256 -C 256" >> $archeInput 
-            # echo "quit" >> $archeInput 
 
-            # python3 ../arche.py < ${archeInput}
-            #screen -dmS ${b1}_${b2} -c "../arche.py < $archeInput"
-            python sac_experiment.py $file1 $workDir 256 256 $k $logfile 
+            for s in "${spacing[@]}"
+            do
+                python sac_experiment.py $file1 $workDir 256 256 $k $logfile
+                python sac_experiment.py $file1 $workDir 128 128 $k $logfile
+                python sac_experiment.py $file1 $workDir 256 128 $k $logfile
+                python sac_experiment.py $file1 $workDir 64 64 $k $logfile 
+            done 
             
             
             echo "Processing Finish time : `date`" >> $benchLog  
