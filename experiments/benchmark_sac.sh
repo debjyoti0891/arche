@@ -61,7 +61,7 @@ mkdir -p $workDir
 # get list of .v files in target directory
 i=0
 benchfiles="`ls -Sr ${targetDir}c*.blif`"
-spacing=( 0 1 2 3 4 5 )
+spacing=( 0 2 4 6 )
 echo $benchfiles
 
 for file1 in $benchfiles
@@ -72,17 +72,16 @@ do
             echo "$b1" >> $archeLog 
             
             
-            
-            
-            # echo "setlog $logfile" > $archeInput
-            # echo "sacmap -f $file1 -d $workDir -k $k -R 256 -C 256" >> $archeInput 
-            # echo "quit" >> $archeInput 
-
-            # python3 ../arche.py < ${archeInput}
-            #python sac_experiment.py benchmark benchdir R C k logfile
             for s in "${spacing[@]}"
             do
-                python3 sac_experiment.py $file1 $workDir 8 8 $k $logfile $s 
+                python3 sac_experiment.py $file1 $workDir 64 32 $k $logfile $s &
+                python3 sac_experiment.py $file1 $workDir 64 64 $k $logfile $s &
+                wait 
+
+                python3 sac_experiment.py $file1 $workDir 128 64 $k $logfile $s &
+                python3 sac_experiment.py $file1 $workDir 128 128 $k $logfile $s &
+                wait 
+                  
                 echo "Processing Finish time : `date`" >> $benchLog  
                 echo "$dashSmall" >> $benchLog
             done
