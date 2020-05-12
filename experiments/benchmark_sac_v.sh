@@ -74,7 +74,7 @@ do
             do
                 python3 sac_experiment.py $file1 $workDir 256 256 $k $logfile
                 python3 sac_experiment.py $file1 $workDir 128 128 $k $logfile
-                python3 sac_experiment.py $file1 $workDir 256 128 $k $logfile
+                #python3 sac_experiment.py $file1 $workDir 256 128 $k $logfile
 
             done 
             

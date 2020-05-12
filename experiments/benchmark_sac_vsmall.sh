@@ -75,7 +75,7 @@ do
                 
                 python3 sac_experiment.py $file1 $workDir 128 64 $k $logfile
                 python3 sac_experiment.py $file1 $workDir 64 64 $k $logfile 
-                python3 sac_experiment.py $file1 $workDir 64 32 $k $logfile
+                #python3 sac_experiment.py $file1 $workDir 64 32 $k $logfile
             done 
             
             
