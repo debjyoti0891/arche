@@ -211,7 +211,7 @@ class LutGraph:
         # get wire name
         output = assignment[: assignment.rfind("=")].strip()
         logic = assignment[assignment.rfind("=") + 1 :]
-        inputs = re.findall("[a-zA-Z0-9\_\\\<\>]+", logic)
+        inputs = re.findall("[a-zA-Z0-9\_\[\]\\\<\>]+", logic)
         inputs = list(set(inputs))
         if self.__debug:
             print(output, "|", inputs, assignment)
@@ -246,7 +246,7 @@ class LutGraph:
         output = assignment[: assignment.rfind("=")].strip()
 
         logic = assignment[assignment.rfind("=") + 1 :]
-        inputs = re.findall("[a-zA-Z0-9\_\\\<\>]+", logic)
+        inputs = re.findall("[a-zA-Z0-9\_\[\]\\\<\>]+", logic)
         inputs = list(set(inputs))
 
         # invoke ABC to generate SOP

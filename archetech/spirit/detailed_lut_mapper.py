@@ -552,8 +552,13 @@ class DetailedMapper:
         else:
             alignedInputs = slotLutInputs
 
-        if self.__debug: print('aligned inputs: {} \n'.format(alignedInputs))
-    
+        if self.__debug: 
+            print('original inputs:')
+            for si in slotLutInputs:
+                print(si)
+            print('aligned inputs:') 
+            for ai in alignedInputs:
+                print(ai)
 
         l = 0
         for  lut, startr, startc, resr, resc in slot:

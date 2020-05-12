@@ -90,10 +90,14 @@ def maxAlignHeuristic(vList, ignore='-', debug=False):
         
         if not aligned:
             for loc in key_loc_dict[k]:
-                aligned_out[loc][i] = free_loc[loc]
+                aligned_out[loc][free_loc[loc]] = k
     
     for val in aligned_out:
         if debug: print(val)
+    # assert validity 
+    for i in range(len(aligned_out)):
+        #print('{} {} {}'.format(set(aligned_out[i]), set(vList[i]), set(aligned_out[i]) == set(vList[i])))
+        assert set(aligned_out[i]) == set(vList[i]), '{} {}'.format(vList[i], aligned_out[i])
 
     return True, aligned_out
      
